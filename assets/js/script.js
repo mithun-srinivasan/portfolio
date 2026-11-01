@@ -40,68 +40,108 @@
   /* Dark-first. The tiny head script has already set data-theme to avoid a flash. */
   applyTheme(isTheme(root.dataset.theme) ? root.dataset.theme : "dark", false);
 
-  /* ---------- site-wide dotted glow (no pointer response) ---------- */
+  /* ---------- site-wide dotted glow (exact Aceternity DottedGlowBackground algorithm) ---------- */
   const glowCanvas = document.createElement("canvas");
   glowCanvas.className = "dotted-glow-background";
   glowCanvas.setAttribute("aria-hidden", "true");
   document.body.prepend(glowCanvas);
   const glowContext = glowCanvas.getContext("2d");
   if (glowContext) {
-    const gap = 22;
-    const radius = 0.55;
+    const gap = 12;
+    const radius = 1.6;
+    const speedMin = 0.3;
+    const speedMax = 1.6;
+    const speedScale = 1;
+    const opacity = 0.85;
+
     let width = 0;
     let height = 0;
     let ratio = 1;
     let dots = [];
     let frame = 0;
-    let baseColor = "#ededed";
+    let baseColor = "rgba(255, 255, 255, 0.2)";
     let glowColor = "#e23b49";
+
     const readColors = () => {
+      const dark = currentTheme() === "dark";
       const style = getComputedStyle(root);
-      baseColor = style.getPropertyValue("--ink").trim() || baseColor;
-      glowColor = style.getPropertyValue("--red-text").trim() || glowColor;
+      const redText = style.getPropertyValue("--red-text").trim() || "#e23b49";
+      baseColor = dark ? "rgba(255, 255, 255, 0.22)" : "rgba(0, 0, 0, 0.25)";
+      glowColor = redText;
     };
+
     const buildDots = () => {
       dots = [];
-      const rows = Math.ceil(height / gap) + 1;
-      const cols = Math.ceil(width / gap) + 1;
-      for (let row = 0; row < rows; row += 1) {
-        for (let col = 0; col < cols; col += 1) {
-          dots.push({
-            x: col * gap,
-            y: row * gap,
-            phase: Math.random() * Math.PI * 2,
-            speed: 0.0003 + Math.random() * 0.0008
-          });
+      const cols = Math.ceil(width / gap) + 2;
+      const rows = Math.ceil(height / gap) + 2;
+      const min = Math.min(speedMin, speedMax);
+      const max = Math.max(speedMin, speedMax);
+      const span = Math.max(max - min, 0);
+
+      for (let i = -1; i < cols; i++) {
+        for (let j = -1; j < rows; j++) {
+          const x = i * gap + (j % 2 === 0 ? 0 : gap * 0.5);
+          const y = j * gap;
+          const phase = Math.random() * Math.PI * 2;
+          const speed = min + Math.random() * span;
+          dots.push({ x, y, phase, speed });
         }
       }
     };
+
     const paint = (now, animate) => {
       glowContext.clearRect(0, 0, width, height);
-      for (const dot of dots) {
-        const pulse = animate ? 0.5 + 0.5 * Math.sin(now * dot.speed + dot.phase) : 0.25;
-        const bright = animate && pulse > 0.965;
-        glowContext.globalAlpha = bright ? 0.35 : 0.08 + pulse * 0.2;
-        glowContext.fillStyle = bright ? glowColor : baseColor;
-        glowContext.shadowColor = bright ? glowColor : "transparent";
-        glowContext.shadowBlur = bright ? 2 : 0;
+      glowContext.save();
+      glowContext.fillStyle = baseColor;
+
+      const time = (now / 1000) * Math.max(speedScale, 0);
+
+      for (let i = 0; i < dots.length; i++) {
+        const d = dots[i];
+        if (!animate) {
+          glowContext.globalAlpha = 0.25 * opacity;
+          glowContext.beginPath();
+          glowContext.arc(d.x, d.y, radius, 0, Math.PI * 2);
+          glowContext.fill();
+          continue;
+        }
+
+        const mod = (time * d.speed + d.phase) % 2;
+        const lin = mod < 1 ? mod : 2 - mod;
+        const a = 0.25 + 0.55 * lin;
+
+        if (a > 0.6) {
+          const glow = (a - 0.6) / 0.4;
+          glowContext.fillStyle = glowColor;
+          glowContext.shadowColor = glowColor;
+          glowContext.shadowBlur = 8 * glow;
+        } else {
+          glowContext.fillStyle = baseColor;
+          glowContext.shadowColor = "transparent";
+          glowContext.shadowBlur = 0;
+        }
+
+        glowContext.globalAlpha = a * opacity;
         glowContext.beginPath();
-        glowContext.arc(dot.x, dot.y, radius, 0, Math.PI * 2);
+        glowContext.arc(d.x, d.y, radius, 0, Math.PI * 2);
         glowContext.fill();
       }
-      glowContext.globalAlpha = 1;
-      glowContext.shadowBlur = 0;
+
+      glowContext.restore();
     };
+
     const draw = (now) => {
       frame = 0;
       if (document.hidden) return;
       paint(now, !reduceMotion.matches);
       if (!reduceMotion.matches) frame = requestAnimationFrame(draw);
     };
+
     const start = () => {
       if (reduceMotion.matches) paint(0, false);
       else if (!document.hidden && !frame) frame = requestAnimationFrame(draw);
     };
+
     const resize = () => {
       ratio = Math.min(window.devicePixelRatio || 1, 2);
       width = window.innerWidth;
@@ -112,6 +152,7 @@
       buildDots();
       start();
     };
+
     readColors();
     resize();
     window.addEventListener("resize", resize, { passive: true });
