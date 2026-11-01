@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" role="img" aria-label="meeting transcriber and summarizer">
+  <path d="M11 23v8M16 17v20M21 24v7" stroke="#a30d18" stroke-width="2.5" stroke-linecap="round"/>
+  <rect x="28" y="8" width="15" height="27" rx="7.5" stroke="#090909" stroke-width="3"/>
+  <path d="M21 30a14.5 14.5 0 0 0 29 0M35.5 44.5V54M28 54h15" stroke="#090909" stroke-width="3" stroke-linecap="round"/>
+  <path d="M49 18h7M49 26h7M49 34h4" stroke="#a30d18" stroke-width="2.5" stroke-linecap="round"/>
+</svg>

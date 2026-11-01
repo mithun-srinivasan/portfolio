@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mithun Srinivasan — CSE undergraduate, FOSS/Linux</title>
+<meta name="author" content="Mithun Srinivasan">
+<meta name="robots" content="index,follow">
+<meta name="color-scheme" content="dark light">
+<meta name="theme-color" content="#050505">
+<meta name="description" content="Mithun Srinivasan is a Computer Science and Engineering undergraduate at Meenakshi Sundararajan Engineering College and a foundational-level Data Science and Applications student at IIT Madras. He builds open-source tools and contributes to FOSS communities in Chennai.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%2378080f'/%3E%3Cpath d='M14 46V18h6l12 17 12-17h6v28h-7V30L32 44 21 30v16z' fill='%23f4f2ee'/%3E%3C/svg%3E">
+<script>
+  // set the theme before paint so there is no light flash
+  (() => {
+    try {
+      const saved = localStorage.getItem("theme");
+      document.documentElement.dataset.theme = saved === "light" ? "light" : "dark";
+    } catch {
+      document.documentElement.dataset.theme = "dark";
+    }
+  })();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header" id="site-header">
+  <div class="shell header-inner">
+    <a class="brand" href="index.html" aria-label="Mithun Srinivasan, home">
+      <span class="brand-mark" aria-hidden="true">MS</span>
+      <span class="brand-text">mithun@portfolio:~$</span>
+    </a>
+    <nav class="nav" aria-label="Main">
+      <a href="#work">work</a>
+      <a href="#about">about</a>
+      <a href="#experience">experience</a>
+      <a href="#skills">skills</a>
+      <a href="blog.html">blog</a>
+      <a href="talks.html">talks</a>
+      <a href="#contact">contact</a>
+    </nav>
+    <button class="theme-toggle" id="theme-toggle" type="button" aria-pressed="true" aria-label="Switch to light theme">
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.66 6.34l1.41-1.41"></path></svg>
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5 8.5 8.5 0 1 0 20.5 14.5Z"></path></svg>
+    </button>
+  </div>
+</header>
+
+<main id="main">
+  <section class="hero" id="top" aria-labelledby="hero-title">
+    <div class="shell hero-grid">
+      <div class="hero-copy">
+        <p class="cmd hero-kicker"><span class="path">~/mithun</span> whoami<span class="caret" aria-hidden="true"></span></p>
+        <h1 class="hero-name" id="hero-title">
+          <span class="line"><span>Mithun</span></span>
+          <span class="line"><span>Srinivasan<span class="dot">.</span></span></span>
+        </h1>
+        <p class="hero-type"><span class="ps1">$</span> <span class="typed" data-typed>CSE undergrad at MSEC</span><span class="caret" aria-hidden="true"></span></p>
+        <p class="hero-lead">Computer Science and Engineering undergraduate at Meenakshi Sundararajan Engineering College, and a foundational-level Data Science and Applications student at IIT Madras. I build <strong>open-source tools</strong> and contribute to FOSS communities in Chennai.</p>
+        <p class="hero-meta"><span>Chennai, India</span><span>B.E. CSE ’29 / MSEC</span><span>B.Sc. Data Science / IIT Madras</span></p>
+        <div class="hero-actions">
+          <a class="btn" href="#work">selected work</a>
+          <a class="text-link" href="mailto:omsaimithun@gmail.com">email me</a>
+        </div>
+      </div>
+
+      <figure class="hero-portrait" data-comet>
+        <div class="comet-card__tilt" data-comet-tilt>
+          <span class="frame">
+            <picture>
+              <source srcset="mithun-portrait.webp" type="image/webp">
+              <img src="mithun-portrait.jpg" alt="Mithun Srinivasan wearing headphones, in a red and white portrait" width="900" height="900" fetchpriority="high" decoding="async">
+            </picture>
+            <span class="comet-card__glare" data-comet-glare aria-hidden="true"></span>
+          </span>
+        </div>
+        <figcaption><span>~/portrait.webp</span><span>900 × 900</span></figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="section" id="work" aria-labelledby="work-title">
+    <div class="shell">
+      <div class="section-head">
+        <p class="cmd"><span class="path">cat</span> work/<span class="caret" aria-hidden="true"></span></p>
+        <h2 id="work-title">Built because<br>the tool didn’t exist.</h2>
+        <p>Five projects I use myself, plus the ones that started as a favour for a friend or a community. Every link goes somewhere real.</p>
+      </div>
+
+      <div class="work-list">
+        <article class="project">
+          <div class="project-cover cover-ditch" aria-hidden="true">
+            <img class="cover-mark" src="assets/logos/ditch-windows.svg" alt="" width="64" height="64" loading="lazy" decoding="async">
+          </div>
+          <div class="project-main">
+            <p class="project-meta">Go / CLI + TUI / 2026</p>
+            <h3><a href="https://github.com/mithun-srinivasan/ditch-windows">ditch-windows</a></h3>
+            <p class="project-desc">Pack up Windows. Put it back. One encrypted backup rebuilds a Windows 11 machine: apps, Wi-Fi, fonts, theme, default apps, and personal folders. It previews every restore; nothing writes without <code>--apply</code>.</p>
+            <div class="project-links">
+              <a href="https://github.com/mithun-srinivasan/ditch-windows">repository</a>
+              <a href="https://github.com/mithun-srinivasan/ditch-windows#readme">how it works</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="project">
+          <div class="project-cover cover-sggs" aria-hidden="true">
+            <img class="cover-mark" src="assets/logos/srigurugranthsahib.svg" alt="" width="100" height="100" loading="lazy" decoding="async">
+          </div>
+          <div class="project-main">
+            <p class="project-meta">TypeScript / Next.js / 2026</p>
+            <h3><a href="https://srigurugranthsahib.vercel.app/">srigurugranthsahib</a></h3>
+            <p class="project-desc">A verse-by-verse reader for the Sri Guru Granth Sahib Ji and the Nitnem Banis. Translations in four languages, word-by-word meanings, the daily Hukamnama, and reading plans. Built as sewa.</p>
+            <div class="project-links">
+              <a href="https://srigurugranthsahib.vercel.app/">read it live</a>
+              <a href="https://github.com/mithun-srinivasan/srigurugranthsahib">repository</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="project">
+          <div class="project-cover cover-meeting" aria-hidden="true">
+            <img class="cover-mark" src="assets/logos/meeting-transcriber.svg" alt="" width="64" height="64" loading="lazy" decoding="async">
+          </div>
+          <div class="project-main">
+            <p class="project-meta">Python / Whisper + LLM</p>
+            <h3><a href="https://github.com/mithun-srinivasan/meeting-transcriber-and-summarizer">meeting-transcriber-and-summarizer</a></h3>
+            <p class="project-desc">Turns meeting audio into notes you can scan. Whisper handles transcription; you choose the LLM provider. Runs locally when privacy matters.</p>
+            <div class="project-links"><a href="https://github.com/mithun-srinivasan/meeting-transcriber-and-summarizer">repository</a></div>
+          </div>
+        </article>
+
+        <article class="project">
+          <div class="project-cover cover-spank" aria-hidden="true">
+            <img class="cover-wordmark" src="assets/logos/spank-for-windows.png" alt="" width="256" height="127" loading="lazy" decoding="async">
+          </div>
+          <div class="project-main">
+            <p class="project-meta">Go / desktop / MIT</p>
+            <h3><a href="https://github.com/mithun-srinivasan/spank-for-windows">spank-for-windows</a></h3>
+            <p class="project-desc">A Windows-native port of taigrr/spank. The microphone listens for a short impact; Go and Fyne do the yelling. Three modes, a sensitivity slider, and one executable.</p>
+            <div class="project-links">
+              <a href="https://github.com/mithun-srinivasan/spank-for-windows">repository</a>
+              <a href="https://github.com/mithun-srinivasan/spank-for-windows/releases">download</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="project">
+          <div class="project-cover cover-sticker" aria-hidden="true">
+            <img class="cover-mark" src="assets/logos/sticker-brains.svg" alt="" width="64" height="64" loading="lazy" decoding="async">
+          </div>
+          <div class="project-main">
+            <p class="project-meta">TypeScript / React + SQLite</p>
+            <h3><a href="https://github.com/mithun-srinivasan/sticker-brains">sticker-brains</a></h3>
+            <p class="project-desc">Mini brain teasers unlock meme stickers. A beginner-friendly React and TypeScript app with an Express and SQLite backend.</p>
+            <div class="project-links"><a href="https://github.com/mithun-srinivasan/sticker-brains">repository</a></div>
+          </div>
+        </article>
+      </div>
+
+      <div class="workshop">
+        <h3 class="workshop-head">More from the workshop</h3>
+        <p class="workshop-desc">Smaller builds, community contributions, and talks.</p>
+        <div class="workshop-links">
+          <a href="https://github.com/mithun-srinivasan?tab=repositories">all 22 repositories</a>
+          <a href="https://www.linkedin.com/in/mithun-srinivasan-msec">linkedin</a>
+          <a href="talks.html">talks</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="about" aria-labelledby="about-title">
+    <div class="shell">
+      <div class="section-head">
+        <p class="cmd"><span class="path">cat</span> about.txt<span class="caret" aria-hidden="true"></span></p>
+        <h2 id="about-title">Serious about<br>shipping. Still<br>a newbie at heart.</h2>
+        <p>I learn by building the thing, breaking it, and then reading the manual. Most of that happens in public, on GitHub.</p>
+      </div>
+      <div class="about-grid">
+        <div>
+          <p class="about-lead">I’m a computer science undergraduate in Chennai who would rather learn by building the thing than by watching someone else build it.</p>
+          <div class="about-body">
+            <p>I study Computer Science and Engineering at Meenakshi Sundararajan Engineering College, alongside the IIT Madras B.Sc. in Data Science and Applications. Most of what I know comes from open source: reading other people’s code, opening pull requests, and shipping small tools until they hold up.</p>
+            <p>I care about FOSS and Linux, strong data structures and algorithms in C++, and a technical career in public service.</p>
+          </div>
+          <p class="about-now"><span class="status-dot" aria-hidden="true"></span><span>now: Technical Consultant at Upfinity / contributor to FOSS United Chennai.</span></p>
+          <blockquote class="quote">
+            <p>“Failure is nothing till you lose the ability to try things. எல்லாம் மாறும்!!”</p>
+            <footer>— the line I keep above my desk</footer>
+          </blockquote>
+        </div>
+        <aside class="about-side" aria-label="Education">
+          <div class="side-block">
+            <h3>education</h3>
+            <div class="edu">
+              <div class="edu-item">
+                <b>B.E. Computer Science and Engineering</b>
+                <span>Meenakshi Sundararajan Engineering College, Chennai</span>
+                <time datetime="2025">2025 – 2029</time>
+              </div>
+              <div class="edu-item">
+                <b>B.S. Data Science and Applications</b>
+                <span>IIT Madras, foundational level</span>
+                <time datetime="2025-05">from May 2025</time>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="experience" aria-labelledby="experience-title">
+    <div class="shell">
+      <div class="section-head">
+        <p class="cmd"><span class="path">git</span> log --oneline<span class="caret" aria-hidden="true"></span></p>
+        <h2 id="experience-title">A short log<br>of showing up.</h2>
+        <p>Community work, a consultancy role, and a lot of pull requests. The dates are real; the commit history does the rest.</p>
+      </div>
+      <ol class="timeline">
+        <li>
+          <div class="when">Jul 2026 — now</div>
+          <div><h3>Technical Consultant, Upfinity</h3><p>Consulting on client projects, reviewing workflows, finding bugs, and pushing product improvements.</p></div>
+        </li>
+        <li>
+          <div class="when">Jul 2026 — now</div>
+          <div><h3>Contributor, <a href="https://github.com/FOSSUChennai/Communities/pulls?q=author%3Amithun-srinivasan">FOSS United Chennai</a></h3><p>Contributing to tamilnadu.tech through pull requests, CI/CD, and SEO on the community’s Next.js site.</p></div>
+        </li>
+        <li>
+          <div class="when">Jul 2026 — now</div>
+          <div><h3>Contributor and volunteer, <a href="https://github.com/CodeSapiens-in/CollegeSapien/pulls?q=author%3Amithun-srinivasan+">Sapiens Campus</a></h3><p>Pull requests to the CollegeSapien repo, plus campus volunteering.</p></div>
+        </li>
+        <li>
+          <div class="when">Aug 2026 — now</div>
+          <div><h3>Community volunteer, <a href="https://fromdevtoops.org">fromDevtoOps</a></h3><p>Community work for a DevOps-focused learning group.</p></div>
+        </li>
+        <li>
+          <div class="when">Oct 2026</div>
+          <div><h3>Volunteer, <a href="https://devfest.gdgchennai.in/">GDG Chennai DevFest 2026</a></h3><p>Tech support for the DeepTech track.</p></div>
+        </li>
+        <li>
+          <div class="when">May — Aug 2026</div>
+          <div><h3>Open source contributor, GirlScript Summer of Code</h3><p>Issues, pull requests, and features on real GitHub projects.</p></div>
+        </li>
+        <li>
+          <div class="when">Jan — May 2026</div>
+          <div><h3>Campus Mantri, GeeksforGeeks</h3><p>Campus representative at MSEC: student engagement, outreach, and campus tech initiatives.</p></div>
+        </li>
+        <li>
+          <div class="when">Sep 2025 — now</div>
+          <div><h3>Member, Sundarbans House, IITM BS Degree</h3><p>Member of Sundarbans House in the IIT Madras BS degree programme.</p></div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="section" id="skills" aria-labelledby="skills-title">
+    <div class="shell">
+      <div class="section-head">
+        <p class="cmd"><span class="path">cat</span> toolchain.txt<span class="caret" aria-hidden="true"></span></p>
+        <h2 id="skills-title">Tools I reach for.</h2>
+        <p>No proficiency bars. Either I’ve shipped with it or I’m learning it.</p>
+      </div>
+      <dl class="skills-grid">
+        <div class="skill">
+          <dt>top_skills</dt>
+          <dd><span class="line">AI pair programming and AI-assisted programming</span><span class="line">C</span><span class="line">Convincing people</span></dd>
+        </div>
+        <div class="skill">
+          <dt>languages</dt>
+          <dd>C, C++, Python, Java, MATLAB</dd>
+        </div>
+        <div class="skill">
+          <dt>tools</dt>
+          <dd>Git, GitHub, Linux, Notion</dd>
+        </div>
+        <div class="skill">
+          <dt>certs</dt>
+          <dd><span class="line">Joy of Computing Using Python</span><span class="line">MATLAB Onramp</span><span class="line">Wells Fargo Personal Banker Job Simulation</span><span class="line">Notion Essentials Badge</span><span class="line">AI Foundations</span></dd>
+        </div>
+        <div class="skill">
+          <dt>speaks</dt>
+          <dd>Tamil (native), English (professional), Hindi, Japanese, Sanskrit (elementary)</dd>
+        </div>
+      </dl>
+
+      <div class="coding" id="coding">
+        <div class="coding-head">
+          <h3>Practice, in public</h3>
+          <a href="https://github.com/mithun-srinivasan?tab=repositories">all repositories</a>
+        </div>
+        <nav class="profiles" aria-label="Coding profiles">
+          <a class="profile" href="https://leetcode.com/u/mithunsrinivasan"><b>LeetCode</b><span>mithunsrinivasan</span></a>
+          <a class="profile" href="https://www.hackerrank.com/profile/mithun01"><b>HackerRank</b><span>mithun01</span></a>
+          <a class="profile" href="https://www.codechef.com/users/mithun_1307"><b>CodeChef</b><span>mithun_1307</span></a>
+          <a class="profile" href="https://codeforces.com/profile/mithunsrinivasan"><b>Codeforces</b><span>mithunsrinivasan</span></a>
+          <a class="profile" href="https://www.codedex.io/@mithun-srini"><b>Codedex</b><span>@mithun-srini</span></a>
+        </nav>
+      </div>
+    </div>
+  </section>
+
+  <section class="contact" id="contact" aria-labelledby="contact-title">
+    <div class="shell contact-inner">
+      <div class="contact-grid">
+        <div>
+          <p class="cmd"><span class="path">mail</span> --to mithun<span class="caret" aria-hidden="true"></span></p>
+          <h2 id="contact-title">Have a problem worth solving?</h2>
+          <p class="contact-lead">I’m looking for internships and collaborations where I can learn fast and ship something useful. If you’re building in the open, even better.</p>
+          <div class="contact-email-row">
+            <a class="contact-email" href="mailto:omsaimithun@gmail.com">omsaimithun@gmail.com</a>
+            <button class="copy-btn" id="copy-email" type="button" data-email="omsaimithun@gmail.com">Copy</button>
+          </div>
+          <p class="copy-status" id="copy-status" role="status" aria-live="polite"></p>
+          <div class="contact-meta">
+            <p>or call <a href="tel:+919342099436">+91 93420 99436</a></p>
+            <p>Chennai, India / IST (UTC+05:30)</p>
+            <p><a href="https://cal.com/mithun-srinivasan/30min">book 30 minutes</a></p>
+          </div>
+        </div>
+        <nav class="socials" aria-label="Elsewhere">
+          <a class="social" href="https://github.com/mithun-srinivasan"><b>GitHub</b><span>mithun-srinivasan</span></a>
+          <a class="social" href="https://www.linkedin.com/in/mithun-srinivasan-msec"><b>LinkedIn</b><span>mithun-srinivasan-msec</span></a>
+          <a class="social" href="https://x.com/simply_mithun"><b>X</b><span>@simply_mithun</span></a>
+          <a class="social" href="https://www.instagram.com/its_mithunsrinivasan/"><b>Instagram</b><span>its_mithunsrinivasan</span></a>
+          <a class="social" href="https://mastodon.social/@mithunsrinivasan"><b>Mastodon</b><span>@mithunsrinivasan</span></a>
+          <a class="social" href="https://itsmithun06.notion.site/"><b>Notion</b><span>itsmithun06.notion.site</span></a>
+        </nav>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="shell">
+    <div class="footer-grid">
+      <div class="term-window" id="term" role="region" aria-label="Guest terminal">
+        <div class="term-head">
+          <i aria-hidden="true"></i><i aria-hidden="true"></i><i aria-hidden="true"></i>
+          <span class="term-title">mithun@portfolio: ~</span>
+        </div>
+        <div class="term-out" id="term-out" role="log" aria-live="polite" aria-label="Terminal output" tabindex="0">
+          <p class="term-line term-dim" data-last-login>Last login: today on ttys001</p>
+          <p class="term-line term-ok">mithun@portfolio — a small shell, not a screenshot.</p>
+          <p class="term-line term-out-text">Type <span class="term-help-key">help</span> and press Enter.</p>
+        </div>
+        <form class="term-form" id="term-form">
+          <label class="sr-only" for="term-input">Terminal command</label>
+          <span class="term-ps1" aria-hidden="true">mithun@portfolio:~$</span>
+          <input class="term-input" id="term-input" name="command" type="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="type a command" aria-describedby="term-hint">
+          <button class="sr-only" type="submit">Run command</button>
+        </form>
+      </div>
+      <div class="footer-copy">
+        <h3>Made in Chennai, one file at a time.</h3>
+        <p>AI-assisted, human-reviewed. HTML, CSS and JavaScript. JetBrains Mono, a dot grid, and three colours doing the work. No framework, no build step. Building toward a technical career in public service.</p>
+        <div class="footer-links">
+          <a href="#top">back to top</a>
+          <a href="blog.html">blog</a>
+          <a href="talks.html">talks</a>
+          <a href="https://github.com/mithun-srinivasan">github</a>
+          <a href="mailto:omsaimithun@gmail.com">email</a>
+        </div>
+      </div>
+    </div>
+    <p class="term-hint" id="term-hint">Try <b>help</b>, <b>whoami</b>, <b>ls</b>, <b>cat .zshrc</b>, <b>theme</b>, <b>email</b>, or <b>neofetch</b>.</p>
+    <div class="footer-bottom">
+      <span>© 2026 Mithun Srinivasan</span>
+      <span>Chennai, India / <time id="local-time">--:--</time> IST</span>
+      <span>Red, white, black. Nothing else.</span>
+    </div>
+    <p class="ai-note">This site was built with AI assistance. I reviewed, edited, and approved the code and content.</p>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>

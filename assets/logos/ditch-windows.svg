@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" role="img" aria-label="ditch-windows">
+  <rect x="7.5" y="9.5" width="49" height="33" stroke="#f4f2ee" stroke-width="3"/>
+  <path d="M7.5 19.5h49M32 19.5v23M7.5 31h49" stroke="#f4f2ee" stroke-width="2"/>
+  <path d="M32 47v9m-4.5-4.5L32 56l4.5-4.5" stroke="#e23b49" stroke-width="3" stroke-linecap="square"/>
+</svg>

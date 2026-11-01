@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Blog — Mithun Srinivasan</title>
+<meta name="author" content="Mithun Srinivasan">
+<meta name="robots" content="index,follow">
+<meta name="color-scheme" content="dark light">
+<meta name="theme-color" content="#050505">
+<meta name="description" content="Notes on Linux, open source, and what I break while learning — by Mithun Srinivasan.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%2378080f'/%3E%3Cpath d='M14 46V18h6l12 17 12-17h6v28h-7V30L32 44 21 30v16z' fill='%23f4f2ee'/%3E%3C/svg%3E">
+<script>
+  (() => {
+    try {
+      const saved = localStorage.getItem("theme");
+      document.documentElement.dataset.theme = saved === "light" ? "light" : "dark";
+    } catch {
+      document.documentElement.dataset.theme = "dark";
+    }
+  })();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header" id="site-header">
+  <div class="shell header-inner">
+    <a class="brand" href="index.html" aria-label="Mithun Srinivasan, home">
+      <span class="brand-mark" aria-hidden="true">MS</span>
+      <span class="brand-text">mithun@portfolio:~$</span>
+    </a>
+    <nav class="nav" aria-label="Main">
+      <a href="index.html#work">work</a>
+      <a href="index.html#about">about</a>
+      <a href="index.html#experience">experience</a>
+      <a href="index.html#skills">skills</a>
+      <a href="blog.html" aria-current="page">blog</a>
+      <a href="talks.html">talks</a>
+      <a href="index.html#contact">contact</a>
+    </nav>
+    <button class="theme-toggle" id="theme-toggle" type="button" aria-pressed="true" aria-label="Switch to light theme">
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.66 6.34l1.41-1.41"></path></svg>
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5 8.5 8.5 0 1 0 20.5 14.5Z"></path></svg>
+    </button>
+  </div>
+</header>
+
+<main id="main">
+  <header class="page-head">
+    <div class="shell">
+      <p class="cmd"><span class="path">ls</span> blog/<span class="caret" aria-hidden="true"></span></p>
+      <h1>Blog<span class="dot">.</span></h1>
+      <p>Notes on Linux, open source, and what I break while learning. Written in plain HTML, published from this one page.</p>
+    </div>
+  </header>
+
+  <section class="entries" aria-labelledby="posts-title">
+    <div class="shell">
+      <h2 class="sr-only" id="posts-title">Posts</h2>
+
+      <div class="entries-list" id="post-list" hidden></div>
+
+      <div class="empty-shell" id="post-empty">
+        <p><span class="term-prompt">$</span> ls posts/<br><span class="dim">(empty)</span></p>
+        <p class="dim">No posts published yet. The first one is on the way: Linux, FOSS, and what I learn while building.</p>
+        <p>To add a post, open <code>blog.html</code> and push an object into the <code>window.POSTS</code> array near the bottom of the file.</p>
+        <pre><code>window.POSTS = [
+  {
+    title:   "What I learned reinstalling Linux",
+    date:    "01 Nov 2026",
+    dateTime:"2026-11-01",
+    excerpt: "One or two lines for the index.",
+    url:     "posts/reinstalling-linux.html"
+  }
+];</code></pre>
+      </div>
+    </div>
+  </section>
+
+  <section class="contact" id="contact" aria-labelledby="contact-title">
+    <div class="shell contact-inner">
+      <div class="contact-grid">
+        <div>
+          <p class="cmd"><span class="path">mail</span> --to mithun<span class="caret" aria-hidden="true"></span></p>
+          <h2 id="contact-title">Have something worth writing about?</h2>
+          <p class="contact-lead">If you’re working on FOSS, Linux, or a tool that should exist, I’d like to hear about it.</p>
+          <div class="contact-email-row">
+            <a class="contact-email" href="mailto:omsaimithun@gmail.com">omsaimithun@gmail.com</a>
+            <button class="copy-btn" id="copy-email" type="button" data-email="omsaimithun@gmail.com">Copy</button>
+          </div>
+          <p class="copy-status" id="copy-status" role="status" aria-live="polite"></p>
+          <div class="contact-meta">
+            <p>or call <a href="tel:+919342099436">+91 93420 99436</a></p>
+            <p>Chennai, India / IST (UTC+05:30)</p>
+            <p><a href="https://cal.com/mithun-srinivasan/30min">book 30 minutes</a></p>
+          </div>
+        </div>
+        <nav class="socials" aria-label="Elsewhere">
+          <a class="social" href="https://github.com/mithun-srinivasan"><b>GitHub</b><span>mithun-srinivasan</span></a>
+          <a class="social" href="https://www.linkedin.com/in/mithun-srinivasan-msec"><b>LinkedIn</b><span>mithun-srinivasan-msec</span></a>
+          <a class="social" href="https://x.com/simply_mithun"><b>X</b><span>@simply_mithun</span></a>
+          <a class="social" href="https://mastodon.social/@mithunsrinivasan"><b>Mastodon</b><span>@mithunsrinivasan</span></a>
+          <a class="social" href="https://itsmithun06.notion.site/"><b>Notion</b><span>itsmithun06.notion.site</span></a>
+        </nav>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="shell">
+    <div class="footer-grid">
+      <div class="term-window" id="term" role="region" data-prompt="mithun@portfolio:~/blog$" aria-label="Guest terminal">
+        <div class="term-head">
+          <i aria-hidden="true"></i><i aria-hidden="true"></i><i aria-hidden="true"></i>
+          <span class="term-title">mithun@portfolio: ~/blog</span>
+        </div>
+        <div class="term-out" id="term-out" role="log" aria-live="polite" aria-label="Terminal output" tabindex="0">
+          <p class="term-line term-dim" data-last-login>Last login: today on ttys001</p>
+          <p class="term-line term-ok">You are in ~/blog. The shell works here too.</p>
+          <p class="term-line term-out-text">Type <span class="term-help-key">help</span> and press Enter.</p>
+        </div>
+        <form class="term-form" id="term-form">
+          <label class="sr-only" for="term-input">Terminal command</label>
+          <span class="term-ps1" aria-hidden="true">mithun@portfolio:~/blog$</span>
+          <input class="term-input" id="term-input" name="command" type="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="type a command" aria-describedby="term-hint">
+          <button class="sr-only" type="submit">Run command</button>
+        </form>
+      </div>
+      <div class="footer-copy">
+        <h3>Made in Chennai, one file at a time.</h3>
+        <p>AI-assisted, human-reviewed. HTML, CSS and JavaScript. JetBrains Mono, a dot grid, and three colours doing the work. No framework, no build step. Building toward a technical career in public service.</p>
+        <div class="footer-links">
+          <a href="index.html">~/home</a>
+          <a href="talks.html">talks</a>
+          <a href="https://github.com/mithun-srinivasan">github</a>
+          <a href="mailto:omsaimithun@gmail.com">email</a>
+        </div>
+      </div>
+    </div>
+    <p class="term-hint" id="term-hint">Try <b>help</b>, <b>whoami</b>, <b>ls</b>, <b>cat .zshrc</b>, <b>theme</b>, <b>email</b>, or <b>neofetch</b>.</p>
+    <div class="footer-bottom">
+      <span>© 2026 Mithun Srinivasan</span>
+      <span>Chennai, India / <time id="local-time">--:--</time> IST</span>
+      <span>Red, white, black. Nothing else.</span>
+    </div>
+    <p class="ai-note">This site was built with AI assistance. I reviewed, edited, and approved the code and content.</p>
+  </div>
+</footer>
+
+<script>
+  /* Add posts here. The index is rendered automatically by script.js. */
+  window.POSTS = [
+    // {
+    //   title:   "What I learned reinstalling Linux",
+    //   date:    "01 Nov 2026",
+    //   dateTime:"2026-11-01",
+    //   excerpt: "One or two lines for the index.",
+    //   url:     "posts/reinstalling-linux.html"
+    // }
+  ];
+</script>
+<script src="script.js"></script>
+</body>
+</html>
