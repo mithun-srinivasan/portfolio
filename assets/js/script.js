@@ -6,6 +6,7 @@
   "use strict";
 
   const root = document.documentElement;
+  const siteRoot = document.querySelector("#term")?.dataset.root || "";
   const themeToggle = document.getElementById("theme-toggle");
   const themeMeta = document.querySelector('meta[name="theme-color"]');
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -301,7 +302,7 @@
     setBlogLinksVisible(window.POSTS.length > 0);
   } else if (blogLinks.length) {
     setBlogLinksVisible(false);
-    fetch("blog.html").then((response) => response.text()).then((html) => {
+    fetch(`${siteRoot}blog.html`).then((response) => response.text()).then((html) => {
       const posts = html.match(/window\.POSTS\s*=\s*\[([\s\S]*?)\]\s*;/);
       const entries = posts?.[1].replace(/^\s*\/\/.*$/gm, "").trim() || "";
       setBlogLinksVisible(entries.length > 0);
@@ -422,6 +423,7 @@
         ["pwd", "print working directory"],
         ["blog", "open the blog"],
         ["talks", "open the talks page"],
+        ["resume", "open my resume PDF"],
         ["theme", "toggle light / dark"],
         ["email", "copy my email address"],
         ["contact", "email, phone, location"],
@@ -544,10 +546,10 @@
             text("/home/mithun/portfolio");
           } else if (/^blog(\.html)?$/.test(arg)) {
             text("opening blog.html …", "term-line term-dim");
-            window.location.assign("blog.html");
+            window.location.assign(`${siteRoot}blog.html`);
           } else if (/^talks(\.html)?$/.test(arg)) {
             text("opening talks.html …", "term-line term-dim");
-            window.location.assign("talks.html");
+            window.location.assign(`${siteRoot}talks.html`);
           } else {
             text(`cd: no such file or directory: ${arg}`, "term-line term-dim");
           }
@@ -555,12 +557,17 @@
 
         case "blog":
           text("opening blog.html …", "term-line term-dim");
-          window.location.assign("blog.html");
+          window.location.assign(`${siteRoot}blog.html`);
           break;
 
         case "talks":
           text("opening talks.html …", "term-line term-dim");
-          window.location.assign("talks.html");
+          window.location.assign(`${siteRoot}talks.html`);
+          break;
+
+        case "resume":
+          text("opening resume PDF …", "term-line term-dim");
+          window.location.assign(`${siteRoot}assets/resume.pdf`);
           break;
 
         case "theme": {

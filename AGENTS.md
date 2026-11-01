@@ -24,10 +24,13 @@ Check dark and light themes, 390px width, `blog.html`, `talks.html`, and the foo
 - `index.html` — home: hero, work, about, experience, skills, contact.
 - `blog.html` — post index. Add posts by editing the `window.POSTS` array near the bottom (`title`, `date`, `dateTime`, `excerpt`, `url`).
 - `talks.html` — talk index. Add talks by editing the `window.TALKS` array near the bottom (`title`, `date`, `dateTime`, `event`, `location`, `url`).
+- `posts/_template.html` — copy this as a static post page, then update its title, metadata, date, and article body.
+- `404.html`, `site.webmanifest`, `sitemap.xml`, and `robots.txt` — static site metadata and not-found page.
 - `assets/css/style.css` — all shared styling and design tokens.
 - `assets/js/script.js` — theme toggle, scroll progress, active nav, copy email, IST clock, hero typewriter, hero comet card, post/talk rendering, footer terminal.
 - `assets/images/` — responsive 480px, 720px, and 900px hero portrait sources in WebP with JPG fallbacks.
 - `assets/fonts/` — self-hosted JetBrains Mono variable WOFF2 and its OFL license.
+- `assets/resume.pdf` — resume file linked from navigation, contact, and the terminal; add the supplied PDF at this path.
 - `assets/logos/` — red/white/black project marks used by the work covers.
 - `README.md` — project overview, structure, and editing notes.
 
@@ -51,6 +54,9 @@ Check dark and light themes, 390px width, `blog.html`, `talks.html`, and the foo
 - Terminal prompt is page-specific via `data-prompt` on `#term`. Echoed commands use that attribute in `assets/js/script.js`.
 - Terminal output uses `innerHTML` for static strings and `esc()` for user input. Escape any new dynamic content. Avoid literal `<file>` in help text — it is parsed as a tag; use `FILE`.
 - `help` is the terminal's built-in command reference. Keep it in sync when adding commands.
+- `resume` opens `assets/resume.pdf`; keep this command and its help entry in sync.
+- Replace `SITE_URL` in canonical/OG metadata, JSON-LD, `sitemap.xml`, and `robots.txt` with the production origin before deployment.
+- Keep the blog's `<noscript>` list current with `window.POSTS` when posts are added.
 - The Blog navigation link stays hidden while `window.POSTS` is empty; the blog empty state is visitor-facing copy.
 
 ## Conventions

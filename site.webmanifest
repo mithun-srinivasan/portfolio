@@ -1,0 +1,16 @@
+{
+  "name": "Mithun Srinivasan — Portfolio",
+  "short_name": "Mithun",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#050505",
+  "theme_color": "#78080f",
+  "icons": [
+    {
+      "src": "assets/images/site-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
