@@ -5,7 +5,7 @@ A static personal portfolio built with semantic HTML, CSS, and vanilla JavaScrip
 ## Pages
 
 - `index.html` — home: hero, selected work, about, experience, skills, and contact.
-- `blog.html` — writing index, rendered from the `window.POSTS` array.
+- `blog.html` — writing index, rendered from the `window.POSTS` array. The Blog navigation link stays hidden until that array has an entry.
 - `talks.html` — talk index, rendered from the `window.TALKS` array.
 
 ## Structure

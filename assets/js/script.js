@@ -22,7 +22,6 @@
     const dark = currentTheme() === "dark";
     if (themeMeta) themeMeta.content = dark ? "#050505" : "#f1efe9";
     if (themeToggle) {
-      themeToggle.setAttribute("aria-pressed", String(dark));
       themeToggle.setAttribute("aria-label", dark ? "Switch to light theme" : "Switch to dark theme");
     }
   }
@@ -286,12 +285,26 @@
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;");
 
+  const blogLinks = document.querySelectorAll("[data-blog-link]");
+  const setBlogLinksVisible = (visible) => blogLinks.forEach((link) => { link.hidden = !visible; });
+  if (Array.isArray(window.POSTS)) {
+    setBlogLinksVisible(window.POSTS.length > 0);
+  } else if (blogLinks.length) {
+    setBlogLinksVisible(false);
+    fetch("blog.html").then((response) => response.text()).then((html) => {
+      const posts = html.match(/window\.POSTS\s*=\s*\[([\s\S]*?)\]\s*;/);
+      const entries = posts?.[1].replace(/^\s*\/\/.*$/gm, "").trim() || "";
+      setBlogLinksVisible(entries.length > 0);
+    }).catch(() => {});
+  }
+
   function renderPosts() {
     const list = document.getElementById("post-list");
     const empty = document.getElementById("post-empty");
     if (!list || !empty) return;
 
     const posts = Array.isArray(window.POSTS) ? window.POSTS : [];
+    setBlogLinksVisible(posts.length > 0);
     if (!posts.length) {
       list.hidden = true;
       empty.hidden = false;

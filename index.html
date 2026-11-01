@@ -40,11 +40,11 @@
       <a href="#about">about</a>
       <a href="#experience">experience</a>
       <a href="#skills">skills</a>
-      <a href="blog.html">blog</a>
+      <a href="blog.html" data-blog-link>blog</a>
       <a href="talks.html">talks</a>
       <a href="#contact">contact</a>
     </nav>
-    <button class="theme-toggle" id="theme-toggle" type="button" aria-pressed="true" aria-label="Switch to light theme">
+    <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch to light theme">
       <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.66 6.34l1.41-1.41"></path></svg>
       <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5 8.5 8.5 0 1 0 20.5 14.5Z"></path></svg>
     </button>
@@ -164,7 +164,7 @@
       </div>
 
       <div class="workshop">
-        <h3 class="workshop-head">More from the workshop</h3>
+        <div class="workshop-head"><h3>More from the workshop</h3></div>
         <p class="workshop-desc">Smaller builds, community contributions, and talks.</p>
         <div class="workshop-links">
           <a href="https://github.com/mithun-srinivasan?tab=repositories">all 22 repositories</a>
@@ -191,7 +191,7 @@
           </div>
           <p class="about-now"><span class="status-dot" aria-hidden="true"></span><span>now: Technical Consultant at Upfinity / contributor to FOSS United Chennai.</span></p>
           <blockquote class="quote">
-            <p>“Failure is nothing till you lose the ability to try things. எல்லாம் மாறும்!!”</p>
+            <p>“Failure is nothing till you lose the ability to try things. <span lang="ta">எல்லாம் மாறும்!!</span>”</p>
             <footer>— the line I keep above my desk</footer>
           </blockquote>
         </div>
@@ -225,36 +225,36 @@
       </div>
       <ol class="timeline">
         <li>
-          <div class="when">Jul 2026 — now</div>
-          <div><h3>Technical Consultant, Upfinity</h3><p>Consulting on client projects, reviewing workflows, finding bugs, and pushing product improvements.</p></div>
-        </li>
-        <li>
-          <div class="when">Jul 2026 — now</div>
-          <div><h3>Contributor, <a href="https://github.com/FOSSUChennai/Communities/pulls?q=author%3Amithun-srinivasan">FOSS United Chennai</a></h3><p>Contributing to tamilnadu.tech through pull requests, CI/CD, and SEO on the community’s Next.js site.</p></div>
-        </li>
-        <li>
-          <div class="when">Jul 2026 — now</div>
-          <div><h3>Contributor and volunteer, <a href="https://github.com/CodeSapiens-in/CollegeSapien/pulls?q=author%3Amithun-srinivasan+">Sapiens Campus</a></h3><p>Pull requests to the CollegeSapien repo, plus campus volunteering.</p></div>
-        </li>
-        <li>
-          <div class="when">Aug 2026 — now</div>
+          <time class="when" datetime="2026-08">Aug 2026 — now</time>
           <div><h3>Community volunteer, <a href="https://fromdevtoops.org">fromDevtoOps</a></h3><p>Community work for a DevOps-focused learning group.</p></div>
         </li>
         <li>
-          <div class="when">Oct 2026</div>
+          <time class="when" datetime="2026-07">Jul 2026 — now</time>
+          <div><h3>Technical Consultant, Upfinity</h3><p>Consulting on client projects, reviewing workflows, finding bugs, and pushing product improvements.</p></div>
+        </li>
+        <li>
+          <time class="when" datetime="2026-07">Jul 2026 — now</time>
+          <div><h3>Contributor, <a href="https://github.com/FOSSUChennai/Communities/pulls?q=author%3Amithun-srinivasan">FOSS United Chennai</a></h3><p>Contributing to tamilnadu.tech through pull requests, CI/CD, and SEO on the community’s Next.js site.</p></div>
+        </li>
+        <li>
+          <time class="when" datetime="2026-07">Jul 2026 — now</time>
+          <div><h3>Contributor and volunteer, <a href="https://github.com/CodeSapiens-in/CollegeSapien/pulls?q=author%3Amithun-srinivasan+">Sapiens Campus</a></h3><p>Pull requests to the CollegeSapien repo, plus campus volunteering.</p></div>
+        </li>
+        <li>
+          <time class="when" datetime="2025-09">Sep 2025 — now</time>
+          <div><h3>Member, Sundarbans House, IITM BS Degree</h3><p>Member of Sundarbans House in the IIT Madras BS degree programme.</p></div>
+        </li>
+        <li>
+          <time class="when" datetime="2026-10">Oct 2026</time>
           <div><h3>Volunteer, <a href="https://devfest.gdgchennai.in/">GDG Chennai DevFest 2026</a></h3><p>Tech support for the DeepTech track.</p></div>
         </li>
         <li>
-          <div class="when">May — Aug 2026</div>
+          <time class="when" datetime="2026-05">May — Aug 2026</time>
           <div><h3>Open source contributor, GirlScript Summer of Code</h3><p>Issues, pull requests, and features on real GitHub projects.</p></div>
         </li>
         <li>
-          <div class="when">Jan — May 2026</div>
+          <time class="when" datetime="2026-01">Jan — May 2026</time>
           <div><h3>Campus Mantri, GeeksforGeeks</h3><p>Campus representative at MSEC: student engagement, outreach, and campus tech initiatives.</p></div>
-        </li>
-        <li>
-          <div class="when">Sep 2025 — now</div>
-          <div><h3>Member, Sundarbans House, IITM BS Degree</h3><p>Member of Sundarbans House in the IIT Madras BS degree programme.</p></div>
         </li>
       </ol>
     </div>

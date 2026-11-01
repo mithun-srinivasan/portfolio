@@ -34,7 +34,7 @@ Check dark and light themes, 390px width, `blog.html`, `talks.html`, and the foo
 
 - Strict red / white / black palette. Do not add a fourth hue.
 - Dark-first. `:root[data-theme="dark"]` is the primary theme; blood red is `--blood:#78080f`.
-- All text uses JetBrains Mono (loaded from Google Fonts). Do not reintroduce the old Bricolage Grotesque display font.
+- All text uses JetBrains Mono, with Tamil-capable system fallbacks. Do not reintroduce the old Bricolage Grotesque display font.
 - Keep the first-version dot/mesh background on `body` (22px dots + 88px mesh lines).
 - Keep a real terminal in the footer (`#term`), not a screenshot.
 - Keep the AI-assistance disclosure in all three page footers. The footer copy should say AI-assisted, not hand-written.
@@ -50,6 +50,7 @@ Check dark and light themes, 390px width, `blog.html`, `talks.html`, and the foo
 - Terminal prompt is page-specific via `data-prompt` on `#term`. Echoed commands use that attribute in `assets/js/script.js`.
 - Terminal output uses `innerHTML` for static strings and `esc()` for user input. Escape any new dynamic content. Avoid literal `<file>` in help text — it is parsed as a tag; use `FILE`.
 - `help` is the terminal's built-in command reference. Keep it in sync when adding commands.
+- The Blog navigation link stays hidden while `window.POSTS` is empty; the blog empty state is visitor-facing copy.
 
 ## Conventions
 
