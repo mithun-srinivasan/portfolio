@@ -40,6 +40,98 @@
   /* Dark-first. The tiny head script has already set data-theme to avoid a flash. */
   applyTheme(isTheme(root.dataset.theme) ? root.dataset.theme : "dark", false);
 
+  /* ---------- native dot-field background (React Bits Dot Grid inspired) ---------- */
+  const dotfield = document.querySelector("[data-dotfield]");
+  if (dotfield) {
+    const hero = dotfield.closest(".hero");
+    const context = dotfield.getContext("2d", { alpha: true });
+    const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)");
+    let width = 0;
+    let height = 0;
+    let pointer = null;
+    let frame = 0;
+    let resizeObserver;
+
+    const draw = () => {
+      frame = 0;
+      if (!context || !width || !height) return;
+      context.clearRect(0, 0, width, height);
+      context.fillStyle = getComputedStyle(root).getPropertyValue("--red-text").trim() || "#8f0c15";
+      for (let y = 12; y < height; y += 22) {
+        for (let x = 12; x < width; x += 22) {
+          let amount = 0;
+          let drawX = x;
+          let drawY = y;
+          if (pointer) {
+            const dx = x - pointer.x;
+            const dy = y - pointer.y;
+            const distance = Math.hypot(dx, dy);
+            if (distance < 150) {
+              amount = (1 - distance / 150) ** 2 * (pointer.strength ?? 1);
+              const push = amount * 10;
+              drawX += (dx / (distance || 1)) * push;
+              drawY += (dy / (distance || 1)) * push;
+            }
+          }
+          context.globalAlpha = .14 + amount * .52;
+          context.beginPath();
+          context.arc(drawX, drawY, .8 + amount * .7, 0, Math.PI * 2);
+          context.fill();
+        }
+      }
+      context.globalAlpha = 1;
+      if (pointer && pointer.returning) {
+        pointer.strength *= .82;
+        if (pointer.strength < .015) pointer = null;
+        else frame = requestAnimationFrame(draw);
+      }
+    };
+
+    const schedule = () => { if (!frame) frame = requestAnimationFrame(draw); };
+    const resize = () => {
+      const rect = hero.getBoundingClientRect();
+      const ratio = Math.min(window.devicePixelRatio || 1, 2);
+      width = rect.width;
+      height = rect.height;
+      dotfield.width = Math.round(width * ratio);
+      dotfield.height = Math.round(height * ratio);
+      context?.setTransform(ratio, 0, 0, ratio, 0, 0);
+      schedule();
+    };
+
+    if (context) {
+      resizeObserver = "ResizeObserver" in window ? new ResizeObserver(resize) : null;
+      resizeObserver?.observe(hero);
+      window.addEventListener("resize", resize, { passive: true });
+      document.addEventListener("themechange", schedule);
+      resize();
+
+      if (finePointer.matches && !reduceMotion.matches) {
+        hero.addEventListener("pointermove", (event) => {
+          const rect = hero.getBoundingClientRect();
+          pointer = { x: event.clientX - rect.left, y: event.clientY - rect.top, strength: 1, returning: false };
+          schedule();
+        }, { passive: true });
+        hero.addEventListener("pointerleave", () => {
+          if (!pointer) return;
+          pointer = { ...pointer, strength: 1, returning: true };
+          schedule();
+        });
+      }
+    }
+  }
+
+  /* ---------- specular CTA highlight (native port, fine pointer only) ---------- */
+  if (window.matchMedia("(hover: hover) and (pointer: fine)").matches && !reduceMotion.matches) {
+    document.querySelectorAll(".btn").forEach((button) => {
+      button.addEventListener("pointermove", (event) => {
+        const rect = button.getBoundingClientRect();
+        button.style.setProperty("--spec-x", `${event.clientX - rect.left}px`);
+        button.style.setProperty("--spec-y", `${event.clientY - rect.top}px`);
+      }, { passive: true });
+    });
+  }
+
   themeToggle?.addEventListener("click", (event) => {
     const next = currentTheme() === "dark" ? "light" : "dark";
     const apply = () => applyTheme(next);

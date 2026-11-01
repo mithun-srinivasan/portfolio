@@ -27,7 +27,7 @@ Check dark and light themes, 390px width, `blog.html`, `talks.html`, and the foo
 - `posts/_template.html` — copy this as a static post page, then update its title, metadata, date, and article body.
 - `404.html`, `manifest.webmanifest`, `sitemap.xml`, and `robots.txt` — static site metadata and not-found page.
 - `assets/css/style.css` — all shared styling and design tokens.
-- `assets/js/script.js` — shared theme, navigation, palette, pulse, post/talk, and terminal behavior; `assets/js/posts.js` contains the post list.
+- `assets/js/script.js` — shared theme, navigation, palette, pulse, post/talk, pointer effects, and terminal behavior; `assets/js/posts.js` contains the post list.
 - `assets/images/` — responsive 480px, 720px, and 900px hero portrait sources in WebP with JPG fallbacks, plus the share card.
 - `assets/fonts/` — self-hosted JetBrains Mono variable WOFF2 and its OFL license.
 - `assets/icons/` — apple touch icon and installable web app icons.
@@ -56,7 +56,7 @@ Check dark and light themes, 390px width, `blog.html`, `talks.html`, and the foo
 - Terminal output uses `innerHTML` for static strings and `esc()` for user input. Escape any new dynamic content. Avoid literal `<file>` in help text — it is parsed as a tag; use `FILE`.
 - `help` is the terminal's built-in command reference. Keep it in sync when adding commands.
 - The command palette is available with Ctrl/Cmd+K or `/`; keep its native `<dialog>` and generated trigger in the shared script.
-- Project filters, scroll reveal, marquee, text scramble, spotlight, and back-to-top are native components; honor `prefers-reduced-motion` when changing their behavior.
+- Project filters, scroll reveal, marquee, text scramble, project spotlight, hero dot field, CTA sheen, and back-to-top are native components; honor `prefers-reduced-motion` when changing their behavior. Pointer effects must stay within the red / white / black palette and only run for fine pointers.
 - Terminal commands include `open PROJECT`, `skills`, `experience`, and `theme [dark|light]`; Tab completes commands, Ctrl+C clears the current input, and `help` must stay current.
 - Refresh `assets/data/github.json` from the public GitHub contribution calendar when updating the pulse; retain its source and `generated` date.
 - Canonical, Open Graph, JSON-LD, sitemap, and robots URLs target `https://mithunsrinivasan.is-a.dev`.
