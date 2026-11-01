@@ -1,13 +1,9 @@
-# Visual effect references
+# Third-party notices
 
-The site's background effects are native CSS and Canvas 2D implementations informed by these Aceternity UI component descriptions and previews:
+## React Bits Dot Grid
 
-- [Background Ripple Effect](https://ui.aceternity.com/components/background-ripple-effect)
-- [Background Boxes](https://ui.aceternity.com/components/background-boxes)
-- [Background Gradient](https://ui.aceternity.com/components/background-gradient)
-- [Pixelated Canvas](https://ui.aceternity.com/components/pixelated-canvas)
-- [Dotted Glow Background](https://ui.aceternity.com/components/dotted-glow-background)
-- [3D Card Effect](https://ui.aceternity.com/components/3d-card-effect)
-- [Matrix Trail](https://ui.aceternity.com/interactions/matrix-trail)
+The hero background is a Canvas 2D port of the spring, pointer, and ripple behavior in React Bits' Dot Grid component. The component's source is available at <https://github.com/DavidHDev/react-bits/tree/main/src/content/Backgrounds/DotGrid>.
 
-No Aceternity component source, package, or remote runtime is included in this repository.
+Copyright (c) 2026 David Haz
+
+Licensed under the MIT + Commons Clause License Condition v1.0. The source code is provided “as is,” without warranty. Permission is granted to use, copy, modify, merge, publish, and distribute the software as part of an application, website, or product, subject to including this copyright and permission notice. The Commons Clause restriction prohibits selling, sublicensing, or redistributing the component itself, including as a ported version. See the [full license](https://github.com/DavidHDev/react-bits/blob/main/LICENSE.md) for the complete terms.

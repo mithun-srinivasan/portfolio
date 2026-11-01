@@ -53,7 +53,7 @@ html{scroll-behavior:smooth;scrollbar-color:var(--red) var(--paper);scrollbar-wi
 body{
   margin:0;
   background-color:var(--paper);
-  /* shared dotted glow stays behind all page content */
+  /* first-version dot grid + a larger mesh grid */
   color:var(--ink);
   font-family:var(--mono);
   font-size:15px;
@@ -66,9 +66,10 @@ body{
 body::before{
   content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
   background-image:
-    radial-gradient(32rem circle at var(--glow-x,50%) var(--glow-y,12%),color-mix(in srgb,var(--red-text) 10%,transparent),transparent 72%),
+    linear-gradient(var(--mesh) 1px,transparent 1px),
+    linear-gradient(90deg,var(--mesh) 1px,transparent 1px),
     radial-gradient(var(--grid) 1px,transparent 1px);
-  background-size:auto,18px 18px;
+  background-size:88px 88px,88px 88px,22px 22px;
 }
 h1,h2,h3,h4,p,figure,blockquote,dl,dd,figcaption{margin:0}
 ul,ol{margin:0;padding:0;list-style:none}
@@ -146,14 +147,13 @@ code{font-family:var(--mono);font-size:.9em;color:var(--red-text);background:col
 .hero::before{
   content:"";position:absolute;inset:0;pointer-events:none;
   background-image:
-    radial-gradient(84px circle at var(--box-x,75%) var(--box-y,10%),color-mix(in srgb,var(--red-text) 15%,transparent),transparent 100%),
     linear-gradient(var(--mesh) 1px,transparent 1px),
     linear-gradient(90deg,var(--mesh) 1px,transparent 1px);
-  background-size:auto,56px 56px,56px 56px;
-  mask-image:radial-gradient(ellipse 90% 90% at 70% 20%,#000 0%,transparent 94%);
-  -webkit-mask-image:radial-gradient(ellipse 90% 90% at 70% 20%,#000 0%,transparent 94%);
+  background-size:88px 88px;
+  mask-image:radial-gradient(ellipse 80% 70% at 75% 10%,#000 0%,transparent 72%);
+  -webkit-mask-image:radial-gradient(ellipse 80% 70% at 75% 10%,#000 0%,transparent 72%);
 }
-.hero-scene{position:absolute;inset:0;z-index:0;pointer-events:none;opacity:.56}
+.hero-dotfield{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:.68}
 .hero-grid{position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,1.18fr) minmax(250px,.82fr);gap:clamp(2rem,6vw,5rem);align-items:start}
 .hero-copy{min-width:0}
 .hero-kicker{margin-bottom:clamp(1.2rem,2.6vw,1.8rem);font-size:.72rem}
@@ -195,12 +195,9 @@ code{font-family:var(--mono);font-size:.9em;color:var(--red-text);background:col
 .hero-portrait .comet-card__tilt{position:relative;transform-style:preserve-3d;will-change:transform}
 .hero-portrait .frame{
   --frame-pad:8px;
-  display:block;position:relative;padding:var(--frame-pad);border:1px solid transparent;
-  background:linear-gradient(var(--panel),var(--panel)) padding-box,linear-gradient(135deg,var(--blood),var(--red-text),var(--black),var(--red)) border-box;
-  background-size:100% 100%,240% 240%;animation:frame-gradient 9s ease-in-out infinite alternate;
+  display:block;position:relative;padding:var(--frame-pad);border:1px solid var(--line);background:var(--panel);
   box-shadow:var(--shadow);isolation:isolate;
 }
-@keyframes frame-gradient{to{background-position:0 0,100% 100%}}
 .hero-portrait .frame::before,.hero-portrait .frame::after{
   content:"";position:absolute;width:14px;height:14px;border:2px solid var(--red-text);pointer-events:none;
 }
@@ -208,8 +205,6 @@ code{font-family:var(--mono);font-size:.9em;color:var(--red-text);background:col
 .hero-portrait .frame::after{bottom:-2px;right:-2px;border-left:0;border-top:0}
 .hero-portrait picture{display:block;position:relative;aspect-ratio:1/1;overflow:hidden;background:var(--red)}
 .hero-portrait img{width:100%;height:100%;object-fit:cover;filter:none;transition:none}
-.pixelated-portrait{position:absolute;inset:0;z-index:1;pointer-events:none;opacity:0;clip-path:circle(0 at var(--pixel-x,50%) var(--pixel-y,50%));transition:opacity .16s,clip-path .12s;image-rendering:pixelated}
-.hero-portrait picture.is-pixelated .pixelated-portrait{opacity:1;clip-path:circle(88px at var(--pixel-x,50%) var(--pixel-y,50%))}
 .hero-portrait .comet-card__glare{
   position:absolute;inset:var(--frame-pad);z-index:2;pointer-events:none;
   background:radial-gradient(circle at var(--glare-x,50%) var(--glare-y,50%),
@@ -242,9 +237,8 @@ code{font-family:var(--mono);font-size:.9em;color:var(--red-text);background:col
   counter-increment:project;
   display:grid;grid-template-columns:clamp(70px,8vw,96px) minmax(0,1fr);
   gap:clamp(1rem,3vw,2rem);padding:clamp(1.15rem,2.6vw,1.75rem) 0;
-  border-bottom:1px solid var(--line);position:relative;transform:perspective(1000px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));transform-style:preserve-3d;transition:transform .18s ease;
+  border-bottom:1px solid var(--line);position:relative;
 }
-.project:hover,.project:focus-within{z-index:2}
 .project-cover{
   width:100%;aspect-ratio:1/1;display:grid;place-items:center;
   padding:.5rem;overflow:hidden;border:1px solid var(--line);
@@ -252,7 +246,7 @@ code{font-family:var(--mono);font-size:.9em;color:var(--red-text);background:col
   transition:border-color .15s,transform .15s,box-shadow .15s;
   position:relative;isolation:isolate;
 }
-.project:hover .project-cover,.project:focus-within .project-cover{border-color:var(--red);transform:translate3d(-2px,-2px,14px);box-shadow:var(--shadow)}
+.project:hover .project-cover,.project:focus-within .project-cover{border-color:var(--red);transform:translate(-2px,-2px);box-shadow:var(--shadow)}
 .cover-mark{display:block;width:min(100%,52px);height:auto;max-height:56px;object-fit:contain}
 .cover-wordmark{display:block;width:100%;height:auto;max-height:54px;object-fit:contain}
 .cover-ditch,.cover-sggs{background:var(--black);border-color:#303030}
@@ -326,14 +320,10 @@ code{font-family:var(--mono);font-size:.9em;color:var(--red-text);background:col
 
 /* ---------- contact ---------- */
 .contact{
-  position:relative;isolation:isolate;overflow:hidden;background-color:var(--blood);color:#fff;
-  background-image:radial-gradient(rgba(255,255,255,.13) 1px,transparent 1px),linear-gradient(115deg,var(--blood),var(--red),var(--blood));
-  background-size:22px 22px,220% 220%;animation:contact-gradient 14s ease-in-out infinite alternate;
+  position:relative;background-color:var(--blood);color:#fff;
+  background-image:radial-gradient(rgba(255,255,255,.13) 1px,transparent 1px);
+  background-size:22px 22px;
 }
-@keyframes contact-gradient{to{background-position:22px 22px,100% 100%}}
-.contact-ripple{position:absolute;z-index:-1;width:var(--ripple-size);height:var(--ripple-size);border:1px solid color-mix(in srgb,var(--on-red) 45%,transparent);border-radius:50%;pointer-events:none;transform:translate(-50%,-50%) scale(0);animation:contact-ripple .72s ease-out forwards}
-@keyframes contact-ripple{to{opacity:0;transform:translate(-50%,-50%) scale(1)}}
-:root[data-theme="light"] .contact-ripple{border-color:color-mix(in srgb,var(--red) 48%,transparent)}
 .contact-inner{padding-block:clamp(3.4rem,6.5vw,5.5rem)}
 .contact-grid{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(240px,.8fr);gap:clamp(2rem,6vw,4.5rem);align-items:start}
 .contact .cmd{color:rgba(255,255,255,.65)}
@@ -358,7 +348,7 @@ code{font-family:var(--mono);font-size:.9em;color:var(--red-text);background:col
 .contact a:hover{color:#fff}
 :root[data-theme="light"] .contact{
   background-color:var(--paper);color:var(--ink);
-  background-image:radial-gradient(var(--grid) 1px,transparent 1px),linear-gradient(115deg,var(--paper),var(--white),var(--paper));
+  background-image:radial-gradient(var(--grid) 1px,transparent 1px);
   border-top:1px solid var(--red);border-bottom:1px solid var(--red);
 }
 :root[data-theme="light"] .contact .cmd{color:var(--muted)}
@@ -613,8 +603,6 @@ pre code{white-space:pre}
   .hero-name .line>span,.hero-kicker,.hero-type,.hero-lead,.hero-meta,.hero-actions,.hero-portrait{opacity:1!important;transform:none!important;animation:none!important}
   .comet-card__tilt{transform:none!important}
   .comet-card__glare{display:none!important}
-  .hero-portrait .frame,.contact{animation:none!important}
-  .pixelated-portrait{display:none!important}
   *,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
 }
 @media print{
