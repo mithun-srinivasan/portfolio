@@ -33,45 +33,35 @@
       try { localStorage.setItem(THEME_KEY, next); } catch { /* storage blocked */ }
     }
     syncThemeUI();
+    if (persist) toast(`theme → ${next}`);
     document.dispatchEvent(new CustomEvent("themechange", { detail: { theme: next } }));
-    if (persist) showToast(`theme set to ${next}`);
-  }
-
-  let toastTimer;
-  function showToast(message) {
-    let toast = document.getElementById("site-toast");
-    if (!toast) {
-      toast = document.createElement("div");
-      toast.id = "site-toast";
-      toast.className = "site-toast";
-      toast.setAttribute("role", "status");
-      toast.setAttribute("aria-live", "polite");
-      document.body.appendChild(toast);
-    }
-    toast.textContent = message;
-    toast.classList.add("is-visible");
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => toast.classList.remove("is-visible"), 2200);
-  }
-
-  function setTheme(next, event) {
-    const update = () => applyTheme(next);
-    if (document.startViewTransition && !reduceMotion.matches) {
-      const transition = document.startViewTransition(update);
-      transition.ready.then(() => {
-        const cx = event?.clientX || window.innerWidth - 48;
-        const cy = event?.clientY || 48;
-        const radius = Math.hypot(Math.max(cx, window.innerWidth - cx), Math.max(cy, window.innerHeight - cy));
-        root.animate({ clipPath: [`circle(0px at ${cx}px ${cy}px)`, `circle(${radius}px at ${cx}px ${cy}px)`] },
-          { duration: 380, easing: "cubic-bezier(.2,.8,.2,1)", pseudoElement: "::view-transition-new(root)" });
-      }).catch(() => {});
-    } else update();
   }
 
   /* Dark-first. The tiny head script has already set data-theme to avoid a flash. */
   applyTheme(isTheme(root.dataset.theme) ? root.dataset.theme : "dark", false);
 
-  themeToggle?.addEventListener("click", (event) => setTheme(currentTheme() === "dark" ? "light" : "dark", event));
+  themeToggle?.addEventListener("click", (event) => {
+    const next = currentTheme() === "dark" ? "light" : "dark";
+    const apply = () => applyTheme(next);
+
+    if (document.startViewTransition && !reduceMotion.matches) {
+      const transition = document.startViewTransition(apply);
+      transition.ready.then(() => {
+        const cx = event.clientX || window.innerWidth - 48;
+        const cy = event.clientY || 48;
+        const radius = Math.hypot(
+          Math.max(cx, window.innerWidth - cx),
+          Math.max(cy, window.innerHeight - cy)
+        );
+        root.animate(
+          { clipPath: [`circle(0px at ${cx}px ${cy}px)`, `circle(${radius}px at ${cx}px ${cy}px)`] },
+          { duration: 380, easing: "cubic-bezier(.2,.8,.2,1)", pseudoElement: "::view-transition-new(root)" }
+        );
+      }).catch(() => {});
+    } else {
+      apply();
+    }
+  });
 
   /* ---------- scroll progress ---------- */
   const header = document.querySelector(".site-header");
@@ -148,8 +138,8 @@
   copyBtn?.addEventListener("click", async () => {
     const email = copyBtn.dataset.email || "omsaimithun@gmail.com";
     const ok = await copyText(email);
-    showToast(ok ? "email copied" : "copy failed");
     if (copyStatus) copyStatus.textContent = ok ? `copied: ${email}` : `copy failed — select ${email}`;
+    toast(ok ? `copied: ${email}` : `copy failed — select ${email}`);
     copyBtn.textContent = ok ? "Copied" : "Try again";
     clearTimeout(copyTimer);
     copyTimer = setTimeout(() => {
@@ -308,26 +298,12 @@
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;");
 
-  const blogLinks = document.querySelectorAll("[data-blog-link]");
-  const setBlogLinksVisible = (visible) => blogLinks.forEach((link) => { link.hidden = !visible; });
-  if (Array.isArray(window.POSTS)) {
-    setBlogLinksVisible(window.POSTS.length > 0);
-  } else if (blogLinks.length) {
-    setBlogLinksVisible(false);
-    fetch(`${siteRoot}blog.html`).then((response) => response.text()).then((html) => {
-      const posts = html.match(/window\.POSTS\s*=\s*\[([\s\S]*?)\]\s*;/);
-      const entries = posts?.[1].replace(/^\s*\/\/.*$/gm, "").trim() || "";
-      setBlogLinksVisible(entries.length > 0);
-    }).catch(() => {});
-  }
-
   function renderPosts() {
     const list = document.getElementById("post-list");
     const empty = document.getElementById("post-empty");
     if (!list || !empty) return;
 
     const posts = Array.isArray(window.POSTS) ? window.POSTS : [];
-    setBlogLinksVisible(posts.length > 0);
     if (!posts.length) {
       list.hidden = true;
       empty.hidden = false;
@@ -388,138 +364,276 @@
   renderPosts();
   renderTalks();
 
-  /* ---------- native command palette ---------- */
-  const palette = document.getElementById("command-palette");
-  const paletteInput = document.getElementById("palette-input");
-  const paletteResults = document.getElementById("palette-results");
-  const paletteTrigger = document.getElementById("palette-trigger");
-  if (palette && paletteInput && paletteResults) {
-    const items = [];
-    document.querySelectorAll("main section[id]").forEach((node) => {
-      const heading = node.querySelector("h1,h2,h3");
-      if (!heading) return;
-      items.push({ label: heading.textContent.trim().replace(/\s+/g, " "), group: "sections", href: `#${node.id}` });
-    });
-    const homeUrl = `${siteRoot}index.html`;
-    [
-      ["work", "work"], ["about", "about"], ["experience", "experience"], ["skills", "skills"], ["contact", "contact"]
-    ].forEach(([label, id]) => items.push({ label, group: "sections", href: location.pathname.endsWith("index.html") || location.pathname === "/" ? `#${id}` : `${homeUrl}#${id}` }));
-    [
-      ["ditch-windows", "https://github.com/mithun-srinivasan/ditch-windows"],
-      ["srigurugranthsahib", "https://github.com/mithun-srinivasan/srigurugranthsahib"],
-      ["meeting-transcriber-and-summarizer", "https://github.com/mithun-srinivasan/meeting-transcriber-and-summarizer"],
-      ["spank-for-windows", "https://github.com/mithun-srinivasan/spank-for-windows"],
-      ["sticker-brains", "https://github.com/mithun-srinivasan/sticker-brains"]
-    ].forEach(([label, href]) => items.push({ label, group: "projects", href }));
-    document.querySelectorAll(".nav a[href], .footer-links a[href], .socials a[href], .profiles a[href]").forEach((link) => items.push({ label: link.textContent.trim(), group: "links", href: link.getAttribute("href") }));
-    [
-      ["github", "https://github.com/mithun-srinivasan"],
-      ["linkedin", "https://www.linkedin.com/in/mithun-srinivasan-msec"],
-      ["notion", "https://itsmithun06.notion.site/"],
-      ["x", "https://x.com/simply_mithun"],
-      ["mastodon", "https://mastodon.social/@mithunsrinivasan"]
-    ].forEach(([label, href]) => items.push({ label, group: "socials", href }));
-    ["dark", "light"].forEach((theme) => items.push({ label: `theme ${theme}`, group: "theme", action: () => setTheme(theme) }));
-    items.push({ label: "copy email", group: "contact", action: async () => { const ok = await copyText("omsaimithun@gmail.com"); showToast(ok ? "email copied" : "copy failed"); } });
-    const active = () => paletteResults.querySelector("button[aria-selected='true']");
-    function paintPalette() {
-      const query = paletteInput.value.trim().toLowerCase();
-      const filtered = items.filter((item) => `${item.group} ${item.label}`.toLowerCase().includes(query));
-      paletteResults.replaceChildren();
-      filtered.forEach((item, index) => {
-        const button = document.createElement("button");
-        button.type = "button";
-        button.className = "palette-result";
-        button.setAttribute("aria-selected", index === 0 ? "true" : "false");
-        const category = document.createElement("span"); category.textContent = item.group;
-        const label = document.createElement("span"); label.textContent = item.label;
-        button.append(category, label);
-        button.addEventListener("click", () => {
-          palette.close();
-          if (item.action) item.action();
-          else if (item.href) window.location.assign(item.href);
-        });
-        paletteResults.appendChild(button);
-      });
-      if (!filtered.length) paletteResults.textContent = "no matches";
+
+  /* ---------- toast (sonner-style, native) ---------- */
+  let toastTimer;
+  function toast(message) {
+    let host = document.getElementById("toast");
+    if (!host) {
+      host = document.createElement("div");
+      host.id = "toast";
+      host.className = "toast";
+      host.setAttribute("role", "status");
+      host.setAttribute("aria-live", "polite");
+      document.body.appendChild(host);
     }
-    const openPalette = () => { if (!palette.open) palette.showModal(); paletteInput.value = ""; paintPalette(); paletteInput.focus(); };
-    paletteTrigger?.addEventListener("click", openPalette);
-    paletteInput.addEventListener("input", paintPalette);
-    paletteInput.addEventListener("keydown", (event) => {
-      const buttons = Array.from(paletteResults.querySelectorAll("button"));
-      let index = buttons.indexOf(active());
-      if (event.key === "ArrowDown" || event.key === "ArrowUp") {
-        event.preventDefault();
-        index = (index + (event.key === "ArrowDown" ? 1 : -1) + buttons.length) % buttons.length;
-        buttons.forEach((button, i) => button.setAttribute("aria-selected", i === index ? "true" : "false"));
-        buttons[index]?.scrollIntoView({ block: "nearest" });
-      } else if (event.key === "Enter" && active()) { event.preventDefault(); active().click(); }
-    });
-    document.addEventListener("keydown", (event) => {
-      if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "k") { event.preventDefault(); openPalette(); }
-    });
+    host.textContent = message;
+    host.classList.add("is-on");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => host.classList.remove("is-on"), 2200);
   }
 
-  /* ---------- project filters, reveal, marquee, scramble, spotlight ---------- */
-  const projectCards = Array.from(document.querySelectorAll(".project[data-language]"));
-  document.querySelectorAll("[data-project-filter]").forEach((button) => button.addEventListener("click", () => {
-    const filter = button.dataset.projectFilter;
-    document.querySelectorAll("[data-project-filter]").forEach((other) => other.setAttribute("aria-pressed", String(other === button)));
-    projectCards.forEach((card) => { card.hidden = filter !== "all" && card.dataset.language !== filter; });
-  }));
+  /* ---------- back to top ---------- */
+  const toTop = document.createElement("button");
+  toTop.type = "button";
+  toTop.className = "to-top";
+  toTop.setAttribute("aria-label", "Back to top");
+  toTop.textContent = "↑";
+  toTop.hidden = true;
+  toTop.addEventListener("click", () => window.scrollTo({ top: 0, behavior: reduceMotion.matches ? "auto" : "smooth" }));
+  document.body.appendChild(toTop);
+  window.addEventListener("scroll", () => { toTop.hidden = window.scrollY < 700; }, { passive: true });
+
+  /* ---------- scroll reveal ---------- */
   if (!reduceMotion.matches && "IntersectionObserver" in window) {
-    const revealObserver = new IntersectionObserver((entries) => entries.forEach((entry) => {
-      if (entry.isIntersecting) { entry.target.classList.add("is-visible"); revealObserver.unobserve(entry.target); }
-    }), { threshold: 0.12 });
-    document.querySelectorAll(".section:not(.hero), .timeline li").forEach((node) => { node.classList.add("reveal"); revealObserver.observe(node); });
-  }
-  if (!reduceMotion.matches) document.querySelectorAll(".section-head h2").forEach((heading) => {
-    if (heading.querySelector("br")) return;
-    const original = heading.textContent.trim();
-    heading.setAttribute("aria-label", original);
-    let timer;
-    const scramble = () => {
-      clearInterval(timer);
-      let frame = 0;
-      timer = setInterval(() => {
-        frame += 1;
-        heading.textContent = original.split("").map((char, i) => char === " " || i < frame / 2 ? char : "#$%&"[Math.floor(Math.random() * 5)]).join("");
-        if (frame > original.length * 2) { clearInterval(timer); heading.textContent = original; }
-      }, 24);
-    };
-    heading.addEventListener("pointerenter", scramble);
-    heading.addEventListener("focus", scramble);
-  });
-  document.querySelectorAll(".project").forEach((card) => card.addEventListener("pointermove", (event) => {
-    const rect = card.getBoundingClientRect();
-    card.style.setProperty("--spot-x", `${event.clientX - rect.left}px`);
-    card.style.setProperty("--spot-y", `${event.clientY - rect.top}px`);
-  }));
-  const backTop = document.getElementById("back-to-top");
-  if (backTop) {
-    const updateBackTop = () => { backTop.hidden = window.scrollY < 650; };
-    window.addEventListener("scroll", updateBackTop, { passive: true }); updateBackTop();
-    backTop.addEventListener("click", () => window.scrollTo({ top: 0, behavior: reduceMotion.matches ? "auto" : "smooth" }));
+    const targets = document.querySelectorAll(".section-head, .project, .timeline li, .skill, .about-grid > *, .coding, .workshop");
+    root.classList.add("js-reveal");
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) { entry.target.classList.add("is-in"); io.unobserve(entry.target); }
+      });
+    }, { rootMargin: "0px 0px -8% 0px", threshold: 0.05 });
+    targets.forEach((el) => { el.classList.add("reveal"); io.observe(el); });
   }
 
-  /* Local, dated GitHub contribution snapshot; no runtime service dependency. */
-  const heatmap = document.getElementById("contribution-heatmap");
-  if (heatmap) fetch(`${siteRoot}assets/data/github-contributions.json`).then((response) => response.json()).then((data) => {
-    const days = Array.isArray(data.days) ? [...data.days].sort((a, b) => a.date.localeCompare(b.date)) : [];
-    heatmap.replaceChildren();
-    const first = days.length ? new Date(`${days[0].date}T00:00:00`) : null;
-    if (first) for (let i = 0; i < first.getDay(); i += 1) { const spacer = document.createElement("i"); spacer.setAttribute("aria-hidden", "true"); heatmap.appendChild(spacer); }
-    days.forEach((day) => {
-      const cell = document.createElement("span");
-      cell.setAttribute("role", "img");
-      cell.dataset.level = String(Math.max(0, Math.min(4, Number(day.level) || 0)));
-      cell.title = `${day.count} contributions on ${day.date}`;
-      cell.setAttribute("aria-label", cell.title);
-      heatmap.appendChild(cell);
+  /* ---------- project filter chips ---------- */
+  const chipBar = document.getElementById("project-filter");
+  if (chipBar) {
+    chipBar.hidden = false;
+    const projects = Array.from(document.querySelectorAll(".work-list .project"));
+    chipBar.addEventListener("click", (event) => {
+      const chip = event.target.closest("[data-filter]");
+      if (!chip) return;
+      const wanted = chip.dataset.filter;
+      chipBar.querySelectorAll("[data-filter]").forEach((c) => c.setAttribute("aria-pressed", String(c === chip)));
+      projects.forEach((project) => {
+        project.hidden = !(wanted === "all" || (project.dataset.lang || "").split(" ").includes(wanted));
+      });
     });
-    heatmap.dataset.loaded = "true";
-  }).catch(() => { heatmap.textContent = "contribution snapshot unavailable"; });
+  }
+
+  /* ---------- project card spotlight (red only, fine pointers) ---------- */
+  if (window.matchMedia("(hover: hover) and (pointer: fine)").matches && !reduceMotion.matches) {
+    document.querySelectorAll(".project").forEach((card) => {
+      card.addEventListener("pointermove", (event) => {
+        const rect = card.getBoundingClientRect();
+        card.style.setProperty("--mx", `${event.clientX - rect.left}px`);
+        card.style.setProperty("--my", `${event.clientY - rect.top}px`);
+      });
+    });
+  }
+
+
+  /* ---------- blog link only when there is a post ---------- */
+  const hasPosts = Array.isArray(window.POSTS) && window.POSTS.length > 0;
+  document.querySelectorAll("[data-blog-link]").forEach((link) => { link.hidden = !hasPosts; });
+
+  /* ---------- count-up numbers ---------- */
+  function countUp(el) {
+    const target = Number(el.dataset.count);
+    if (!Number.isFinite(target)) return;
+    if (reduceMotion.matches) { el.textContent = String(target); return; }
+    const start = performance.now();
+    const step = (now) => {
+      const t = Math.min(1, (now - start) / 900);
+      el.textContent = String(Math.round(target * (1 - Math.pow(1 - t, 3))));
+      if (t < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }
+
+  /* ---------- github pulse: snapshot json -> numbers + heatmap ---------- */
+  const heat = document.getElementById("heat");
+  const heatWrap = document.getElementById("heat-wrap");
+  const statEls = document.querySelectorAll(".stats [data-count]");
+  const startStats = () => {
+    if (!statEls.length) return;
+    if ("IntersectionObserver" in window) {
+      const io2 = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => { if (entry.isIntersecting) { countUp(entry.target); io2.unobserve(entry.target); } });
+      }, { threshold: 0.6 });
+      statEls.forEach((el) => io2.observe(el));
+    } else {
+      statEls.forEach(countUp);
+    }
+  };
+  if (heat && window.location.protocol !== "file:") {
+    fetch(`${siteRoot}assets/data/github.json`)
+      .then((r) => (r.ok ? r.json() : Promise.reject()))
+      .then((data) => {
+        const set = (index, value) => { if (statEls[index] && Number.isFinite(value)) statEls[index].dataset.count = String(value); };
+        set(0, data.repos);
+        set(1, data.contributions);
+        const days = data.days || [];
+        if (days.length) {
+          const pad = new Date(`${days[0][0]}T00:00:00`).getDay();
+          const frag = document.createDocumentFragment();
+          for (let i = 0; i < pad; i += 1) { const p = document.createElement("i"); p.className = "pad"; frag.appendChild(p); }
+          days.forEach(([date, level, count]) => {
+            const cell = document.createElement("i");
+            cell.dataset.l = String(level);
+            cell.title = `${count} contribution${count === 1 ? "" : "s"} on ${date}`;
+            frag.appendChild(cell);
+          });
+          heat.replaceChildren(frag);
+          heat.setAttribute("aria-label", `GitHub contributions over the last 12 months: ${data.contributions} in total`);
+          heatWrap.hidden = false;
+          heatWrap.scrollLeft = heatWrap.scrollWidth;
+        }
+      })
+      .catch(() => {})
+      .finally(startStats);
+  } else {
+    startStats();
+  }
+
+  /* ---------- text scramble on heading hover (once per hover) ---------- */
+  if (!reduceMotion.matches && window.matchMedia("(hover: hover)").matches) {
+    const GLYPHS = "!<>-_\\/[]{}=+*^?#";
+    document.querySelectorAll(".section-head h2, .page-head h1").forEach((heading) => {
+      const nodes = [];
+      const walker = document.createTreeWalker(heading, NodeFilter.SHOW_TEXT);
+      while (walker.nextNode()) { if (walker.currentNode.nodeValue.trim()) nodes.push([walker.currentNode, walker.currentNode.nodeValue]); }
+      if (!nodes.length) return;
+      heading.setAttribute("aria-label", heading.textContent.replace(/\s+/g, " ").trim());
+      let running = false;
+      heading.addEventListener("pointerenter", () => {
+        if (running) return;
+        running = true;
+        const frames = 14;
+        let frame = 0;
+        const tick = () => {
+          frame += 1;
+          nodes.forEach(([node, original]) => {
+            node.nodeValue = original.split("").map((ch, i) => (ch === " " || ch === "\n" || i < (frame / frames) * original.length)
+              ? ch : GLYPHS[Math.floor(Math.random() * GLYPHS.length)]).join("");
+          });
+          if (frame < frames) setTimeout(tick, 32);
+          else { nodes.forEach(([node, original]) => { node.nodeValue = original; }); running = false; }
+        };
+        tick();
+      });
+    });
+  }
+
+  /* ---------- command palette (Ctrl/Cmd+K or /) ---------- */
+  const onHome = !!document.getElementById("work");
+  const home = (hash) => (onHome ? hash : `${siteRoot}index.html${hash}`);
+  const PROJECTS = [
+    ["ditch-windows", "https://github.com/mithun-srinivasan/ditch-windows"],
+    ["srigurugranthsahib", "https://srigurugranthsahib.vercel.app/"],
+    ["meeting-transcriber-and-summarizer", "https://github.com/mithun-srinivasan/meeting-transcriber-and-summarizer"],
+    ["spank-for-windows", "https://github.com/mithun-srinivasan/spank-for-windows"],
+    ["sticker-brains", "https://github.com/mithun-srinivasan/sticker-brains"]
+  ];
+  const paletteItems = [
+    ...[["work", "#work"], ["about", "#about"], ["experience", "#experience"], ["skills", "#skills"], ["contact", "#contact"]]
+      .map(([name, hash]) => ({ group: "go to", label: name, run: () => { window.location.assign(home(hash)); } })),
+    ...(hasPosts ? [{ group: "go to", label: "blog", run: () => window.location.assign(`${siteRoot}blog.html`) }] : []),
+    { group: "go to", label: "talks", run: () => window.location.assign(`${siteRoot}talks.html`) },
+    ...PROJECTS.map(([name, url]) => ({ group: "projects", label: name, run: () => window.open(url, "_blank", "noopener") })),
+    { group: "actions", label: "toggle theme", run: () => applyTheme(currentTheme() === "dark" ? "light" : "dark") },
+    { group: "actions", label: "copy email", run: async () => { const ok = await copyText("omsaimithun@gmail.com"); toast(ok ? "copied: omsaimithun@gmail.com" : "email: omsaimithun@gmail.com"); } },
+    { group: "actions", label: "book 30 minutes", run: () => window.open("https://cal.com/mithun-srinivasan/30min", "_blank", "noopener") },
+    ...[["github", "https://github.com/mithun-srinivasan"], ["linkedin", "https://www.linkedin.com/in/mithun-srinivasan-msec"], ["x", "https://x.com/simply_mithun"], ["mastodon", "https://mastodon.social/@mithunsrinivasan"], ["notion", "https://itsmithun06.notion.site/"]]
+      .map(([name, url]) => ({ group: "elsewhere", label: name, run: () => window.open(url, "_blank", "noopener") }))
+  ];
+
+  const fuzzy = (query, text) => {
+    if (!query) return 1;
+    const q = query.toLowerCase();
+    const t = text.toLowerCase();
+    if (t.includes(q)) return 100 - t.indexOf(q);
+    let i = 0;
+    for (const ch of t) { if (ch === q[i]) i += 1; if (i === q.length) return 1; }
+    return 0;
+  };
+
+  if (typeof HTMLDialogElement === "function") {
+    const dialog = document.createElement("dialog");
+    dialog.className = "palette";
+    dialog.setAttribute("aria-label", "Command palette");
+    dialog.innerHTML = `
+      <div class="palette-box">
+        <label class="sr-only" for="palette-input">Search commands</label>
+        <div class="palette-field"><span aria-hidden="true">$</span>
+          <input id="palette-input" type="text" role="combobox" aria-expanded="true" aria-controls="palette-list" aria-autocomplete="list" autocomplete="off" spellcheck="false" placeholder="jump to… (esc to close)">
+        </div>
+        <ul id="palette-list" role="listbox" aria-label="Results"></ul>
+        <p class="palette-hint">↑ ↓ to move · enter to run · esc to close</p>
+      </div>`;
+    document.body.appendChild(dialog);
+    const input = dialog.querySelector("#palette-input");
+    const list = dialog.querySelector("#palette-list");
+    let results = [];
+    let active = 0;
+
+    const paint = () => {
+      results = paletteItems
+        .filter((item) => !item.when || item.when())
+        .map((item) => ({ item, score: fuzzy(input.value.trim(), `${item.label} ${item.group}`) }))
+        .filter((r) => r.score > 0)
+        .sort((a, b) => b.score - a.score)
+        .map((r) => r.item);
+      active = Math.min(active, Math.max(0, results.length - 1));
+      list.replaceChildren(...results.map((item, index) => {
+        const li = document.createElement("li");
+        li.id = `palette-opt-${index}`;
+        li.setAttribute("role", "option");
+        li.setAttribute("aria-selected", String(index === active));
+        const group = document.createElement("span");
+        group.textContent = item.group;
+        li.append(item.label, group);
+        li.addEventListener("click", () => run(item));
+        return li;
+      }));
+      if (!results.length) {
+        const li = document.createElement("li");
+        li.className = "palette-empty";
+        li.textContent = "no match";
+        list.appendChild(li);
+      }
+      input.setAttribute("aria-activedescendant", results.length ? `palette-opt-${active}` : "");
+      list.querySelector('[aria-selected="true"]')?.scrollIntoView({ block: "nearest" });
+    };
+
+    const run = (item) => { dialog.close(); item.run(); };
+    const openPalette = () => { if (dialog.open) return; input.value = ""; active = 0; paint(); dialog.showModal(); input.focus(); };
+
+    input.addEventListener("input", () => { active = 0; paint(); });
+    input.addEventListener("keydown", (event) => {
+      if (event.key === "ArrowDown") { event.preventDefault(); active = Math.min(results.length - 1, active + 1); paint(); }
+      else if (event.key === "ArrowUp") { event.preventDefault(); active = Math.max(0, active - 1); paint(); }
+      else if (event.key === "Enter") { event.preventDefault(); if (results[active]) run(results[active]); }
+    });
+    dialog.addEventListener("click", (event) => { if (event.target === dialog) dialog.close(); });
+
+    document.addEventListener("keydown", (event) => {
+      const typing = /^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement?.tagName || "") || document.activeElement?.isContentEditable;
+      if ((event.key.toLowerCase() === "k" && (event.ctrlKey || event.metaKey)) || (event.key === "/" && !typing && !event.ctrlKey && !event.metaKey)) {
+        event.preventDefault();
+        openPalette();
+      }
+    });
+
+    const trigger = document.createElement("button");
+    trigger.type = "button";
+    trigger.className = "palette-trigger";
+    trigger.setAttribute("aria-label", "Open command palette");
+    trigger.innerHTML = '<span aria-hidden="true">ctrl k</span>';
+    trigger.addEventListener("click", openPalette);
+    themeToggle?.before(trigger);
+  }
 
   /* ---------- footer terminal ---------- */
   const term = document.getElementById("term");
@@ -543,8 +657,16 @@
       termOut.scrollTop = termOut.scrollHeight;
     }
 
+    const LINKS = /(https?:\/\/[^\s<]+|\b(?:github\.com|linkedin\.com|x\.com|mastodon\.social|itsmithun06\.notion\.site|cal\.com)\/[^\s<]*)/g;
+    function linkify(html) {
+      return html.replace(LINKS, (url) => {
+        const href = /^https?:/.test(url) ? url : `https://${url}`;
+        return `<a href="${href}" target="_blank" rel="noopener">${url}</a>`;
+      });
+    }
+
     function text(value, className = "term-line term-out-text") {
-      print(esc(value), className);
+      print(linkify(esc(value)), className);
     }
 
     function echo(command) {
@@ -568,10 +690,10 @@
         ["pwd", "print working directory"],
         ["blog", "open the blog"],
         ["talks", "open the talks page"],
-        ["open PROJECT", "open a project by name"],
-        ["skills", "list skills"],
-        ["experience", "list experience"],
-        ["theme [dark|light]", "set or toggle the theme"],
+        ["theme [dark|light]", "toggle or set the theme"],
+        ["open PROJECT", "open a project (try: open ditch)"],
+        ["skills", "languages and tools"],
+        ["experience", "the short log"],
         ["email", "copy my email address"],
         ["contact", "email, phone, location"],
         ["socials", "where else to find me"],
@@ -583,7 +705,7 @@
       ];
       rows.forEach(([key, value]) => {
         print(
-          `<span class="term-help-key">${key.padEnd(21, " ")}</span><span class="term-help-val">${value}</span>`
+          `<span class="term-help-key">${key.padEnd(19, " ")}</span><span class="term-help-val">${value}</span>`
         );
       });
       print("<span class='term-dim'>tip: ↑ / ↓ history · tab completes · ctrl+c clears input</span>");
@@ -625,6 +747,8 @@
         "# red, white, black. nothing else."
       ]
     };
+
+    const COMMANDS = ["help", "whoami", "about", "projects", "ls", "cat", "pwd", "cd", "blog", "talks", "theme", "open", "skills", "experience", "email", "contact", "socials", "neofetch", "date", "history", "clear", "exit", "echo", "uname"];
 
     function listFiles() {
       text("welcome.txt   about.txt   projects.txt   contact.txt   .zshrc");
@@ -712,38 +836,38 @@
           window.location.assign(`${siteRoot}talks.html`);
           break;
 
+        case "theme": {
+          const wanted = arg.toLowerCase();
+          if (wanted && !isTheme(wanted)) { text("usage: theme [dark|light]", "term-line term-dim"); break; }
+          const next = wanted || (currentTheme() === "dark" ? "light" : "dark");
+          applyTheme(next);
+          text(`theme → ${next}`);
+          break;
+        }
+
         case "open": {
-          const known = {
-            "ditch-windows": "https://github.com/mithun-srinivasan/ditch-windows",
-            "srigurugranthsahib": "https://github.com/mithun-srinivasan/srigurugranthsahib",
-            "meeting-transcriber": "https://github.com/mithun-srinivasan/meeting-transcriber-and-summarizer",
-            "meeting-transcriber-and-summarizer": "https://github.com/mithun-srinivasan/meeting-transcriber-and-summarizer",
-            "spank-for-windows": "https://github.com/mithun-srinivasan/spank-for-windows",
-            "sticker-brains": "https://github.com/mithun-srinivasan/sticker-brains"
-          };
-          const slug = arg.toLowerCase().replace(/\s+/g, "-");
-          if (known[slug]) window.open(known[slug], "_blank", "noopener,noreferrer");
-          else text(`open: unknown project: ${arg || "(missing name)"}`, "term-line term-dim");
+          if (!arg) { text("usage: open PROJECT   (try: open ditch)", "term-line term-dim"); break; }
+          const hit = PROJECTS.find(([name]) => name.startsWith(arg.toLowerCase()) || name.includes(arg.toLowerCase()));
+          if (!hit) { text(`open: no project matches ${arg}`, "term-line term-dim"); break; }
+          text(`opening ${hit[1]} …`, "term-line term-dim");
+          window.open(hit[1], "_blank", "noopener");
           break;
         }
 
         case "skills":
-          document.querySelectorAll(".skill").forEach((skill) => text(`${skill.querySelector("dt")?.textContent || "skill"}: ${skill.querySelector("dd")?.textContent || ""}`));
-          if (!document.querySelector(".skill")) text("Go · TypeScript · Python · Linux · data science");
+          text("languages  C, C++, Python, Java, MATLAB");
+          text("tools      Git, GitHub, Linux, Notion");
+          text("speaks     Tamil, English, Hindi, Japanese, Sanskrit");
           break;
 
         case "experience":
-          document.querySelectorAll("#experience .timeline li").forEach((item) => text(`${item.querySelector("time")?.textContent || ""} — ${item.querySelector("h3")?.textContent || ""}`));
-          if (!document.querySelector("#experience .timeline li")) text("Technical Consultant at Upfinity · FOSS United Chennai");
+          text("2026-now   Technical Consultant, Upfinity");
+          text("2026-now   Contributor, FOSS United Chennai");
+          text("2026-now   Contributor + volunteer, Sapiens Campus");
+          text("2026-now   Community volunteer, fromDevtoOps");
+          text("oct 2026   Volunteer, GDG Chennai DevFest 2026");
+          text("2026       GSSoC contributor, Campus Mantri @ GfG");
           break;
-
-        case "theme": {
-          const requested = arg.toLowerCase();
-          const next = isTheme(requested) ? requested : currentTheme() === "dark" ? "light" : "dark";
-          setTheme(next);
-          text(`theme → ${next}`);
-          break;
-        }
 
         case "email":
           copyText(EMAIL).then((ok) => {
@@ -838,18 +962,7 @@
     });
 
     termInput.addEventListener("keydown", (event) => {
-      if (event.key === "Tab") {
-        event.preventDefault();
-        const commands = ["help", "whoami", "about", "projects", "ls", "cat", "pwd", "blog", "talks", "open", "skills", "experience", "theme", "email", "contact", "socials", "neofetch", "date", "history", "clear", "exit"];
-        const fragment = termInput.value.trim().toLowerCase();
-        const matches = commands.filter((item) => item.startsWith(fragment));
-        if (matches.length === 1) termInput.value = `${matches[0]} `;
-        else if (matches.length > 1) text(matches.join("   "), "term-line term-dim");
-      } else if (event.key === "c" && event.ctrlKey) {
-        event.preventDefault();
-        termInput.value = "";
-        text("^C", "term-line term-dim");
-      } else if (event.key === "ArrowUp") {
+      if (event.key === "ArrowUp") {
         event.preventDefault();
         if (historyIndex > 0) {
           historyIndex -= 1;
@@ -867,6 +980,32 @@
       } else if (event.key === "l" && event.ctrlKey) {
         event.preventDefault();
         termOut.replaceChildren();
+      } else if (event.key === "c" && event.ctrlKey && !window.getSelection()?.toString()) {
+        event.preventDefault();
+        echo(`${termInput.value}^C`);
+        termInput.value = "";
+      } else if (event.key === "Tab") {
+        const value = termInput.value;
+        if (!value.trim()) return;
+        event.preventDefault();
+        const parts = value.split(/\s+/);
+        const last = parts[parts.length - 1].toLowerCase();
+        const pool = parts.length === 1
+          ? COMMANDS
+          : parts[0].toLowerCase() === "cat" ? Object.keys(files)
+          : parts[0].toLowerCase() === "open" ? PROJECTS.map(([name]) => name)
+          : parts[0].toLowerCase() === "theme" ? ["dark", "light"] : [];
+        const matches = pool.filter((name) => name.toLowerCase().startsWith(last));
+        if (matches.length === 1) {
+          parts[parts.length - 1] = matches[0];
+          termInput.value = parts.join(" ") + (parts.length === 1 ? " " : "");
+        } else if (matches.length > 1) {
+          text(matches.join("   "), "term-line term-dim");
+          let prefix = matches[0];
+          matches.forEach((m) => { while (!m.toLowerCase().startsWith(prefix.toLowerCase())) prefix = prefix.slice(0, -1); });
+          parts[parts.length - 1] = prefix;
+          termInput.value = parts.join(" ");
+        }
       }
     });
 

@@ -22,15 +22,16 @@ Check dark and light themes, 390px width, `blog.html`, `talks.html`, and the foo
 ## File map
 
 - `index.html` — home: hero, work, about, experience, skills, contact.
-- `blog.html` — post index. Add posts by editing the `window.POSTS` array near the bottom (`title`, `date`, `dateTime`, `excerpt`, `url`).
+- `blog.html` — post index. Add entries to `window.POSTS` in `assets/js/posts.js` (`title`, `date`, `dateTime`, `excerpt`, `url`).
 - `talks.html` — talk index. Add talks by editing the `window.TALKS` array near the bottom (`title`, `date`, `dateTime`, `event`, `location`, `url`).
 - `posts/_template.html` — copy this as a static post page, then update its title, metadata, date, and article body.
-- `404.html`, `site.webmanifest`, `sitemap.xml`, and `robots.txt` — static site metadata and not-found page.
+- `404.html`, `manifest.webmanifest`, `sitemap.xml`, and `robots.txt` — static site metadata and not-found page.
 - `assets/css/style.css` — all shared styling and design tokens.
-- `assets/js/script.js` — theme toggle, scroll progress, active nav, copy email, IST clock, hero typewriter, hero comet card, post/talk rendering, footer terminal.
-- `assets/images/` — responsive 480px, 720px, and 900px hero portrait sources in WebP with JPG fallbacks.
+- `assets/js/script.js` — shared theme, navigation, palette, pulse, post/talk, and terminal behavior; `assets/js/posts.js` contains the post list.
+- `assets/images/` — responsive 480px, 720px, and 900px hero portrait sources in WebP with JPG fallbacks, plus the share card.
 - `assets/fonts/` — self-hosted JetBrains Mono variable WOFF2 and its OFL license.
-- `assets/data/github-contributions.json` — dated public profile snapshot used by the contribution heatmap.
+- `assets/icons/` — apple touch icon and installable web app icons.
+- `assets/data/github.json` — dated GitHub pulse totals and daily contribution snapshot.
 - `assets/logos/` — red/white/black project marks used by the work covers.
 - `README.md` — project overview, structure, and editing notes.
 
@@ -54,11 +55,12 @@ Check dark and light themes, 390px width, `blog.html`, `talks.html`, and the foo
 - Terminal prompt is page-specific via `data-prompt` on `#term`. Echoed commands use that attribute in `assets/js/script.js`.
 - Terminal output uses `innerHTML` for static strings and `esc()` for user input. Escape any new dynamic content. Avoid literal `<file>` in help text — it is parsed as a tag; use `FILE`.
 - `help` is the terminal's built-in command reference. Keep it in sync when adding commands.
-- The command palette is available with Ctrl/Cmd+K or the `jump` header button; keep its native `<dialog>` markup on every page using the shared script.
+- The command palette is available with Ctrl/Cmd+K or `/`; keep its native `<dialog>` and generated trigger in the shared script.
 - Project filters, scroll reveal, marquee, text scramble, spotlight, and back-to-top are native components; honor `prefers-reduced-motion` when changing their behavior.
 - Terminal commands include `open PROJECT`, `skills`, `experience`, and `theme [dark|light]`; Tab completes commands, Ctrl+C clears the current input, and `help` must stay current.
-- Refresh `assets/data/github-contributions.json` from the public GitHub contribution calendar when updating the heatmap; retain its source and `updated` date.
-- Replace `SITE_URL` in canonical/OG metadata, JSON-LD, `sitemap.xml`, and `robots.txt` with the production origin before deployment.
+- Refresh `assets/data/github.json` from the public GitHub contribution calendar when updating the pulse; retain its source and `generated` date.
+- Canonical, Open Graph, JSON-LD, sitemap, and robots URLs target `https://mithunsrinivasan.is-a.dev`.
+- To activate the custom domain, register `mithunsrinivasan.is-a.dev` with is-a.dev first, then set it in the repository's GitHub Pages settings and enable HTTPS. The is-a.dev record should CNAME to `mithun-srinivasan.github.io`.
 - Keep the blog's `<noscript>` list current with `window.POSTS` when posts are added.
 - The Blog navigation link stays hidden while `window.POSTS` is empty; the blog empty state is visitor-facing copy.
 
