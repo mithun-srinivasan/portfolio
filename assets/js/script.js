@@ -376,10 +376,10 @@
   const typedEl = document.querySelector("[data-typed]");
   if (typedEl) {
     const phrases = [
-      "CSE undergrad at MSEC",
-      "data science at IIT Madras",
-      "FOSS/Linux enthusiast",
-      "student developer in Chennai"
+      "Sophomore CSE Undergraduate - MSEC",
+      "BS Data Science & Applications (Foundational Level) - IITM",
+      "FOSS/Linux Enthusiast",
+      "Student Developer"
     ];
     if (reduceMotion.matches) {
       typedEl.textContent = phrases[0];
@@ -926,9 +926,7 @@
         "dark-first, dot-grid, red / white / black, terminal in the footer."
       ],
       "about.txt": [
-        "mithun srinivasan - CSE undergrad at MSEC.",
-        "foundational-level data science and applications student at IIT Madras.",
-        "FOSS/Linux enthusiast building open-source tools in Chennai.",
+        "Sophomore CSE Undergraduate - MSEC | BS Data Science & Applications (Foundational Level) - IITM | FOSS/Linux Enthusiast | Student Developer",
         "currently: Technical Consultant at Upfinity; FOSS United Chennai.",
         "aiming at a technical career in public service."
       ],
@@ -978,7 +976,7 @@
           break;
 
         case "whoami":
-          text("mithun srinivasan - CSE undergrad at MSEC, FOSS/Linux enthusiast, Chennai.", "term-line term-ok");
+          text("Sophomore CSE Undergraduate - MSEC | BS Data Science & Applications (Foundational Level) - IITM | FOSS/Linux Enthusiast | Student Developer", "term-line term-ok");
           break;
 
         case "about":
