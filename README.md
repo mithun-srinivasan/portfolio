@@ -49,6 +49,8 @@ A static personal portfolio built with semantic HTML, CSS, and vanilla JavaScrip
         └── ...
 ```
 
+See [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md) for the React Bits Dot Grid source attribution and license.
+
 ## Preview locally
 
 From the project root:
@@ -67,8 +69,8 @@ Open <http://127.0.0.1:4173/>. The site can also be opened directly from `index.
 - **Canonical URLs:** page metadata, JSON-LD, `sitemap.xml`, and `robots.txt` use `https://mithunsrinivasan.is-a.dev`.
 - **Styles:** shared tokens and component styles live in `assets/css/style.css`.
 - **Behaviour:** theme, navigation, typewriter, portrait card, pulse, and terminal live in `assets/js/script.js`; post content lives in `assets/js/posts.js`.
-- **Interactions:** Ctrl/Cmd+K opens the native command palette; work filters, scroll reveal, tools marquee, heading scramble, project spotlight, hero dot field, CTA sheen, toast, and back-to-top are native and dependency-free. Pointer effects are limited to fine pointers and respect reduced-motion settings.
-- **Inspiration:** the hero dot field and CTA light response are native adaptations of React Bits [Dot Grid](https://reactbits.dev/backgrounds/dot-grid) and [Specular Button](https://reactbits.dev/components/specular-button), recolored for this site's palette.
+- **Interactions:** Ctrl/Cmd+K opens the native command palette; work filters, scroll reveal, tools marquee, heading scramble, project spotlight, hero Dot Grid background, toast, and back-to-top remain dependency-free. The Dot Grid supports pointer movement and click ripples, uses the red palette, and becomes static with reduced motion.
+- **Dot Grid source:** the hero background is a plain Canvas 2D port of React Bits' [Dot Grid](https://reactbits.dev/backgrounds/dot-grid) spring, cursor, and ripple behavior. The original dot/mesh background remains on `body`.
 - **Terminal:** `help` lists `open PROJECT`, `skills`, `experience`, and `theme [dark|light]`; Tab completes commands and Ctrl+C clears the current input.
 - **GitHub pulse:** `assets/data/github.json` holds the dated contribution calendar and summary totals; refresh it from the public profile when updating those figures.
 
