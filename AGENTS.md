@@ -31,7 +31,6 @@ Check dark and light themes, 390px width, `blog.html`, `talks.html`, and the foo
 - `assets/images/` — responsive 480px, 720px, and 900px hero portrait sources in WebP with JPG fallbacks.
 - `assets/fonts/` — self-hosted JetBrains Mono variable WOFF2 and its OFL license.
 - `assets/data/github-contributions.json` — dated public profile snapshot used by the contribution heatmap.
-- `assets/resume.pdf` — resume file linked from navigation, contact, and the terminal; add the supplied PDF at this path.
 - `assets/logos/` — red/white/black project marks used by the work covers.
 - `README.md` — project overview, structure, and editing notes.
 
@@ -55,7 +54,6 @@ Check dark and light themes, 390px width, `blog.html`, `talks.html`, and the foo
 - Terminal prompt is page-specific via `data-prompt` on `#term`. Echoed commands use that attribute in `assets/js/script.js`.
 - Terminal output uses `innerHTML` for static strings and `esc()` for user input. Escape any new dynamic content. Avoid literal `<file>` in help text — it is parsed as a tag; use `FILE`.
 - `help` is the terminal's built-in command reference. Keep it in sync when adding commands.
-- `resume` opens `assets/resume.pdf`; keep this command and its help entry in sync.
 - The command palette is available with Ctrl/Cmd+K or the `jump` header button; keep its native `<dialog>` markup on every page using the shared script.
 - Project filters, scroll reveal, marquee, text scramble, spotlight, and back-to-top are native components; honor `prefers-reduced-motion` when changing their behavior.
 - Terminal commands include `open PROJECT`, `skills`, `experience`, and `theme [dark|light]`; Tab completes commands, Ctrl+C clears the current input, and `help` must stay current.

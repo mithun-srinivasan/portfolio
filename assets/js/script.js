@@ -568,7 +568,6 @@
         ["pwd", "print working directory"],
         ["blog", "open the blog"],
         ["talks", "open the talks page"],
-        ["resume", "open my resume PDF"],
         ["open PROJECT", "open a project by name"],
         ["skills", "list skills"],
         ["experience", "list experience"],
@@ -713,11 +712,6 @@
           window.location.assign(`${siteRoot}talks.html`);
           break;
 
-        case "resume":
-          text("opening resume PDF …", "term-line term-dim");
-          window.location.assign(`${siteRoot}assets/resume.pdf`);
-          break;
-
         case "open": {
           const known = {
             "ditch-windows": "https://github.com/mithun-srinivasan/ditch-windows",
@@ -846,7 +840,7 @@
     termInput.addEventListener("keydown", (event) => {
       if (event.key === "Tab") {
         event.preventDefault();
-        const commands = ["help", "whoami", "about", "projects", "ls", "cat", "pwd", "blog", "talks", "resume", "open", "skills", "experience", "theme", "email", "contact", "socials", "neofetch", "date", "history", "clear", "exit"];
+        const commands = ["help", "whoami", "about", "projects", "ls", "cat", "pwd", "blog", "talks", "open", "skills", "experience", "theme", "email", "contact", "socials", "neofetch", "date", "history", "clear", "exit"];
         const fragment = termInput.value.trim().toLowerCase();
         const matches = commands.filter((item) => item.startsWith(fragment));
         if (matches.length === 1) termInput.value = `${matches[0]} `;

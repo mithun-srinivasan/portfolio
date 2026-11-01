@@ -60,7 +60,6 @@ Open <http://127.0.0.1:4173/>. The site can also be opened directly from `index.
 - **Static posts:** copy `posts/_template.html` and replace its metadata, date, title, and article body; add its URL and summary to `window.POSTS` and the blog's `<noscript>` list.
 - **Talks:** edit `window.TALKS` near the bottom of `talks.html`.
 - **Canonical URLs:** replace the `SITE_URL` placeholder in page metadata, `sitemap.xml`, and `robots.txt` before deployment.
-- **Resume:** place the supplied PDF at `assets/resume.pdf`.
 - **Styles:** shared tokens and component styles live in `assets/css/style.css`.
 - **Behaviour:** theme, navigation, typewriter, portrait card, and terminal live in `assets/js/script.js`.
 - **Interactions:** Ctrl/Cmd+K opens the native command palette; work filters, scroll reveal, tools marquee, heading scramble, card spotlight, toast, and back-to-top need no runtime dependencies. Reveal and marquee motion honor reduced-motion settings.
