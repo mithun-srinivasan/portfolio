@@ -1,5 +1,9 @@
 # Third-party notices
 
+## Aceternity UI Dotted Glow Background
+
+The shared body background adds a native CSS radial glow inspired by the [Dotted Glow Background](https://ui.aceternity.com/components/dotted-glow-background) effect. No Aceternity source code or package is included.
+
 ## React Bits Dot Grid
 
 The hero background is a Canvas 2D port of the spring, pointer, and ripple behavior in React Bits' Dot Grid component. The component's source is available at <https://github.com/DavidHDev/react-bits/tree/main/src/content/Backgrounds/DotGrid>.

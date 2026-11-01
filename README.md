@@ -69,7 +69,7 @@ Open <http://127.0.0.1:4173/>. The site can also be opened directly from `index.
 - **Canonical URLs:** page metadata, JSON-LD, `sitemap.xml`, and `robots.txt` use `https://mithunsrinivasan.is-a.dev`.
 - **Styles:** shared tokens and component styles live in `assets/css/style.css`.
 - **Behaviour:** theme, navigation, typewriter, portrait card, pulse, and terminal live in `assets/js/script.js`; post content lives in `assets/js/posts.js`.
-- **Interactions:** Ctrl/Cmd+K opens the native command palette; work filters, scroll reveal, tools marquee, heading scramble, project spotlight, hero Dot Grid background, toast, and back-to-top remain dependency-free. The Dot Grid supports pointer movement and click ripples, uses the red palette, and becomes static with reduced motion.
+- **Interactions:** Ctrl/Cmd+K opens the native command palette; work filters, scroll reveal, tools marquee, heading scramble, project spotlight, hero Dot Grid background, toast, and back-to-top remain dependency-free. The Dot Grid supports pointer movement and click ripples. A red Dotted Glow follows fine-pointer movement across the shared body dot/mesh; it stays still with reduced motion.
 - **Dot Grid source:** the hero background is a plain Canvas 2D port of React Bits' [Dot Grid](https://reactbits.dev/backgrounds/dot-grid) spring, cursor, and ripple behavior. The original dot/mesh background remains on `body`.
 - **Terminal:** `help` lists `open PROJECT`, `skills`, `experience`, and `theme [dark|light]`; Tab completes commands and Ctrl+C clears the current input.
 - **GitHub pulse:** `assets/data/github.json` holds the dated contribution calendar and summary totals; refresh it from the public profile when updating those figures.

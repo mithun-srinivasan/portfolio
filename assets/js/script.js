@@ -40,6 +40,19 @@
   /* Dark-first. The tiny head script has already set data-theme to avoid a flash. */
   applyTheme(isTheme(root.dataset.theme) ? root.dataset.theme : "dark", false);
 
+  /* ---------- site-wide dotted glow ---------- */
+  if (window.matchMedia("(hover: hover) and (pointer: fine)").matches && !reduceMotion.matches) {
+    let glowFrame = 0;
+    document.addEventListener("pointermove", (event) => {
+      if (glowFrame) return;
+      glowFrame = requestAnimationFrame(() => {
+        root.style.setProperty("--glow-x", `${event.clientX}px`);
+        root.style.setProperty("--glow-y", `${event.clientY}px`);
+        glowFrame = 0;
+      });
+    }, { passive: true });
+  }
+
   /* ---------- React Bits Dot Grid source port (plain canvas) ---------- */
   const dotfield = document.querySelector("[data-dotfield]");
   if (dotfield) {

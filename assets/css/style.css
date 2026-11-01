@@ -71,6 +71,15 @@ body::before{
     radial-gradient(var(--grid) 1px,transparent 1px);
   background-size:88px 88px,88px 88px,22px 22px;
 }
+body::after{
+  content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background:radial-gradient(420px circle at var(--glow-x,68%) var(--glow-y,18%),color-mix(in srgb,var(--red-text) 14%,transparent),transparent 76%);
+  opacity:.55;
+}
+@media (prefers-reduced-motion:no-preference){
+  body::after{animation:dotted-glow 7s ease-in-out infinite alternate}
+  @keyframes dotted-glow{to{opacity:.82}}
+}
 h1,h2,h3,h4,p,figure,blockquote,dl,dd,figcaption{margin:0}
 ul,ol{margin:0;padding:0;list-style:none}
 img{display:block;max-width:100%}
