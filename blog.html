@@ -79,7 +79,16 @@
       <h2 class="sr-only" id="posts-title">Posts</h2>
 
       <div class="entries-list" id="post-list" hidden></div>
-      <noscript><p class="empty-shell">Posts load with JavaScript. None are published yet.</p></noscript>
+      <noscript>
+        <div class="entries-list">
+          <a class="entry" href="posts/hi.html">
+            <time datetime="2026-11-01">01 Nov 2026</time>
+            <h2>Hi, world</h2>
+            <p>A quick hello from the new blog: why I built this portfolio dependency-free, what I'm working on, and what's next.</p>
+            <span class="entry-more">read post →</span>
+          </a>
+        </div>
+      </noscript>
 
       <div class="empty-shell" id="post-empty">
         <p><span class="term-prompt">$</span> ls posts/<br><span class="dim">(empty)</span></p>

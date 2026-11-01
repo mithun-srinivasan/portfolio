@@ -51,10 +51,10 @@
     if (glowContext) {
       const gap = 12;
       const radius = 1.6;
-      const speedMin = 0.25;
-      const speedMax = 1.2;
-      const speedScale = 0.85;
-      const opacity = 0.82;
+      const speedMin = 0.45;
+      const speedMax = 1.6;
+      const speedScale = 1.15;
+      const opacity = 0.88;
 
       let width = 0;
       let height = 0;
@@ -324,17 +324,17 @@
         typedEl.textContent = text.slice(0, char);
         if (!deleting && char < text.length) {
           char += 1;
-          schedule(42);
+          schedule(28);
         } else if (!deleting) {
           deleting = true;
-          schedule(1700);
+          schedule(1200);
         } else if (char > 0) {
           char -= 1;
-          schedule(22);
+          schedule(14);
         } else {
           deleting = false;
           phrase = (phrase + 1) % phrases.length;
-          schedule(260);
+          schedule(180);
         }
       };
       document.addEventListener("visibilitychange", () => {
