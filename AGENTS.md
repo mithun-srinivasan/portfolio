@@ -24,11 +24,11 @@ Check dark and light themes, 390px width, `blog.html`, `talks.html`, and the foo
 - `index.html` — home: hero, work, about, experience, skills, contact.
 - `blog.html` — post index. Add posts by editing the `window.POSTS` array near the bottom (`title`, `date`, `dateTime`, `excerpt`, `url`).
 - `talks.html` — talk index. Add talks by editing the `window.TALKS` array near the bottom (`title`, `date`, `dateTime`, `event`, `location`, `url`).
-- `style.css` — all shared styling and design tokens.
-- `script.js` — theme toggle, scroll progress, active nav, copy email, IST clock, hero typewriter, hero comet card, post/talk rendering, footer terminal.
+- `assets/css/style.css` — all shared styling and design tokens.
+- `assets/js/script.js` — theme toggle, scroll progress, active nav, copy email, IST clock, hero typewriter, hero comet card, post/talk rendering, footer terminal.
+- `assets/images/` — hero portrait in WebP with a JPG fallback.
 - `assets/logos/` — red/white/black project marks used by the work covers.
-
-`Mithun Srinivasan*.html` (including `- very first one` and `.v1`) are historical references. Do not edit or delete them unless explicitly asked.
+- `README.md` — project overview, structure, and editing notes.
 
 ## Hard design constraints
 
@@ -47,12 +47,12 @@ Check dark and light themes, 390px width, `blog.html`, `talks.html`, and the foo
 
 - An inline script in each `<head>` sets `data-theme` before paint. Do not remove it or move it below the stylesheet; it prevents a light flash.
 - `localStorage` key is `theme`; values are `dark` and `light`.
-- Terminal prompt is page-specific via `data-prompt` on `#term`. Echoed commands use that attribute in `script.js`.
+- Terminal prompt is page-specific via `data-prompt` on `#term`. Echoed commands use that attribute in `assets/js/script.js`.
 - Terminal output uses `innerHTML` for static strings and `esc()` for user input. Escape any new dynamic content. Avoid literal `<file>` in help text — it is parsed as a tag; use `FILE`.
 - `help` is the terminal's built-in command reference. Keep it in sync when adding commands.
 
 ## Conventions
 
 - Semantic HTML, lowercase UI copy, `aria-current` on the active nav link.
-- CSS is organised by component with section comments; shared tokens live at the top of `style.css`.
+- CSS is organised by component with section comments; shared tokens live at the top of `assets/css/style.css`.
 - No dependencies, bundlers, or generated assets. Keep deployment to plain static files (root serves `index.html`).

@@ -1,0 +1,13 @@
+# Operating system metadata
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor files
+.idea/
+.vscode/
+*.swp
+
+# Local verification output
+out.png
+*.log
