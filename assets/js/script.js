@@ -40,227 +40,85 @@
   /* Dark-first. The tiny head script has already set data-theme to avoid a flash. */
   applyTheme(isTheme(root.dataset.theme) ? root.dataset.theme : "dark", false);
 
-  /* ---------- site-wide dotted glow ---------- */
-  if (window.matchMedia("(hover: hover) and (pointer: fine)").matches && !reduceMotion.matches) {
-    let glowFrame = 0;
-    document.addEventListener("pointermove", (event) => {
-      if (glowFrame) return;
-      glowFrame = requestAnimationFrame(() => {
-        root.style.setProperty("--glow-x", `${event.clientX}px`);
-        root.style.setProperty("--glow-y", `${event.clientY}px`);
-        glowFrame = 0;
-      });
-    }, { passive: true });
-  }
-
-  /* ---------- React Bits Dot Grid source port (plain canvas) ---------- */
-  const dotfield = document.querySelector("[data-dotfield]");
-  if (dotfield) {
-    const hero = dotfield.closest(".hero");
-    const context = dotfield.getContext("2d", { alpha: true });
-    const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
-    const reduced = reduceMotion.matches;
-    const cell = 22;
-    const proximity = 140;
-    const smootherstep = (value) => {
-      const t = Math.min(1, Math.max(0, value));
-      return t * t * t * (t * (t * 6 - 15) + 10);
-    };
+  /* ---------- site-wide dotted glow (no pointer response) ---------- */
+  const glowCanvas = document.createElement("canvas");
+  glowCanvas.className = "dotted-glow-background";
+  glowCanvas.setAttribute("aria-hidden", "true");
+  document.body.prepend(glowCanvas);
+  const glowContext = glowCanvas.getContext("2d");
+  if (glowContext) {
+    const gap = 22;
+    const radius = 0.55;
     let width = 0;
     let height = 0;
-    let cols = 0;
-    let rows = 0;
-    let rest = new Float32Array(0);
-    let offset = new Float32Array(0);
-    let velocity = new Float32Array(0);
-    let force = new Float32Array(0);
-    let next = new Float32Array(0);
-    let pointer = { x: 0, y: 0, vx: 0, vy: 0, time: 0, inside: false };
-    const shocks = [];
+    let ratio = 1;
+    let dots = [];
     let frame = 0;
-    let last = 0;
-
-    const rebuild = () => {
-      cols = Math.max(1, Math.floor(width / cell));
-      rows = Math.max(1, Math.floor(height / cell));
-      rest = new Float32Array(cols * rows * 2);
-      offset = new Float32Array(rest.length);
-      velocity = new Float32Array(rest.length);
-      force = new Float32Array(rest.length);
-      next = new Float32Array(rest.length);
-      const startX = (width - (cols - 1) * cell) / 2;
-      const startY = (height - (rows - 1) * cell) / 2;
+    let baseColor = "#ededed";
+    let glowColor = "#e23b49";
+    const readColors = () => {
+      const style = getComputedStyle(root);
+      baseColor = style.getPropertyValue("--ink").trim() || baseColor;
+      glowColor = style.getPropertyValue("--red-text").trim() || glowColor;
+    };
+    const buildDots = () => {
+      dots = [];
+      const rows = Math.ceil(height / gap) + 1;
+      const cols = Math.ceil(width / gap) + 1;
       for (let row = 0; row < rows; row += 1) {
         for (let col = 0; col < cols; col += 1) {
-          const index = (row * cols + col) * 2;
-          rest[index] = startX + col * cell;
-          rest[index + 1] = startY + row * cell;
+          dots.push({
+            x: col * gap,
+            y: row * gap,
+            phase: Math.random() * Math.PI * 2,
+            speed: 0.0003 + Math.random() * 0.0008
+          });
         }
       }
     };
-
-    const step = (dt, now) => {
-      const zeta = 1 - 0.85 * 0.6;
-      const omega = 4 / (zeta * 0.8);
-      const stiffness = omega * omega;
-      const damping = 2 * zeta * omega;
-      const speed = Math.hypot(pointer.vx, pointer.vy);
-      const drive = pointer.inside ? 6500 * Math.tanh(speed / 900) : 0;
-      const dirX = speed > 0.001 ? pointer.vx / speed : 0;
-      const dirY = speed > 0.001 ? pointer.vy / speed : 0;
-
-      for (const shock of shocks) {
-        shock.front = ((now - shock.start) / 1000) * 650;
-        shock.amplitude = smootherstep(1 - shock.front / 320) * 5 * cell * 0.24;
+    const paint = (now, animate) => {
+      glowContext.clearRect(0, 0, width, height);
+      for (const dot of dots) {
+        const pulse = animate ? 0.5 + 0.5 * Math.sin(now * dot.speed + dot.phase) : 0.25;
+        const bright = animate && pulse > 0.965;
+        glowContext.globalAlpha = bright ? 0.35 : 0.08 + pulse * 0.2;
+        glowContext.fillStyle = bright ? glowColor : baseColor;
+        glowContext.shadowColor = bright ? glowColor : "transparent";
+        glowContext.shadowBlur = bright ? 2 : 0;
+        glowContext.beginPath();
+        glowContext.arc(dot.x, dot.y, radius, 0, Math.PI * 2);
+        glowContext.fill();
       }
-      for (let i = 0; i < rest.length / 2; i += 1) {
-        const index = i * 2;
-        const rx = rest[index];
-        const ry = rest[index + 1];
-        let ax = 0;
-        let ay = 0;
-        if (drive > 0) {
-          const ex = rx + offset[index] - pointer.x;
-          const ey = ry + offset[index + 1] - pointer.y;
-          const distance = Math.hypot(ex, ey);
-          if (distance < proximity) {
-            const weight = smootherstep(1 - distance / proximity) * drive;
-            const nx = distance > 0.001 ? ex / distance : 0;
-            const ny = distance > 0.001 ? ey / distance : 0;
-            ax += weight * (dirX + nx * 0.6);
-            ay += weight * (dirY + ny * 0.6);
-          }
-        }
-        for (const shock of shocks) {
-          const ex = rx - shock.x;
-          const ey = ry - shock.y;
-          const distance = Math.hypot(ex, ey);
-          const u = (distance - shock.front) / (cell * 1.4);
-          if (Math.abs(u) < 3 && distance > 0.001) {
-            const push = shock.amplitude * Math.exp(-u * u);
-            ax += (ex / distance) * push * stiffness * 0.35;
-            ay += (ey / distance) * push * stiffness * 0.35;
-          }
-        }
-        force[index] = ax - stiffness * offset[index] - damping * velocity[index];
-        force[index + 1] = ay - stiffness * offset[index + 1] - damping * velocity[index + 1];
-      }
-
-      const steps = Math.min(6, Math.max(1, Math.ceil(dt / (1 / 120))));
-      const h = dt / steps;
-      for (let substep = 0; substep < steps; substep += 1) {
-        for (let i = 0; i < offset.length; i += 1) next[i] = velocity[i] + force[i] * h;
-        for (let i = 0; i < offset.length; i += 1) {
-          velocity[i] = next[i];
-          offset[i] += velocity[i] * h;
-        }
-      }
-
-      const decay = 1 - Math.exp(-dt / 0.08);
-      pointer.vx -= pointer.vx * decay;
-      pointer.vy -= pointer.vy * decay;
-      for (let i = shocks.length - 1; i >= 0; i -= 1) {
-        if (shocks[i].front > 320 + cell * 3) shocks.splice(i, 1);
-      }
+      glowContext.globalAlpha = 1;
+      glowContext.shadowBlur = 0;
     };
-
-    const settled = () => {
-      if (shocks.length || Math.abs(pointer.vx) + Math.abs(pointer.vy) > 1) return false;
-      for (let i = 0; i < offset.length; i += 1) {
-        if (Math.abs(offset[i]) > 0.02 || Math.abs(velocity[i]) > 0.5) return false;
-      }
-      return true;
-    };
-
-    const draw = () => {
-      if (!context || !width || !height) return;
-      context.clearRect(0, 0, width, height);
-      context.fillStyle = getComputedStyle(root).getPropertyValue("--red-text").trim() || "#8f0c15";
-      for (let i = 0; i < rest.length / 2; i += 1) {
-        const index = i * 2;
-        const x = rest[index] + offset[index];
-        const y = rest[index + 1] + offset[index + 1];
-        const speed = Math.hypot(velocity[index], velocity[index + 1]);
-        const displacement = Math.hypot(offset[index], offset[index + 1]);
-        let energy = Math.min(1, (speed / 380) * 0.85 + (displacement / (cell * 2.2)) * 0.35);
-        if (pointer.inside) {
-          const distance = Math.hypot(x - pointer.x, y - pointer.y);
-          if (distance < proximity) energy = Math.max(energy, smootherstep(1 - distance / proximity) * 0.4);
-        }
-        context.globalAlpha = .26 + energy * .7;
-        context.beginPath();
-        context.arc(x, y, 1.1 + energy * 2, 0, Math.PI * 2);
-        context.fill();
-      }
-      context.globalAlpha = 1;
-    };
-
-    const tick = (now) => {
+    const draw = (now) => {
       frame = 0;
-      const dt = Math.min(0.05, Math.max(0, (now - last) / 1000));
-      last = now;
-      if (!reduced) step(dt, now);
-      draw();
-      if (!reduced && !settled()) frame = requestAnimationFrame(tick);
+      if (document.hidden) return;
+      paint(now, !reduceMotion.matches);
+      if (!reduceMotion.matches) frame = requestAnimationFrame(draw);
     };
-    const wake = () => {
-      if (frame) return;
-      last = performance.now();
-      frame = requestAnimationFrame(tick);
+    const start = () => {
+      if (reduceMotion.matches) paint(0, false);
+      else if (!document.hidden && !frame) frame = requestAnimationFrame(draw);
     };
     const resize = () => {
-      const rect = hero.getBoundingClientRect();
-      const ratio = Math.min(window.devicePixelRatio || 1, 2);
-      width = rect.width;
-      height = rect.height;
-      dotfield.width = Math.round(width * ratio);
-      dotfield.height = Math.round(height * ratio);
-      context?.setTransform(ratio, 0, 0, ratio, 0, 0);
-      rebuild();
-      wake();
+      ratio = Math.min(window.devicePixelRatio || 1, 2);
+      width = window.innerWidth;
+      height = window.innerHeight;
+      glowCanvas.width = Math.ceil(width * ratio);
+      glowCanvas.height = Math.ceil(height * ratio);
+      glowContext.setTransform(ratio, 0, 0, ratio, 0, 0);
+      buildDots();
+      start();
     };
-
-    if (context) {
-      const resizeObserver = "ResizeObserver" in window ? new ResizeObserver(resize) : null;
-      resizeObserver?.observe(hero);
-      window.addEventListener("resize", resize, { passive: true });
-      document.addEventListener("themechange", wake);
-      resize();
-      if (finePointer && !reduced) {
-        hero.addEventListener("pointermove", (event) => {
-          const rect = dotfield.getBoundingClientRect();
-          const x = event.clientX - rect.left;
-          const y = event.clientY - rect.top;
-          const time = event.timeStamp || performance.now();
-          if (pointer.inside && pointer.time) {
-            const elapsed = Math.max(4, time - pointer.time) / 1000;
-            pointer.vx += ((x - pointer.x) / elapsed - pointer.vx) * 0.6;
-            pointer.vy += ((y - pointer.y) / elapsed - pointer.vy) * 0.6;
-          } else {
-            pointer.vx = 0;
-            pointer.vy = 0;
-          }
-          pointer.x = x;
-          pointer.y = y;
-          pointer.time = time;
-          pointer.inside = true;
-          wake();
-        }, { passive: true });
-        hero.addEventListener("pointerleave", () => {
-          pointer.inside = false;
-          pointer.time = 0;
-          wake();
-        });
-        hero.addEventListener("pointerdown", (event) => {
-          const rect = dotfield.getBoundingClientRect();
-          shocks.push({ x: event.clientX - rect.left, y: event.clientY - rect.top, start: performance.now(), front: 0, amplitude: 0 });
-          if (shocks.length > 6) shocks.shift();
-          wake();
-        });
-      }
-    }
+    readColors();
+    resize();
+    window.addEventListener("resize", resize, { passive: true });
+    document.addEventListener("visibilitychange", start);
+    document.addEventListener("themechange", () => { readColors(); start(); });
+    reduceMotion.addEventListener?.("change", start);
   }
-
   themeToggle?.addEventListener("click", (event) => {
     const next = currentTheme() === "dark" ? "light" : "dark";
     const apply = () => applyTheme(next);
@@ -642,18 +500,6 @@
       });
     });
   }
-
-  /* ---------- project card spotlight (red only, fine pointers) ---------- */
-  if (window.matchMedia("(hover: hover) and (pointer: fine)").matches && !reduceMotion.matches) {
-    document.querySelectorAll(".project").forEach((card) => {
-      card.addEventListener("pointermove", (event) => {
-        const rect = card.getBoundingClientRect();
-        card.style.setProperty("--mx", `${event.clientX - rect.left}px`);
-        card.style.setProperty("--my", `${event.clientY - rect.top}px`);
-      });
-    });
-  }
-
 
   /* ---------- blog link only when there is a post ---------- */
   const hasPosts = Array.isArray(window.POSTS) && window.POSTS.length > 0;

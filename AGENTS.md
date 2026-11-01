@@ -34,14 +34,14 @@ Check dark and light themes, 390px width, `blog.html`, `talks.html`, and the foo
 - `assets/data/github.json` — dated GitHub pulse totals and daily contribution snapshot.
 - `assets/logos/` — red/white/black project marks used by the work covers.
 - `README.md` — project overview, structure, and editing notes.
-- `THIRD_PARTY_NOTICES.md` — attribution and license for the Dot Grid source port, plus visual-effect references.
+- `THIRD_PARTY_NOTICES.md` — attribution for the native dotted-glow effect reference.
 
 ## Hard design constraints
 
 - Strict red / white / black palette. Do not add a fourth hue.
 - Dark-first. `:root[data-theme="dark"]` is the primary theme; blood red is `--blood:#78080f`.
 - All text uses self-hosted JetBrains Mono WOFF2, with Tamil-capable system fallbacks. Do not reintroduce remote font requests or the old Bricolage Grotesque display font.
-- Keep the first-version dot/mesh background on `body` (22px dots + 88px mesh lines), with the red Dotted Glow layer over it.
+- Keep the first-version dot/mesh background on `body` (22px dot spacing + 88px mesh lines). The tiny dots pulse independently; they do not react to pointer movement.
 - Keep a real terminal in the footer (`#term`), not a screenshot.
 - Keep the AI-assistance disclosure in all three page footers. The footer copy should say AI-assisted, not hand-written.
 - Keep the hero portrait permanently red/white duotone. The comet card may tilt and add a white specular glare on fine-pointer hover; do not add a grayscale-to-color or hue-changing hover.
@@ -57,7 +57,7 @@ Check dark and light themes, 390px width, `blog.html`, `talks.html`, and the foo
 - Terminal output uses `innerHTML` for static strings and `esc()` for user input. Escape any new dynamic content. Avoid literal `<file>` in help text — it is parsed as a tag; use `FILE`.
 - `help` is the terminal's built-in command reference. Keep it in sync when adding commands.
 - The command palette is available with Ctrl/Cmd+K or `/`; keep its native `<dialog>` and generated trigger in the shared script.
-- Project filters, scroll reveal, marquee, text scramble, project spotlight, hero Dot Grid background, and back-to-top are native components; honor `prefers-reduced-motion` when changing their behavior. The Dot Grid uses the red theme color, supports fine-pointer movement and click ripples, and stays inside the hero. The Dotted Glow overlays the shared body dot/mesh, follows fine-pointer movement, and stays static for reduced motion.
+- Project filters, scroll reveal, marquee, text scramble, dotted-glow canvas, and back-to-top are native components; honor `prefers-reduced-motion` when changing their behavior. The Dotted Glow uses tiny 0.55px dots over the body mesh, pulses red dots independently, and has no pointer response. Reduced motion renders a static field.
 - Terminal commands include `open PROJECT`, `skills`, `experience`, and `theme [dark|light]`; Tab completes commands, Ctrl+C clears the current input, and `help` must stay current.
 - Refresh `assets/data/github.json` from the public GitHub contribution calendar when updating the pulse; retain its source and `generated` date.
 - Canonical, Open Graph, JSON-LD, sitemap, and robots URLs target `https://mithunsrinivasan.is-a.dev`.
