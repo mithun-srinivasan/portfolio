@@ -26,7 +26,8 @@ Check dark and light themes, 390px width, `blog.html`, `talks.html`, and the foo
 - `talks.html` — talk index. Add talks by editing the `window.TALKS` array near the bottom (`title`, `date`, `dateTime`, `event`, `location`, `url`).
 - `assets/css/style.css` — all shared styling and design tokens.
 - `assets/js/script.js` — theme toggle, scroll progress, active nav, copy email, IST clock, hero typewriter, hero comet card, post/talk rendering, footer terminal.
-- `assets/images/` — hero portrait in WebP with a JPG fallback.
+- `assets/images/` — responsive 480px, 720px, and 900px hero portrait sources in WebP with JPG fallbacks.
+- `assets/fonts/` — self-hosted JetBrains Mono variable WOFF2 and its OFL license.
 - `assets/logos/` — red/white/black project marks used by the work covers.
 - `README.md` — project overview, structure, and editing notes.
 
@@ -34,7 +35,7 @@ Check dark and light themes, 390px width, `blog.html`, `talks.html`, and the foo
 
 - Strict red / white / black palette. Do not add a fourth hue.
 - Dark-first. `:root[data-theme="dark"]` is the primary theme; blood red is `--blood:#78080f`.
-- All text uses JetBrains Mono, with Tamil-capable system fallbacks. Do not reintroduce the old Bricolage Grotesque display font.
+- All text uses self-hosted JetBrains Mono WOFF2, with Tamil-capable system fallbacks. Do not reintroduce remote font requests or the old Bricolage Grotesque display font.
 - Keep the first-version dot/mesh background on `body` (22px dots + 88px mesh lines).
 - Keep a real terminal in the footer (`#term`), not a screenshot.
 - Keep the AI-assistance disclosure in all three page footers. The footer copy should say AI-assisted, not hand-written.

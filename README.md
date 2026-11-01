@@ -18,13 +18,15 @@ A static personal portfolio built with semantic HTML, CSS, and vanilla JavaScrip
 ├── README.md
 ├── AGENTS.md
 └── assets/
+    ├── fonts/
+    │   ├── jetbrains-mono-latin-variable.woff2
+    │   └── OFL.txt
     ├── css/
     │   └── style.css
     ├── js/
     │   └── script.js
     ├── images/
-    │   ├── mithun-portrait.webp
-    │   └── mithun-portrait.jpg
+    │   └── mithun-portrait-{480,720,900}.{webp,jpg}
     └── logos/
         └── ...
 ```

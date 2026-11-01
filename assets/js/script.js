@@ -176,24 +176,34 @@
       let phrase = 0;
       let char = phrases[0].length;
       let deleting = false;
+      let timer;
+      const schedule = (delay) => {
+        clearTimeout(timer);
+        if (!document.hidden) timer = setTimeout(tick, delay);
+      };
       const tick = () => {
+        if (document.hidden) return;
         const text = phrases[phrase];
         typedEl.textContent = text.slice(0, char);
         if (!deleting && char < text.length) {
           char += 1;
-          setTimeout(tick, 42);
+          schedule(42);
         } else if (!deleting) {
           deleting = true;
-          setTimeout(tick, 1700);
+          schedule(1700);
         } else if (char > 0) {
           char -= 1;
-          setTimeout(tick, 22);
+          schedule(22);
         } else {
           deleting = false;
           phrase = (phrase + 1) % phrases.length;
-          setTimeout(tick, 260);
+          schedule(260);
         }
       };
+      document.addEventListener("visibilitychange", () => {
+        if (document.hidden) clearTimeout(timer);
+        else tick();
+      });
       tick();
     }
   }
