@@ -40,125 +40,139 @@
   /* Dark-first. The tiny head script has already set data-theme to avoid a flash. */
   applyTheme(isTheme(root.dataset.theme) ? root.dataset.theme : "dark", false);
 
-  /* ---------- site-wide dotted glow (exact Aceternity DottedGlowBackground algorithm) ---------- */
-  const glowCanvas = document.createElement("canvas");
-  glowCanvas.className = "dotted-glow-background";
-  glowCanvas.setAttribute("aria-hidden", "true");
-  document.body.prepend(glowCanvas);
-  const glowContext = glowCanvas.getContext("2d");
-  if (glowContext) {
-    const gap = 12;
-    const radius = 1.6;
-    const speedMin = 0.3;
-    const speedMax = 1.6;
-    const speedScale = 1;
-    const opacity = 0.85;
+  /* ---------- hero-only dotted glow (exact Aceternity DottedGlowBackground algorithm) ---------- */
+  const heroSection = document.querySelector(".hero");
+  if (heroSection) {
+    const glowCanvas = document.createElement("canvas");
+    glowCanvas.className = "hero-dotted-glow";
+    glowCanvas.setAttribute("aria-hidden", "true");
+    heroSection.prepend(glowCanvas);
+    const glowContext = glowCanvas.getContext("2d");
+    if (glowContext) {
+      const gap = 12;
+      const radius = 1.6;
+      const speedMin = 0.25;
+      const speedMax = 1.2;
+      const speedScale = 0.85;
+      const opacity = 0.82;
 
-    let width = 0;
-    let height = 0;
-    let ratio = 1;
-    let dots = [];
-    let frame = 0;
-    let baseColor = "rgba(255, 255, 255, 0.2)";
-    let glowColor = "#e23b49";
+      let width = 0;
+      let height = 0;
+      let ratio = 1;
+      let dots = [];
+      let frame = 0;
+      let isVisible = true;
+      let baseColor = "rgba(255, 255, 255, 0.2)";
+      let glowColor = "#e23b49";
 
-    const readColors = () => {
-      const dark = currentTheme() === "dark";
-      const style = getComputedStyle(root);
-      const redText = style.getPropertyValue("--red-text").trim() || "#e23b49";
-      baseColor = dark ? "rgba(255, 255, 255, 0.22)" : "rgba(0, 0, 0, 0.25)";
-      glowColor = redText;
-    };
+      const readColors = () => {
+        const dark = currentTheme() === "dark";
+        const style = getComputedStyle(root);
+        const redText = style.getPropertyValue("--red-text").trim() || "#e23b49";
+        baseColor = dark ? "rgba(255, 255, 255, 0.22)" : "rgba(0, 0, 0, 0.25)";
+        glowColor = redText;
+      };
 
-    const buildDots = () => {
-      dots = [];
-      const cols = Math.ceil(width / gap) + 2;
-      const rows = Math.ceil(height / gap) + 2;
-      const min = Math.min(speedMin, speedMax);
-      const max = Math.max(speedMin, speedMax);
-      const span = Math.max(max - min, 0);
+      const buildDots = () => {
+        dots = [];
+        const cols = Math.ceil(width / gap) + 2;
+        const rows = Math.ceil(height / gap) + 2;
+        const min = Math.min(speedMin, speedMax);
+        const max = Math.max(speedMin, speedMax);
+        const span = Math.max(max - min, 0);
 
-      for (let i = -1; i < cols; i++) {
-        for (let j = -1; j < rows; j++) {
-          const x = i * gap + (j % 2 === 0 ? 0 : gap * 0.5);
-          const y = j * gap;
-          const phase = Math.random() * Math.PI * 2;
-          const speed = min + Math.random() * span;
-          dots.push({ x, y, phase, speed });
+        for (let i = -1; i < cols; i++) {
+          for (let j = -1; j < rows; j++) {
+            const x = i * gap + (j % 2 === 0 ? 0 : gap * 0.5);
+            const y = j * gap;
+            const phase = Math.random() * Math.PI * 2;
+            const speed = min + Math.random() * span;
+            dots.push({ x, y, phase, speed });
+          }
         }
-      }
-    };
+      };
 
-    const paint = (now, animate) => {
-      glowContext.clearRect(0, 0, width, height);
-      glowContext.save();
-      glowContext.fillStyle = baseColor;
+      const paint = (now, animate) => {
+        glowContext.clearRect(0, 0, width, height);
+        glowContext.save();
+        glowContext.fillStyle = baseColor;
 
-      const time = (now / 1000) * Math.max(speedScale, 0);
+        const time = (now / 1000) * Math.max(speedScale, 0);
 
-      for (let i = 0; i < dots.length; i++) {
-        const d = dots[i];
-        if (!animate) {
-          glowContext.globalAlpha = 0.25 * opacity;
+        for (let i = 0; i < dots.length; i++) {
+          const d = dots[i];
+          if (!animate) {
+            glowContext.globalAlpha = 0.25 * opacity;
+            glowContext.beginPath();
+            glowContext.arc(d.x, d.y, radius, 0, Math.PI * 2);
+            glowContext.fill();
+            continue;
+          }
+
+          // Smooth sine-smoothed triangle wave for organic, calm pulsation
+          const mod = (time * d.speed + d.phase) % 2;
+          const lin = mod < 1 ? mod : 2 - mod;
+          const smooth = 0.5 - 0.5 * Math.cos(lin * Math.PI); // cosine ease 0..1..0
+          const a = 0.22 + 0.58 * smooth; // 0.22..0.8 smoothly
+
+          if (a > 0.58) {
+            const glow = (a - 0.58) / 0.22;
+            glowContext.fillStyle = glowColor;
+            glowContext.shadowColor = glowColor;
+            glowContext.shadowBlur = 8 * glow;
+          } else {
+            glowContext.fillStyle = baseColor;
+            glowContext.shadowColor = "transparent";
+            glowContext.shadowBlur = 0;
+          }
+
+          glowContext.globalAlpha = a * opacity;
           glowContext.beginPath();
           glowContext.arc(d.x, d.y, radius, 0, Math.PI * 2);
           glowContext.fill();
-          continue;
         }
 
-        const mod = (time * d.speed + d.phase) % 2;
-        const lin = mod < 1 ? mod : 2 - mod;
-        const a = 0.25 + 0.55 * lin;
+        glowContext.restore();
+      };
 
-        if (a > 0.6) {
-          const glow = (a - 0.6) / 0.4;
-          glowContext.fillStyle = glowColor;
-          glowContext.shadowColor = glowColor;
-          glowContext.shadowBlur = 8 * glow;
-        } else {
-          glowContext.fillStyle = baseColor;
-          glowContext.shadowColor = "transparent";
-          glowContext.shadowBlur = 0;
-        }
+      const draw = (now) => {
+        frame = 0;
+        if (document.hidden || !isVisible) return;
+        paint(now, !reduceMotion.matches);
+        if (!reduceMotion.matches) frame = requestAnimationFrame(draw);
+      };
 
-        glowContext.globalAlpha = a * opacity;
-        glowContext.beginPath();
-        glowContext.arc(d.x, d.y, radius, 0, Math.PI * 2);
-        glowContext.fill();
-      }
+      const start = () => {
+        if (reduceMotion.matches) paint(0, false);
+        else if (!document.hidden && isVisible && !frame) frame = requestAnimationFrame(draw);
+      };
 
-      glowContext.restore();
-    };
+      const resize = () => {
+        const rect = heroSection.getBoundingClientRect();
+        ratio = Math.min(window.devicePixelRatio || 1, 2);
+        width = Math.ceil(rect.width);
+        height = Math.ceil(rect.height);
+        glowCanvas.width = Math.ceil(width * ratio);
+        glowCanvas.height = Math.ceil(height * ratio);
+        glowContext.setTransform(ratio, 0, 0, ratio, 0, 0);
+        buildDots();
+        start();
+      };
 
-    const draw = (now) => {
-      frame = 0;
-      if (document.hidden) return;
-      paint(now, !reduceMotion.matches);
-      if (!reduceMotion.matches) frame = requestAnimationFrame(draw);
-    };
+      readColors();
+      resize();
 
-    const start = () => {
-      if (reduceMotion.matches) paint(0, false);
-      else if (!document.hidden && !frame) frame = requestAnimationFrame(draw);
-    };
+      const heroObserver = new IntersectionObserver((entries) => {
+        isVisible = entries[0]?.isIntersecting ?? true;
+        if (isVisible) start();
+      }, { threshold: 0.05 });
+      heroObserver.observe(heroSection);
 
-    const resize = () => {
-      ratio = Math.min(window.devicePixelRatio || 1, 2);
-      width = window.innerWidth;
-      height = window.innerHeight;
-      glowCanvas.width = Math.ceil(width * ratio);
-      glowCanvas.height = Math.ceil(height * ratio);
-      glowContext.setTransform(ratio, 0, 0, ratio, 0, 0);
-      buildDots();
-      start();
-    };
-
-    readColors();
-    resize();
-    window.addEventListener("resize", resize, { passive: true });
-    document.addEventListener("visibilitychange", start);
-    document.addEventListener("themechange", () => { readColors(); start(); });
-    reduceMotion.addEventListener?.("change", start);
+      window.addEventListener("resize", resize, { passive: true });
+      document.addEventListener("visibilitychange", start);
+      document.addEventListener("themechange", () => { readColors(); start(); });
+      reduceMotion.addEventListener?.("change", start);
+    }
   }
   themeToggle?.addEventListener("click", (event) => {
     const next = currentTheme() === "dark" ? "light" : "dark";
@@ -331,7 +345,7 @@
     }
   }
 
-  /* ---------- hero comet card (native port of Aceternity's component) ---------- */
+  /* ---------- hero comet card (silky smooth, responsive 3D tilt & glare) ---------- */
   const comet = document.querySelector("[data-comet]");
   if (comet) {
     const tilt = comet.querySelector("[data-comet-tilt]");
@@ -340,37 +354,51 @@
     const canTilt = () => finePointer.matches && !reduceMotion.matches;
 
     if (tilt && glare && canTilt()) {
-      const ROTATE = 8;
-      const TRANSLATE = 8;
+      const ROTATE = 14;
+      const TRANSLATE = 12;
       let targetX = 0;
       let targetY = 0;
       let currentX = 0;
       let currentY = 0;
+      let targetScale = 1;
+      let currentScale = 1;
       let active = false;
       let frame = 0;
 
       const clamp = (value) => Math.max(-0.5, Math.min(0.5, value));
       const paint = () => {
         frame = 0;
+        // Smooth dampening factor (0.1) for high-fidelity fluid motion
         const dx = targetX - currentX;
         const dy = targetY - currentY;
-        currentX += dx * 0.18;
-        currentY += dy * 0.18;
+        const ds = targetScale - currentScale;
 
-        if (Math.abs(dx) < 0.0005 && Math.abs(dy) < 0.0005) {
+        currentX += dx * 0.12;
+        currentY += dy * 0.12;
+        currentScale += ds * 0.12;
+
+        if (Math.abs(dx) < 0.0001 && Math.abs(dy) < 0.0001 && Math.abs(ds) < 0.0001) {
           currentX = targetX;
           currentY = targetY;
+          currentScale = targetScale;
         }
 
-        const scale = active ? 1.025 : 1;
-        tilt.style.transform =
-          `translate3d(${(currentX * -TRANSLATE).toFixed(2)}px, ${(currentY * TRANSLATE).toFixed(2)}px, 0) ` +
-          `rotateX(${(currentY * ROTATE).toFixed(2)}deg) rotateY(${(currentX * -ROTATE).toFixed(2)}deg) ` +
-          `scale(${scale})`;
-        glare.style.setProperty("--glare-x", `${((currentX + 0.5) * 100).toFixed(2)}%`);
-        glare.style.setProperty("--glare-y", `${((currentY + 0.5) * 100).toFixed(2)}%`);
+        const rotX = (currentY * -ROTATE).toFixed(3);
+        const rotY = (currentX * ROTATE).toFixed(3);
+        const transX = (currentX * TRANSLATE).toFixed(2);
+        const transY = (currentY * TRANSLATE).toFixed(2);
 
-        if (currentX !== targetX || currentY !== targetY) {
+        tilt.style.transform =
+          `translate3d(${transX}px, ${transY}px, 0) ` +
+          `rotateX(${rotX}deg) rotateY(${rotY}deg) ` +
+          `scale3d(${currentScale.toFixed(3)}, ${currentScale.toFixed(3)}, 1)`;
+
+        const gx = ((currentX + 0.5) * 100).toFixed(2);
+        const gy = ((currentY + 0.5) * 100).toFixed(2);
+        glare.style.setProperty("--glare-x", `${gx}%`);
+        glare.style.setProperty("--glare-y", `${gy}%`);
+
+        if (Math.abs(dx) > 0.0001 || Math.abs(dy) > 0.0001 || Math.abs(ds) > 0.0001 || active) {
           frame = requestAnimationFrame(paint);
         } else if (!active) {
           tilt.style.transform = "";
@@ -387,6 +415,7 @@
         active = false;
         targetX = 0;
         targetY = 0;
+        targetScale = 1;
         comet.classList.remove("is-active");
         start();
       };
@@ -394,6 +423,7 @@
       tilt.addEventListener("pointerenter", () => {
         if (!canTilt()) return;
         active = true;
+        targetScale = 1.04;
         comet.classList.add("is-active");
         start();
       });

@@ -72,7 +72,12 @@ body::before{
     radial-gradient(var(--grid) .55px,transparent .7px);
   background-size:88px 88px,88px 88px,22px 22px;
 }
-.dotted-glow-background{position:fixed;inset:0;z-index:-1;display:block;width:100vw;height:100vh;pointer-events:none;opacity:.72}
+.hero-dotted-glow{
+  position:absolute;inset:0;z-index:0;display:block;width:100%;height:100%;
+  pointer-events:none;opacity:.88;
+  mask-image:radial-gradient(ellipse 90% 85% at 50% 40%,#000 20%,transparent 95%);
+  -webkit-mask-image:radial-gradient(ellipse 90% 85% at 50% 40%,#000 20%,transparent 95%);
+}
 h1,h2,h3,h4,p,figure,blockquote,dl,dd,figcaption{margin:0}
 ul,ol{margin:0;padding:0;list-style:none}
 img{display:block;max-width:100%}
@@ -192,27 +197,35 @@ code{font-family:var(--mono);font-size:.9em;color:var(--red-text);background:col
 .text-link{display:inline-flex;align-items:center;min-height:46px;color:var(--ink);font-weight:700;font-size:.8rem;text-decoration:underline;text-decoration-color:var(--red);text-underline-offset:.28em}
 .text-link:hover{color:var(--red-text)}
 /* comet card — native port of Aceternity's pointer tilt + glare, no React */
-.hero-portrait{width:100%;max-width:360px;justify-self:end;margin:0;perspective:900px}
-.hero-portrait .comet-card__tilt{position:relative;transform-style:preserve-3d;will-change:transform}
+.hero-portrait{width:100%;max-width:360px;justify-self:end;margin:0;perspective:1000px}
+.hero-portrait .comet-card__tilt{position:relative;transform-style:preserve-3d;will-change:transform;transition:box-shadow .24s ease}
 .hero-portrait .frame{
   --frame-pad:8px;
   display:block;position:relative;padding:var(--frame-pad);border:1px solid var(--line);background:var(--panel);
   box-shadow:var(--shadow);isolation:isolate;
+  transition:border-color .24s ease,box-shadow .24s ease;
+}
+.hero-portrait.is-active .frame{
+  border-color:var(--red);
+  box-shadow:0 18px 40px -12px rgba(120,8,15,.35),0 0 20px -4px rgba(226,59,73,.22);
 }
 .hero-portrait .frame::before,.hero-portrait .frame::after{
   content:"";position:absolute;width:14px;height:14px;border:2px solid var(--red-text);pointer-events:none;
+  transition:transform .2s ease;
 }
+.hero-portrait.is-active .frame::before{transform:translate(-2px,-2px)}
+.hero-portrait.is-active .frame::after{transform:translate(2px,2px)}
 .hero-portrait .frame::before{top:-2px;left:-2px;border-right:0;border-bottom:0}
 .hero-portrait .frame::after{bottom:-2px;right:-2px;border-left:0;border-top:0}
 .hero-portrait picture{display:block;position:relative;aspect-ratio:1/1;overflow:hidden;background:var(--red)}
 .hero-portrait img{width:100%;height:100%;object-fit:cover;filter:none;transition:none}
 .hero-portrait .comet-card__glare{
   position:absolute;inset:var(--frame-pad);z-index:2;pointer-events:none;
-  background:radial-gradient(circle at var(--glare-x,50%) var(--glare-y,50%),
-    rgba(255,255,255,.9) 0%,rgba(255,255,255,.4) 18%,rgba(255,255,255,0) 60%);
-  mix-blend-mode:overlay;opacity:0;transition:opacity .18s ease;
+  background:radial-gradient(circle 240px at var(--glare-x,50%) var(--glare-y,50%),
+    rgba(255,255,255,.85) 0%,rgba(255,255,255,.32) 28%,rgba(255,255,255,0) 65%);
+  mix-blend-mode:overlay;opacity:0;transition:opacity .22s cubic-bezier(.2,.8,.2,1);
 }
-.hero-portrait.is-active .comet-card__glare{opacity:.5}
+.hero-portrait.is-active .comet-card__glare{opacity:.65}
 .hero-portrait figcaption{display:flex;justify-content:space-between;gap:1rem;margin-top:.55rem;padding-top:.45rem;border-top:1px dashed var(--line);font-size:.72rem;line-height:1.5;color:var(--muted)}
 @media (prefers-reduced-motion:no-preference){
   .hero-name .line>span{transform:translateY(110%);animation:hero-rise .7s cubic-bezier(.2,.8,.2,1) forwards}
