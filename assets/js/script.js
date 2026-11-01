@@ -376,10 +376,10 @@
   const typedEl = document.querySelector("[data-typed]");
   if (typedEl) {
     const phrases = [
-      "Sophomore CSE Undergraduate - MSEC",
-      "BS Data Science & Applications (Foundational Level) - IITM",
-      "FOSS/Linux Enthusiast",
-      "Student Developer"
+      "CSE undergrad at MSEC",
+      "data science at IIT Madras",
+      "FOSS/Linux enthusiast",
+      "student developer in Chennai"
     ];
     if (reduceMotion.matches) {
       typedEl.textContent = phrases[0];
