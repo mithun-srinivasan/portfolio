@@ -34,33 +34,44 @@
     }
     syncThemeUI();
     document.dispatchEvent(new CustomEvent("themechange", { detail: { theme: next } }));
+    if (persist) showToast(`theme set to ${next}`);
+  }
+
+  let toastTimer;
+  function showToast(message) {
+    let toast = document.getElementById("site-toast");
+    if (!toast) {
+      toast = document.createElement("div");
+      toast.id = "site-toast";
+      toast.className = "site-toast";
+      toast.setAttribute("role", "status");
+      toast.setAttribute("aria-live", "polite");
+      document.body.appendChild(toast);
+    }
+    toast.textContent = message;
+    toast.classList.add("is-visible");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove("is-visible"), 2200);
+  }
+
+  function setTheme(next, event) {
+    const update = () => applyTheme(next);
+    if (document.startViewTransition && !reduceMotion.matches) {
+      const transition = document.startViewTransition(update);
+      transition.ready.then(() => {
+        const cx = event?.clientX || window.innerWidth - 48;
+        const cy = event?.clientY || 48;
+        const radius = Math.hypot(Math.max(cx, window.innerWidth - cx), Math.max(cy, window.innerHeight - cy));
+        root.animate({ clipPath: [`circle(0px at ${cx}px ${cy}px)`, `circle(${radius}px at ${cx}px ${cy}px)`] },
+          { duration: 380, easing: "cubic-bezier(.2,.8,.2,1)", pseudoElement: "::view-transition-new(root)" });
+      }).catch(() => {});
+    } else update();
   }
 
   /* Dark-first. The tiny head script has already set data-theme to avoid a flash. */
   applyTheme(isTheme(root.dataset.theme) ? root.dataset.theme : "dark", false);
 
-  themeToggle?.addEventListener("click", (event) => {
-    const next = currentTheme() === "dark" ? "light" : "dark";
-    const apply = () => applyTheme(next);
-
-    if (document.startViewTransition && !reduceMotion.matches) {
-      const transition = document.startViewTransition(apply);
-      transition.ready.then(() => {
-        const cx = event.clientX || window.innerWidth - 48;
-        const cy = event.clientY || 48;
-        const radius = Math.hypot(
-          Math.max(cx, window.innerWidth - cx),
-          Math.max(cy, window.innerHeight - cy)
-        );
-        root.animate(
-          { clipPath: [`circle(0px at ${cx}px ${cy}px)`, `circle(${radius}px at ${cx}px ${cy}px)`] },
-          { duration: 380, easing: "cubic-bezier(.2,.8,.2,1)", pseudoElement: "::view-transition-new(root)" }
-        );
-      }).catch(() => {});
-    } else {
-      apply();
-    }
-  });
+  themeToggle?.addEventListener("click", (event) => setTheme(currentTheme() === "dark" ? "light" : "dark", event));
 
   /* ---------- scroll progress ---------- */
   const header = document.querySelector(".site-header");
@@ -137,6 +148,7 @@
   copyBtn?.addEventListener("click", async () => {
     const email = copyBtn.dataset.email || "omsaimithun@gmail.com";
     const ok = await copyText(email);
+    showToast(ok ? "email copied" : "copy failed");
     if (copyStatus) copyStatus.textContent = ok ? `copied: ${email}` : `copy failed — select ${email}`;
     copyBtn.textContent = ok ? "Copied" : "Try again";
     clearTimeout(copyTimer);
@@ -376,6 +388,139 @@
   renderPosts();
   renderTalks();
 
+  /* ---------- native command palette ---------- */
+  const palette = document.getElementById("command-palette");
+  const paletteInput = document.getElementById("palette-input");
+  const paletteResults = document.getElementById("palette-results");
+  const paletteTrigger = document.getElementById("palette-trigger");
+  if (palette && paletteInput && paletteResults) {
+    const items = [];
+    document.querySelectorAll("main section[id]").forEach((node) => {
+      const heading = node.querySelector("h1,h2,h3");
+      if (!heading) return;
+      items.push({ label: heading.textContent.trim().replace(/\s+/g, " "), group: "sections", href: `#${node.id}` });
+    });
+    const homeUrl = `${siteRoot}index.html`;
+    [
+      ["work", "work"], ["about", "about"], ["experience", "experience"], ["skills", "skills"], ["contact", "contact"]
+    ].forEach(([label, id]) => items.push({ label, group: "sections", href: location.pathname.endsWith("index.html") || location.pathname === "/" ? `#${id}` : `${homeUrl}#${id}` }));
+    [
+      ["ditch-windows", "https://github.com/mithun-srinivasan/ditch-windows"],
+      ["srigurugranthsahib", "https://github.com/mithun-srinivasan/srigurugranthsahib"],
+      ["meeting-transcriber-and-summarizer", "https://github.com/mithun-srinivasan/meeting-transcriber-and-summarizer"],
+      ["spank-for-windows", "https://github.com/mithun-srinivasan/spank-for-windows"],
+      ["sticker-brains", "https://github.com/mithun-srinivasan/sticker-brains"]
+    ].forEach(([label, href]) => items.push({ label, group: "projects", href }));
+    document.querySelectorAll(".nav a[href], .footer-links a[href], .socials a[href], .profiles a[href]").forEach((link) => items.push({ label: link.textContent.trim(), group: "links", href: link.getAttribute("href") }));
+    [
+      ["github", "https://github.com/mithun-srinivasan"],
+      ["linkedin", "https://www.linkedin.com/in/mithun-srinivasan-msec"],
+      ["notion", "https://itsmithun06.notion.site/"],
+      ["x", "https://x.com/simply_mithun"],
+      ["mastodon", "https://mastodon.social/@mithunsrinivasan"]
+    ].forEach(([label, href]) => items.push({ label, group: "socials", href }));
+    ["dark", "light"].forEach((theme) => items.push({ label: `theme ${theme}`, group: "theme", action: () => setTheme(theme) }));
+    items.push({ label: "copy email", group: "contact", action: async () => { const ok = await copyText("omsaimithun@gmail.com"); showToast(ok ? "email copied" : "copy failed"); } });
+    const active = () => paletteResults.querySelector("button[aria-selected='true']");
+    function paintPalette() {
+      const query = paletteInput.value.trim().toLowerCase();
+      const filtered = items.filter((item) => `${item.group} ${item.label}`.toLowerCase().includes(query));
+      paletteResults.replaceChildren();
+      filtered.forEach((item, index) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "palette-result";
+        button.setAttribute("aria-selected", index === 0 ? "true" : "false");
+        const category = document.createElement("span"); category.textContent = item.group;
+        const label = document.createElement("span"); label.textContent = item.label;
+        button.append(category, label);
+        button.addEventListener("click", () => {
+          palette.close();
+          if (item.action) item.action();
+          else if (item.href) window.location.assign(item.href);
+        });
+        paletteResults.appendChild(button);
+      });
+      if (!filtered.length) paletteResults.textContent = "no matches";
+    }
+    const openPalette = () => { if (!palette.open) palette.showModal(); paletteInput.value = ""; paintPalette(); paletteInput.focus(); };
+    paletteTrigger?.addEventListener("click", openPalette);
+    paletteInput.addEventListener("input", paintPalette);
+    paletteInput.addEventListener("keydown", (event) => {
+      const buttons = Array.from(paletteResults.querySelectorAll("button"));
+      let index = buttons.indexOf(active());
+      if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+        event.preventDefault();
+        index = (index + (event.key === "ArrowDown" ? 1 : -1) + buttons.length) % buttons.length;
+        buttons.forEach((button, i) => button.setAttribute("aria-selected", i === index ? "true" : "false"));
+        buttons[index]?.scrollIntoView({ block: "nearest" });
+      } else if (event.key === "Enter" && active()) { event.preventDefault(); active().click(); }
+    });
+    document.addEventListener("keydown", (event) => {
+      if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "k") { event.preventDefault(); openPalette(); }
+    });
+  }
+
+  /* ---------- project filters, reveal, marquee, scramble, spotlight ---------- */
+  const projectCards = Array.from(document.querySelectorAll(".project[data-language]"));
+  document.querySelectorAll("[data-project-filter]").forEach((button) => button.addEventListener("click", () => {
+    const filter = button.dataset.projectFilter;
+    document.querySelectorAll("[data-project-filter]").forEach((other) => other.setAttribute("aria-pressed", String(other === button)));
+    projectCards.forEach((card) => { card.hidden = filter !== "all" && card.dataset.language !== filter; });
+  }));
+  if (!reduceMotion.matches && "IntersectionObserver" in window) {
+    const revealObserver = new IntersectionObserver((entries) => entries.forEach((entry) => {
+      if (entry.isIntersecting) { entry.target.classList.add("is-visible"); revealObserver.unobserve(entry.target); }
+    }), { threshold: 0.12 });
+    document.querySelectorAll(".section:not(.hero), .timeline li").forEach((node) => { node.classList.add("reveal"); revealObserver.observe(node); });
+  }
+  if (!reduceMotion.matches) document.querySelectorAll(".section-head h2").forEach((heading) => {
+    if (heading.querySelector("br")) return;
+    const original = heading.textContent.trim();
+    heading.setAttribute("aria-label", original);
+    let timer;
+    const scramble = () => {
+      clearInterval(timer);
+      let frame = 0;
+      timer = setInterval(() => {
+        frame += 1;
+        heading.textContent = original.split("").map((char, i) => char === " " || i < frame / 2 ? char : "#$%&"[Math.floor(Math.random() * 5)]).join("");
+        if (frame > original.length * 2) { clearInterval(timer); heading.textContent = original; }
+      }, 24);
+    };
+    heading.addEventListener("pointerenter", scramble);
+    heading.addEventListener("focus", scramble);
+  });
+  document.querySelectorAll(".project").forEach((card) => card.addEventListener("pointermove", (event) => {
+    const rect = card.getBoundingClientRect();
+    card.style.setProperty("--spot-x", `${event.clientX - rect.left}px`);
+    card.style.setProperty("--spot-y", `${event.clientY - rect.top}px`);
+  }));
+  const backTop = document.getElementById("back-to-top");
+  if (backTop) {
+    const updateBackTop = () => { backTop.hidden = window.scrollY < 650; };
+    window.addEventListener("scroll", updateBackTop, { passive: true }); updateBackTop();
+    backTop.addEventListener("click", () => window.scrollTo({ top: 0, behavior: reduceMotion.matches ? "auto" : "smooth" }));
+  }
+
+  /* Local, dated GitHub contribution snapshot; no runtime service dependency. */
+  const heatmap = document.getElementById("contribution-heatmap");
+  if (heatmap) fetch(`${siteRoot}assets/data/github-contributions.json`).then((response) => response.json()).then((data) => {
+    const days = Array.isArray(data.days) ? [...data.days].sort((a, b) => a.date.localeCompare(b.date)) : [];
+    heatmap.replaceChildren();
+    const first = days.length ? new Date(`${days[0].date}T00:00:00`) : null;
+    if (first) for (let i = 0; i < first.getDay(); i += 1) { const spacer = document.createElement("i"); spacer.setAttribute("aria-hidden", "true"); heatmap.appendChild(spacer); }
+    days.forEach((day) => {
+      const cell = document.createElement("span");
+      cell.setAttribute("role", "img");
+      cell.dataset.level = String(Math.max(0, Math.min(4, Number(day.level) || 0)));
+      cell.title = `${day.count} contributions on ${day.date}`;
+      cell.setAttribute("aria-label", cell.title);
+      heatmap.appendChild(cell);
+    });
+    heatmap.dataset.loaded = "true";
+  }).catch(() => { heatmap.textContent = "contribution snapshot unavailable"; });
+
   /* ---------- footer terminal ---------- */
   const term = document.getElementById("term");
   const termOut = document.getElementById("term-out");
@@ -424,7 +569,10 @@
         ["blog", "open the blog"],
         ["talks", "open the talks page"],
         ["resume", "open my resume PDF"],
-        ["theme", "toggle light / dark"],
+        ["open PROJECT", "open a project by name"],
+        ["skills", "list skills"],
+        ["experience", "list experience"],
+        ["theme [dark|light]", "set or toggle the theme"],
         ["email", "copy my email address"],
         ["contact", "email, phone, location"],
         ["socials", "where else to find me"],
@@ -436,10 +584,10 @@
       ];
       rows.forEach(([key, value]) => {
         print(
-          `<span class="term-help-key">${key.padEnd(15, " ")}</span><span class="term-help-val">${value}</span>`
+          `<span class="term-help-key">${key.padEnd(21, " ")}</span><span class="term-help-val">${value}</span>`
         );
       });
-      print("<span class='term-dim'>tip: ↑ / ↓ walks through history</span>");
+      print("<span class='term-dim'>tip: ↑ / ↓ history · tab completes · ctrl+c clears input</span>");
     }
 
     const files = {
@@ -570,9 +718,35 @@
           window.location.assign(`${siteRoot}assets/resume.pdf`);
           break;
 
+        case "open": {
+          const known = {
+            "ditch-windows": "https://github.com/mithun-srinivasan/ditch-windows",
+            "srigurugranthsahib": "https://github.com/mithun-srinivasan/srigurugranthsahib",
+            "meeting-transcriber": "https://github.com/mithun-srinivasan/meeting-transcriber-and-summarizer",
+            "meeting-transcriber-and-summarizer": "https://github.com/mithun-srinivasan/meeting-transcriber-and-summarizer",
+            "spank-for-windows": "https://github.com/mithun-srinivasan/spank-for-windows",
+            "sticker-brains": "https://github.com/mithun-srinivasan/sticker-brains"
+          };
+          const slug = arg.toLowerCase().replace(/\s+/g, "-");
+          if (known[slug]) window.open(known[slug], "_blank", "noopener,noreferrer");
+          else text(`open: unknown project: ${arg || "(missing name)"}`, "term-line term-dim");
+          break;
+        }
+
+        case "skills":
+          document.querySelectorAll(".skill").forEach((skill) => text(`${skill.querySelector("dt")?.textContent || "skill"}: ${skill.querySelector("dd")?.textContent || ""}`));
+          if (!document.querySelector(".skill")) text("Go · TypeScript · Python · Linux · data science");
+          break;
+
+        case "experience":
+          document.querySelectorAll("#experience .timeline li").forEach((item) => text(`${item.querySelector("time")?.textContent || ""} — ${item.querySelector("h3")?.textContent || ""}`));
+          if (!document.querySelector("#experience .timeline li")) text("Technical Consultant at Upfinity · FOSS United Chennai");
+          break;
+
         case "theme": {
-          const next = currentTheme() === "dark" ? "light" : "dark";
-          applyTheme(next);
+          const requested = arg.toLowerCase();
+          const next = isTheme(requested) ? requested : currentTheme() === "dark" ? "light" : "dark";
+          setTheme(next);
           text(`theme → ${next}`);
           break;
         }
@@ -670,7 +844,18 @@
     });
 
     termInput.addEventListener("keydown", (event) => {
-      if (event.key === "ArrowUp") {
+      if (event.key === "Tab") {
+        event.preventDefault();
+        const commands = ["help", "whoami", "about", "projects", "ls", "cat", "pwd", "blog", "talks", "resume", "open", "skills", "experience", "theme", "email", "contact", "socials", "neofetch", "date", "history", "clear", "exit"];
+        const fragment = termInput.value.trim().toLowerCase();
+        const matches = commands.filter((item) => item.startsWith(fragment));
+        if (matches.length === 1) termInput.value = `${matches[0]} `;
+        else if (matches.length > 1) text(matches.join("   "), "term-line term-dim");
+      } else if (event.key === "c" && event.ctrlKey) {
+        event.preventDefault();
+        termInput.value = "";
+        text("^C", "term-line term-dim");
+      } else if (event.key === "ArrowUp") {
         event.preventDefault();
         if (historyIndex > 0) {
           historyIndex -= 1;

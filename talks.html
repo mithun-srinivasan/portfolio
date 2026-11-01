@@ -61,12 +61,20 @@
       <a href="assets/resume.pdf">resume</a>
       <a href="#contact">contact</a>
     </nav>
+    <button class="palette-trigger" id="palette-trigger" type="button" aria-label="Open command palette"><span>jump</span><kbd>ctrl / ⌘ k</kbd></button>
     <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch to light theme">
       <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.66 6.34l1.41-1.41"></path></svg>
       <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5 8.5 8.5 0 1 0 20.5 14.5Z"></path></svg>
     </button>
   </div>
 </header>
+<dialog class="command-palette" id="command-palette" aria-labelledby="palette-title">
+  <div class="palette-head"><div><p class="cmd"><span class="path">~/portfolio</span> jump<span class="caret" aria-hidden="true"></span></p><h2 id="palette-title">go somewhere</h2></div><form method="dialog"><button class="palette-close" aria-label="Close command palette">esc</button></form></div>
+  <label class="sr-only" for="palette-input">Search sections, projects, and links</label>
+  <input id="palette-input" class="palette-input" type="search" placeholder="search sections, projects, links" autocomplete="off" spellcheck="false">
+  <div class="palette-results" id="palette-results"></div><p class="palette-hint">↑ / ↓ move · enter open · esc close</p>
+</dialog>
+
 
 <main id="main">
   <header class="page-head">
@@ -152,7 +160,7 @@
         </div>
       </div>
     </div>
-    <p class="term-hint" id="term-hint">Try <b>help</b>, <b>whoami</b>, <b>ls</b>, <b>cat .zshrc</b>, <b>theme</b>, <b>email</b>, <b>resume</b>, or <b>neofetch</b>.</p>
+    <p class="term-hint" id="term-hint">Try <b>help</b>, <b>open PROJECT</b>, <b>skills</b>, <b>experience</b>, <b>theme dark|light</b>, <b>resume</b>, or <b>email</b>.</p>
     <div class="footer-bottom">
       <span>© 2026 Mithun Srinivasan</span>
       <span>Chennai, India / <time id="local-time">--:--</time> IST</span>
@@ -183,6 +191,7 @@
     }
   ];
 </script>
+<button class="back-to-top" id="back-to-top" type="button" aria-label="Back to top" hidden>↑</button>
 <script src="assets/js/script.js"></script>
 </body>
 </html>

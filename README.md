@@ -34,6 +34,8 @@ A static personal portfolio built with semantic HTML, CSS, and vanilla JavaScrip
     │   └── style.css
     ├── js/
     │   └── script.js
+    ├── data/
+    │   └── github-contributions.json
     ├── images/
     │   ├── mithun-portrait-{480,720,900}.{webp,jpg}
     │   ├── og-image.png
@@ -61,6 +63,9 @@ Open <http://127.0.0.1:4173/>. The site can also be opened directly from `index.
 - **Resume:** place the supplied PDF at `assets/resume.pdf`.
 - **Styles:** shared tokens and component styles live in `assets/css/style.css`.
 - **Behaviour:** theme, navigation, typewriter, portrait card, and terminal live in `assets/js/script.js`.
+- **Interactions:** Ctrl/Cmd+K opens the native command palette; work filters, scroll reveal, tools marquee, heading scramble, card spotlight, toast, and back-to-top need no runtime dependencies. Reveal and marquee motion honor reduced-motion settings.
+- **Terminal:** `help` lists `open PROJECT`, `skills`, `experience`, and `theme [dark|light]`; Tab completes commands and Ctrl+C clears the current input.
+- **Contribution snapshot:** refresh `assets/data/github-contributions.json` from the public GitHub calendar and update its `updated` date.
 
 ## Deployment
 

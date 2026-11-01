@@ -63,12 +63,21 @@
       <a href="assets/resume.pdf">resume</a>
       <a href="#contact">contact</a>
     </nav>
+    <button class="palette-trigger" id="palette-trigger" type="button" aria-label="Open command palette"><span>jump</span><kbd>ctrl / ⌘ k</kbd></button>
     <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch to light theme">
       <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.66 6.34l1.41-1.41"></path></svg>
       <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5 8.5 8.5 0 1 0 20.5 14.5Z"></path></svg>
     </button>
   </div>
 </header>
+
+<dialog class="command-palette" id="command-palette" aria-labelledby="palette-title">
+  <div class="palette-head"><div><p class="cmd"><span class="path">~/portfolio</span> jump<span class="caret" aria-hidden="true"></span></p><h2 id="palette-title">go somewhere</h2></div><form method="dialog"><button class="palette-close" aria-label="Close command palette">esc</button></form></div>
+  <label class="sr-only" for="palette-input">Search sections, projects, and links</label>
+  <input id="palette-input" class="palette-input" type="search" placeholder="search sections, projects, links" autocomplete="off" spellcheck="false">
+  <div class="palette-results" id="palette-results"></div>
+  <p class="palette-hint">↑ / ↓ move · enter open · esc close</p>
+</dialog>
 
 <main id="main">
   <section class="hero" id="top" aria-labelledby="hero-title">
@@ -111,8 +120,14 @@
         <p>Five projects I use myself, plus the ones that started as a favour for a friend or a community. Every link goes somewhere real.</p>
       </div>
 
+      <div class="project-filters" role="group" aria-label="Filter projects by language">
+        <button type="button" data-project-filter="all" aria-pressed="true">all</button>
+        <button type="button" data-project-filter="go" aria-pressed="false">Go</button>
+        <button type="button" data-project-filter="ts" aria-pressed="false">TS</button>
+        <button type="button" data-project-filter="python" aria-pressed="false">Python</button>
+      </div>
       <div class="work-list">
-        <article class="project">
+        <article class="project" data-language="go">
           <div class="project-cover cover-ditch" aria-hidden="true">
             <img class="cover-mark" src="assets/logos/ditch-windows.svg" alt="" width="64" height="64" loading="lazy" decoding="async">
           </div>
@@ -127,7 +142,7 @@
           </div>
         </article>
 
-        <article class="project">
+        <article class="project" data-language="ts">
           <div class="project-cover cover-sggs" aria-hidden="true">
             <img class="cover-mark" src="assets/logos/srigurugranthsahib.svg" alt="" width="100" height="100" loading="lazy" decoding="async">
           </div>
@@ -142,7 +157,7 @@
           </div>
         </article>
 
-        <article class="project">
+        <article class="project" data-language="python">
           <div class="project-cover cover-meeting" aria-hidden="true">
             <img class="cover-mark" src="assets/logos/meeting-transcriber.svg" alt="" width="64" height="64" loading="lazy" decoding="async">
           </div>
@@ -154,7 +169,7 @@
           </div>
         </article>
 
-        <article class="project">
+        <article class="project" data-language="go">
           <div class="project-cover cover-spank" aria-hidden="true">
             <img class="cover-wordmark" src="assets/logos/spank-for-windows.svg" alt="" width="256" height="127" loading="lazy" decoding="async">
           </div>
@@ -169,7 +184,7 @@
           </div>
         </article>
 
-        <article class="project">
+        <article class="project" data-language="ts">
           <div class="project-cover cover-sticker" aria-hidden="true">
             <img class="cover-mark" src="assets/logos/sticker-brains.svg" alt="" width="64" height="64" loading="lazy" decoding="async">
           </div>
@@ -190,6 +205,10 @@
           <a href="https://www.linkedin.com/in/mithun-srinivasan-msec">linkedin</a>
           <a href="talks.html">talks</a>
         </div>
+      </div>
+      <div class="tool-marquee" aria-label="Tools and communities">
+        <p class="sr-only">Tools and communities: Git, GitHub, Linux, C++, Python, FOSS United Chennai, IIT Madras, and open source.</p>
+        <div class="marquee-track" aria-hidden="true"><span>git</span><span>github</span><span>linux</span><span>c++</span><span>python</span><span>foss united chennai</span><span>iit madras</span><span>open source</span><span>git</span><span>github</span><span>linux</span><span>c++</span><span>python</span><span>foss united chennai</span><span>iit madras</span><span>open source</span></div>
       </div>
     </div>
   </section>
@@ -322,6 +341,12 @@
           <a class="profile" href="https://www.codedex.io/@mithun-srini"><b>Codedex</b><span>@mithun-srini</span></a>
         </nav>
       </div>
+      <section class="contributions" id="contributions" aria-labelledby="contributions-title">
+        <div class="contributions-head"><div><h3 id="contributions-title">GitHub activity</h3><p>Public contributions over the past year.</p></div><a href="https://github.com/mithun-srinivasan">view profile</a></div>
+        <div class="heatmap-scroll"><div class="heatmap" id="contribution-heatmap" role="group" aria-label="GitHub contribution calendar"></div></div>
+        <div class="heatmap-legend" aria-label="Contribution levels"><span>less</span><i data-level="0"></i><i data-level="1"></i><i data-level="2"></i><i data-level="3"></i><i data-level="4"></i><span>more</span></div>
+        <p class="heatmap-updated" id="heatmap-updated">Snapshot updated 2026-11-01.</p>
+      </section>
     </div>
   </section>
 
@@ -389,7 +414,7 @@
         </div>
       </div>
     </div>
-    <p class="term-hint" id="term-hint">Try <b>help</b>, <b>whoami</b>, <b>ls</b>, <b>cat .zshrc</b>, <b>theme</b>, <b>email</b>, <b>resume</b>, or <b>neofetch</b>.</p>
+    <p class="term-hint" id="term-hint">Try <b>help</b>, <b>open PROJECT</b>, <b>skills</b>, <b>experience</b>, <b>theme dark|light</b>, <b>resume</b>, or <b>email</b>.</p>
     <div class="footer-bottom">
       <span>© 2026 Mithun Srinivasan</span>
       <span>Chennai, India / <time id="local-time">--:--</time> IST</span>
@@ -398,6 +423,8 @@
     <p class="ai-note">This site was built with AI assistance. I reviewed, edited, and approved the code and content.</p>
   </div>
 </footer>
+
+<button class="back-to-top" id="back-to-top" type="button" aria-label="Back to top" hidden>↑</button>
 
 <script src="assets/js/script.js"></script>
 </body>
