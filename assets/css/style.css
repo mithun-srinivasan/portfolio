@@ -311,8 +311,6 @@ code{font-family:var(--mono);font-size:.9em;color:var(--red-text);background:col
 .timeline p{max-width:70ch;margin-top:.25rem;font-size:.78rem;line-height:1.65;color:var(--muted)}
 
 .experience-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(240px,.6fr);gap:clamp(2rem,6vw,4.5rem);align-items:start}
-.events-attended{margin-top:clamp(1.5rem,3vw,2rem);font-size:.78rem;line-height:1.65;color:var(--muted)}
-.events-attended .status-dot{margin-top:.3rem}
 
 .project-outcome{margin-top:.4rem;font-size:.74rem;line-height:1.6;color:var(--muted)}
 .outcome-label{color:var(--red-text);font-weight:700;text-transform:uppercase;letter-spacing:.08em}
