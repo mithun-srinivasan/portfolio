@@ -878,7 +878,7 @@
       "about.txt": [
         "Sophomore CSE Undergraduate - MSEC | BS Data Science & Applications (Foundational Level) - IITM | FOSS/Linux Enthusiast | Student Developer",
         "currently: Technical Consultant at Upfinity; FOSS United Chennai.",
-        "aiming at a technical career in public service."
+        "aiming at building open-source tools in public."
       ],
       "projects.txt": [
         "ditch-windows        Go       rebuild a Windows machine from one encrypted backup",
