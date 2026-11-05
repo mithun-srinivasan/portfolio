@@ -560,14 +560,53 @@
   const chipBar = document.getElementById("project-filter");
   if (chipBar) {
     chipBar.hidden = false;
+    const chips = Array.from(chipBar.querySelectorAll("[data-filter]"));
     const projects = Array.from(document.querySelectorAll(".work-list .project"));
-    chipBar.addEventListener("click", (event) => {
-      const chip = event.target.closest("[data-filter]");
+    const selectChip = (chip, moveFocus = false) => {
       if (!chip) return;
+      chips.forEach((item) => {
+        const selected = item === chip;
+        item.setAttribute("aria-checked", String(selected));
+        item.tabIndex = selected ? 0 : -1;
+      });
       const wanted = chip.dataset.filter;
-      chipBar.querySelectorAll("[data-filter]").forEach((c) => c.setAttribute("aria-pressed", String(c === chip)));
       projects.forEach((project) => {
         project.hidden = !(wanted === "all" || (project.dataset.lang || "").split(" ").includes(wanted));
+      });
+      if (moveFocus) chip.focus();
+    };
+
+    chipBar.addEventListener("click", (event) => {
+      const chip = event.target.closest("[data-filter]");
+      if (chip) selectChip(chip);
+    });
+
+    chipBar.addEventListener("keydown", (event) => {
+      const current = event.target.closest("[data-filter]");
+      if (!current) return;
+      const index = chips.indexOf(current);
+      let next = null;
+      if (event.key === "ArrowRight" || event.key === "ArrowDown") next = chips[(index + 1) % chips.length];
+      else if (event.key === "ArrowLeft" || event.key === "ArrowUp") next = chips[(index - 1 + chips.length) % chips.length];
+      else if (event.key === "Home") next = chips[0];
+      else if (event.key === "End") next = chips[chips.length - 1];
+      if (!next) return;
+      event.preventDefault();
+      selectChip(next, true);
+    });
+  }
+
+  /* ---------- project spotlight (red only, fine pointers) ---------- */
+  if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+    document.querySelectorAll(".work-list .project").forEach((project) => {
+      project.addEventListener("pointermove", (event) => {
+        const rect = project.getBoundingClientRect();
+        project.style.setProperty("--spot-x", `${event.clientX - rect.left}px`);
+        project.style.setProperty("--spot-y", `${event.clientY - rect.top}px`);
+      });
+      project.addEventListener("pointerleave", () => {
+        project.style.removeProperty("--spot-x");
+        project.style.removeProperty("--spot-y");
       });
     });
   }
@@ -593,6 +632,7 @@
   /* ---------- github pulse: snapshot json -> numbers + heatmap ---------- */
   const heat = document.getElementById("heat");
   const heatWrap = document.getElementById("heat-wrap");
+  const heatFallback = document.getElementById("heat-fallback");
   const statEls = document.querySelectorAll(".stats [data-count]");
   const startStats = () => {
     if (!statEls.length) return;
@@ -614,6 +654,7 @@
         set(1, data.contributions);
         const days = data.days || [];
         if (days.length) {
+          if (heatFallback) heatFallback.hidden = true;
           const pad = new Date(`${days[0][0]}T00:00:00`).getDay();
           const frag = document.createDocumentFragment();
           for (let i = 0; i < pad; i += 1) { const p = document.createElement("i"); p.className = "pad"; frag.appendChild(p); }
@@ -627,9 +668,13 @@
           heat.setAttribute("aria-label", `GitHub contributions over the last 12 months: ${data.contributions} in total`);
           heatWrap.hidden = false;
           heatWrap.scrollLeft = heatWrap.scrollWidth;
+        } else if (heatFallback) {
+          heatFallback.hidden = false;
         }
       })
-      .catch(() => {})
+      .catch(() => {
+        if (heatFallback) heatFallback.hidden = false;
+      })
       .finally(startStats);
   } else {
     startStats();
@@ -683,7 +728,7 @@
     { group: "actions", label: "toggle theme", run: () => applyTheme(currentTheme() === "dark" ? "light" : "dark") },
     { group: "actions", label: "copy email", run: async () => { const ok = await copyText("omsaimithun@gmail.com"); toast(ok ? "copied: omsaimithun@gmail.com" : "email: omsaimithun@gmail.com"); } },
     { group: "actions", label: "book 30 minutes", run: () => window.open("https://cal.com/mithun-srinivasan/30min", "_blank", "noopener") },
-    ...[["github", "https://github.com/mithun-srinivasan"], ["linkedin", "https://www.linkedin.com/in/mithun-srinivasan-msec"], ["x", "https://x.com/simply_mithun"], ["mastodon", "https://mastodon.social/@mithunsrinivasan"], ["notion", "https://itsmithun06.notion.site/"]]
+    ...[["github", "https://github.com/mithun-srinivasan"], ["linkedin", "https://www.linkedin.com/in/mithun-srinivasan-msec"], ["x", "https://x.com/simply_mithun"], ["instagram", "https://www.instagram.com/its_mithunsrinivasan/"], ["mastodon", "https://mastodon.social/@mithunsrinivasan"], ["notion", "https://itsmithun06.notion.site/"]]
       .map(([name, url]) => ({ group: "elsewhere", label: name, run: () => window.open(url, "_blank", "noopener") }))
   ];
 
@@ -756,21 +801,23 @@
     });
     dialog.addEventListener("click", (event) => { if (event.target === dialog) dialog.close(); });
 
-    document.addEventListener("keydown", (event) => {
-      const typing = /^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement?.tagName || "") || document.activeElement?.isContentEditable;
-      if ((event.key.toLowerCase() === "k" && (event.ctrlKey || event.metaKey)) || (event.key === "/" && !typing && !event.ctrlKey && !event.metaKey)) {
-        event.preventDefault();
-        openPalette();
-      }
-    });
-
+    const isApple = /macintosh|mac intel|mac ppc|mac68k/.test((navigator.userAgentData?.platform || navigator.platform || "").toLowerCase());
     const trigger = document.createElement("button");
     trigger.type = "button";
     trigger.className = "palette-trigger";
     trigger.setAttribute("aria-label", "Open command palette");
-    trigger.innerHTML = '<span aria-hidden="true">ctrl k</span>';
+    trigger.innerHTML = `<span aria-hidden="true">${isApple ? "cmd k" : "ctrl k"}</span>`;
     trigger.addEventListener("click", openPalette);
     themeToggle?.before(trigger);
+
+    document.addEventListener("keydown", (event) => {
+      const typing = /^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement?.tagName || "") || document.activeElement?.isContentEditable;
+      if ((event.key.toLowerCase() === "k" && (event.ctrlKey || event.metaKey)) || (event.key === "/" && !typing && !event.ctrlKey && !event.metaKey)) {
+        event.preventDefault();
+        if (dialog.open) dialog.close();
+        else openPalette();
+      }
+    });
   }
 
   /* ---------- footer terminal ---------- */
@@ -795,7 +842,7 @@
       termOut.scrollTop = termOut.scrollHeight;
     }
 
-    const LINKS = /(https?:\/\/[^\s<]+|\b(?:github\.com|linkedin\.com|x\.com|mastodon\.social|itsmithun06\.notion\.site|cal\.com)\/[^\s<]*)/g;
+    const LINKS = /(https?:\/\/[^\s<]+|\b(?:github\.com|linkedin\.com|x\.com|instagram\.com|mastodon\.social|itsmithun06\.notion\.site|cal\.com)\/[^\s<]*)/g;
     function linkify(html) {
       return html.replace(LINKS, (url) => {
         const href = /^https?:/.test(url) ? url : `https://${url}`;
@@ -819,13 +866,14 @@
       print("<span class='term-ok'>mithun@portfolio — shell help</span>");
       print("<span class='term-dim'>──────────────────────────────────────────────</span>");
       const rows = [
-        ["help", "this page"],
+        ["help / ?", "this page"],
         ["whoami", "one-line identity"],
         ["about", "the short bio"],
         ["projects", "things I have shipped"],
         ["ls", "files in this directory"],
         ["cat FILE", "read a file (try .zshrc)"],
         ["pwd", "print working directory"],
+        ["cd [blog|talks]", "move to a page"],
         ["blog", "open the blog"],
         ["talks", "open the talks page"],
         ["theme [dark|light]", "toggle or set the theme"],
@@ -839,6 +887,10 @@
         ["date", "current time in IST"],
         ["history", "commands from this session"],
         ["clear", "clear the screen"],
+        ["echo TEXT", "print text"],
+        ["uname", "kernel-ish output"],
+        ["sudo", "permission denied, politely"],
+        ["rm", "nice try"],
         ["exit", "exit 0"]
       ];
       rows.forEach(([key, value]) => {
@@ -884,7 +936,7 @@
       ]
     };
 
-    const COMMANDS = ["help", "whoami", "about", "projects", "ls", "cat", "pwd", "cd", "blog", "talks", "theme", "open", "skills", "experience", "email", "contact", "socials", "neofetch", "date", "history", "clear", "exit", "echo", "uname"];
+    const COMMANDS = ["help", "?", "whoami", "about", "projects", "ls", "cat", "pwd", "cd", "blog", "talks", "theme", "open", "skills", "experience", "email", "contact", "socials", "neofetch", "date", "history", "clear", "exit", "echo", "uname", "sudo", "rm"];
 
     function listFiles() {
       text("welcome.txt   about.txt   projects.txt   contact.txt   .zshrc");
@@ -1019,6 +1071,7 @@
           text("github     github.com/mithun-srinivasan");
           text("linkedin   linkedin.com/in/mithun-srinivasan-msec");
           text("x          x.com/simply_mithun");
+          text("instagram  instagram.com/its_mithunsrinivasan");
           text("mastodon   mastodon.social/@mithunsrinivasan");
           text("notion     itsmithun06.notion.site");
           break;
