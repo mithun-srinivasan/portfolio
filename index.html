@@ -71,7 +71,7 @@
   <section class="hero" id="top" aria-labelledby="hero-title">
     <div class="shell hero-grid">
       <div class="hero-copy">
-        <p class="cmd hero-kicker"><span class="path">~/mithun</span> whoami<span class="caret" aria-hidden="true"></span></p>
+        <p class="cmd hero-kicker"><span class="path">~/mithun</span> whoami</p>
         <h1 class="hero-name" id="hero-title">
           <span class="line"><span>Mithun</span></span>
           <span class="line"><span>Srinivasan<span class="dot">.</span></span></span>
@@ -110,16 +110,16 @@
   <section class="section" id="work" aria-labelledby="work-title">
     <div class="shell">
       <div class="section-head">
-        <p class="cmd"><span class="path">cat</span> work/<span class="caret" aria-hidden="true"></span></p>
+        <p class="cmd"><span class="path">cat</span> work/</p>
         <h2 id="work-title">Built because<br>the tool didn’t exist.</h2>
-        <p>Five projects I use myself, plus the ones that started as a favour for a friend or a community. Every link goes somewhere real.</p>
+        <p>A few projects I use myself, plus the ones that started as a favour for a friend or a community. Every link goes somewhere real.</p>
       </div>
 
-      <div class="chips" id="project-filter" role="group" aria-label="Filter projects by language" hidden>
-        <button class="chip" type="button" data-filter="all" aria-pressed="true">all</button>
-        <button class="chip" type="button" data-filter="go" aria-pressed="false">go</button>
-        <button class="chip" type="button" data-filter="typescript" aria-pressed="false">ts</button>
-        <button class="chip" type="button" data-filter="python" aria-pressed="false">python</button>
+      <div class="chips" id="project-filter" role="radiogroup" aria-label="Filter projects by language" hidden>
+        <button class="chip" type="button" role="radio" data-filter="all" aria-checked="true" tabindex="0">all</button>
+        <button class="chip" type="button" role="radio" data-filter="go" aria-checked="false" tabindex="-1">go</button>
+        <button class="chip" type="button" role="radio" data-filter="typescript" aria-checked="false" tabindex="-1">ts</button>
+        <button class="chip" type="button" role="radio" data-filter="python" aria-checked="false" tabindex="-1">python</button>
       </div>
 
       <div class="work-list">
@@ -214,6 +214,7 @@
           <div class="heat" id="heat" role="img" aria-label="GitHub contribution heatmap for the last 12 months"></div>
           <p class="heat-legend" aria-hidden="true">less <i data-l="0"></i><i data-l="1"></i><i data-l="2"></i><i data-l="3"></i><i data-l="4"></i> more</p>
         </div>
+        <p class="heat-fallback" id="heat-fallback" role="status" hidden>The contribution calendar could not load. The totals above are from the last saved GitHub snapshot.</p>
       </div>
     </div>
   </section>
@@ -221,7 +222,7 @@
   <section class="section" id="about" aria-labelledby="about-title">
     <div class="shell">
       <div class="section-head">
-        <p class="cmd"><span class="path">cat</span> about.txt<span class="caret" aria-hidden="true"></span></p>
+        <p class="cmd"><span class="path">cat</span> about.txt</p>
         <h2 id="about-title">Serious about<br>shipping. Still<br>a newbie at heart.</h2>
         <p>I learn by building the thing, breaking it, and then reading the manual. Most of that happens in public, on GitHub.</p>
       </div>
@@ -262,7 +263,7 @@
   <section class="section" id="experience" aria-labelledby="experience-title">
     <div class="shell">
       <div class="section-head">
-        <p class="cmd"><span class="path">git</span> log --oneline<span class="caret" aria-hidden="true"></span></p>
+        <p class="cmd"><span class="path">git</span> log --oneline</p>
         <h2 id="experience-title">A short log<br>of showing up.</h2>
         <p>Community work, a consultancy role, and a lot of pull requests. The dates are real; the commit history does the rest.</p>
       </div>
@@ -306,7 +307,7 @@
   <section class="section" id="skills" aria-labelledby="skills-title">
     <div class="shell">
       <div class="section-head">
-        <p class="cmd"><span class="path">cat</span> toolchain.txt<span class="caret" aria-hidden="true"></span></p>
+        <p class="cmd"><span class="path">cat</span> toolchain.txt</p>
         <h2 id="skills-title">Tools I reach for.</h2>
         <p>No proficiency bars. Either I’ve shipped with it or I’m learning it.</p>
       </div>
@@ -353,7 +354,7 @@
     <div class="shell contact-inner">
       <div class="contact-grid">
         <div>
-          <p class="cmd"><span class="path">mail</span> --to mithun<span class="caret" aria-hidden="true"></span></p>
+          <p class="cmd"><span class="path">mail</span> --to mithun</p>
           <h2 id="contact-title">Have a problem worth solving?</h2>
           <p class="contact-lead">I’m looking for internships and collaborations where I can learn fast and ship something useful. If you’re building in the open, even better.</p>
           <div class="contact-email-row">
