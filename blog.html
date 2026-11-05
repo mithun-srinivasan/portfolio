@@ -9,7 +9,11 @@
 <meta name="color-scheme" content="dark light">
 <meta name="theme-color" content="#050505">
 <meta name="description" content="Notes on Linux, open source, and what I break while learning — by Mithun Srinivasan.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%2378080f'/%3E%3Cpath d='M14 46V18h6l12 17 12-17h6v28h-7V30L32 44 21 30v16z' fill='%23f4f2ee'/%3E%3C/svg%3E">
+<meta name="google-site-verification" content="TODO">
+<link rel="icon" href="/favicon.ico" sizes="48x48" type="image/x-icon">
+<link rel="icon" href="/assets/images/site-icon.svg" type="image/svg+xml">
+<link rel="icon" href="/assets/images/icon-192.png" sizes="192x192" type="image/png">
+<link rel="me" href="https://mastodon.social/@mithunsrinivasan">
 <script>
   (() => {
     try {
@@ -23,38 +27,68 @@
 <link rel="preload" href="assets/fonts/jetbrains-mono-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="canonical" href="https://mithunsrinivasan.is-a.dev/blog.html">
 <link rel="alternate" type="application/atom+xml" title="Mithun Srinivasan — Blog" href="feed.xml">
-<link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
-<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta property="og:locale" content="en_IN">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Mithun Srinivasan">
 <meta property="og:title" content="Blog — Mithun Srinivasan">
 <meta property="og:description" content="Notes on Linux, open source, and what I break while learning — by Mithun Srinivasan.">
 <meta property="og:url" content="https://mithunsrinivasan.is-a.dev/blog.html">
 <meta property="og:image" content="https://mithunsrinivasan.is-a.dev/assets/images/og-image.png">
+<meta property="og:image:alt" content="Mithun Srinivasan red and white duotone portrait">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@simply_mithun">
+<meta name="twitter:creator" content="@simply_mithun">
 <meta name="twitter:title" content="Blog — Mithun Srinivasan">
 <meta name="twitter:description" content="Notes on Linux, open source, and what I break while learning — by Mithun Srinivasan.">
 <meta name="twitter:image" content="https://mithunsrinivasan.is-a.dev/assets/images/og-image.png">
+<meta name="twitter:image:alt" content="Mithun Srinivasan red and white duotone portrait">
 <meta name="referrer" content="strict-origin-when-cross-origin">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","name":"Mithun Srinivasan","url":"https://mithunsrinivasan.is-a.dev/","image":"https://mithunsrinivasan.is-a.dev/assets/images/mithun-portrait-900.webp","jobTitle":"Sophomore CSE Undergraduate","address":{"@type":"PostalAddress","addressLocality":"Chennai","addressCountry":"IN"},"alumniOf":[{"@type":"CollegeOrUniversity","name":"Meenakshi Sundararajan Engineering College"},{"@type":"CollegeOrUniversity","name":"Indian Institute of Technology Madras"}],"sameAs":["https://github.com/mithun-srinivasan","https://www.linkedin.com/in/mithun-srinivasan-msec","https://x.com/simply_mithun","https://www.instagram.com/its_mithunsrinivasan/","https://mastodon.social/@mithunsrinivasan","https://itsmithun06.notion.site/"]}</script>
-<link rel="stylesheet" href="assets/css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "CollectionPage",
+      "url": "https://mithunsrinivasan.is-a.dev/blog.html",
+      "name": "Blog",
+      "description": "Notes on Linux, open source, and what I break while learning — by Mithun Srinivasan."
+    },
+    {
+      "@type": "ItemList",
+      "name": "Posts",
+      "numberOfItems": 1,
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "url": "https://mithunsrinivasan.is-a.dev/posts/hi.html",
+          "name": "Hi, world"
+        }
+      ]
+    }
+  ]
+}
+</script>
+<link rel="stylesheet" href="/assets/css/style.css">
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
 
 <header class="site-header" id="site-header">
   <div class="shell header-inner">
-    <a class="brand" href="index.html" aria-label="Mithun Srinivasan, home">
+    <a class="brand" href="/" aria-label="Mithun Srinivasan, home">
       <span class="brand-mark" aria-hidden="true">MS</span>
       <span class="brand-text">mithun@portfolio:~$</span>
     </a>
     <nav class="nav" aria-label="Main">
-      <a href="index.html#work">work</a>
-      <a href="index.html#about">about</a>
-      <a href="index.html#experience">experience</a>
-      <a href="index.html#skills">skills</a>
+      <a href="/#work">work</a>
+      <a href="/#experience">experience</a>
+      <a href="/#community">community</a>
+      <a href="/#skills">skills</a>
       <a href="blog.html" data-blog-link aria-current="page">blog</a>
       <a href="talks.html">talks</a>
       <a href="#contact">contact</a>
@@ -112,7 +146,6 @@
           </div>
           <p class="copy-status" id="copy-status" role="status" aria-live="polite"></p>
           <div class="contact-meta">
-            <p>or call <a href="tel:+919342099436">+91 93420 99436</a></p>
             <p>Chennai, India / IST (UTC+05:30)</p>
             <p><a href="https://cal.com/mithun-srinivasan/30min">book 30 minutes</a></p>
           </div>
@@ -122,7 +155,7 @@
           <a class="social" href="https://www.linkedin.com/in/mithun-srinivasan-msec"><b>LinkedIn</b><span>mithun-srinivasan-msec</span></a>
           <a class="social" href="https://x.com/simply_mithun"><b>X</b><span>@simply_mithun</span></a>
           <a class="social" href="https://www.instagram.com/its_mithunsrinivasan/"><b>Instagram</b><span>its_mithunsrinivasan</span></a>
-          <a class="social" href="https://mastodon.social/@mithunsrinivasan"><b>Mastodon</b><span>@mithunsrinivasan</span></a>
+          <a class="social" href="https://mastodon.social/@mithunsrinivasan" rel="me"><b>Mastodon</b><span>@mithunsrinivasan</span></a>
           <a class="social" href="https://itsmithun06.notion.site/"><b>Notion</b><span>itsmithun06.notion.site</span></a>
         </nav>
       </div>
@@ -154,7 +187,7 @@
         <h3>Made in Chennai, one file at a time.</h3>
         <p>AI-assisted, human-reviewed. HTML, CSS and JavaScript. JetBrains Mono, a dot grid, and three colours doing the work. No framework, no build step. Building toward a technical career in public service.</p>
         <div class="footer-links">
-          <a href="index.html">~/home</a>
+          <a href="/">~/home</a>
           <a href="talks.html">talks</a>
           <a href="https://github.com/mithun-srinivasan">github</a>
           <a href="mailto:omsaimithun@gmail.com">email</a>
