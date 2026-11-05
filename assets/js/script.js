@@ -100,7 +100,7 @@
         const bucketCount = 8;
         const alphaMin = 0.22;
         const alphaSpan = 0.58;
-        const buckets = Array.from({ length: bucketCount }, () => new Path2D());
+        const dotBuckets = Array.from({ length: bucketCount }, () => []);
         const halo = [];
 
         for (let i = 0; i < dots.length; i++) {
@@ -115,16 +115,20 @@
             a = alphaMin + alphaSpan * smooth;
           }
           const bucketIdx = Math.min(bucketCount - 1, Math.floor(((a - alphaMin) / alphaSpan) * bucketCount));
-          buckets[bucketIdx].arc(d.x, d.y, radius, 0, Math.PI * 2);
+          dotBuckets[bucketIdx].push(d);
           if (a > 0.58) halo.push({ x: d.x, y: d.y, glow: (a - 0.58) / 0.22 });
         }
 
-        // one Path2D fill per alpha bucket
+        // one fill pass per alpha bucket; beginPath per dot keeps dots separate
         for (let b = 0; b < bucketCount; b++) {
           const a = alphaMin + (b + 0.5) * (alphaSpan / bucketCount);
           glowContext.globalAlpha = a * opacity;
           glowContext.fillStyle = a > 0.58 ? glowColor : baseColor;
-          glowContext.fill(buckets[b]);
+          for (const d of dotBuckets[b]) {
+            glowContext.beginPath();
+            glowContext.arc(d.x, d.y, radius, 0, Math.PI * 2);
+            glowContext.fill();
+          }
         }
 
         // larger low-alpha halo circle replaces shadowBlur
