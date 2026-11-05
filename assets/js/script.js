@@ -95,40 +95,44 @@
       const paint = (now, animate) => {
         glowContext.clearRect(0, 0, width, height);
         glowContext.save();
-        glowContext.fillStyle = baseColor;
 
         const time = (now / 1000) * Math.max(speedScale, 0);
+        const bucketCount = 8;
+        const alphaMin = 0.22;
+        const alphaSpan = 0.58;
+        const buckets = Array.from({ length: bucketCount }, () => new Path2D());
+        const halo = [];
 
         for (let i = 0; i < dots.length; i++) {
           const d = dots[i];
+          let a;
           if (!animate) {
-            glowContext.globalAlpha = 0.25 * opacity;
-            glowContext.beginPath();
-            glowContext.arc(d.x, d.y, radius, 0, Math.PI * 2);
-            glowContext.fill();
-            continue;
-          }
-
-          // Smooth sine-smoothed triangle wave for organic, calm pulsation
-          const mod = (time * d.speed + d.phase) % 2;
-          const lin = mod < 1 ? mod : 2 - mod;
-          const smooth = 0.5 - 0.5 * Math.cos(lin * Math.PI); // cosine ease 0..1..0
-          const a = 0.22 + 0.58 * smooth; // 0.22..0.8 smoothly
-
-          if (a > 0.58) {
-            const glow = (a - 0.58) / 0.22;
-            glowContext.fillStyle = glowColor;
-            glowContext.shadowColor = glowColor;
-            glowContext.shadowBlur = 8 * glow;
+            a = alphaMin;
           } else {
-            glowContext.fillStyle = baseColor;
-            glowContext.shadowColor = "transparent";
-            glowContext.shadowBlur = 0;
+            const mod = (time * d.speed + d.phase) % 2;
+            const lin = mod < 1 ? mod : 2 - mod;
+            const smooth = 0.5 - 0.5 * Math.cos(lin * Math.PI);
+            a = alphaMin + alphaSpan * smooth;
           }
+          const bucketIdx = Math.min(bucketCount - 1, Math.floor(((a - alphaMin) / alphaSpan) * bucketCount));
+          buckets[bucketIdx].arc(d.x, d.y, radius, 0, Math.PI * 2);
+          if (a > 0.58) halo.push({ x: d.x, y: d.y, glow: (a - 0.58) / 0.22 });
+        }
 
+        // one Path2D fill per alpha bucket
+        for (let b = 0; b < bucketCount; b++) {
+          const a = alphaMin + (b + 0.5) * (alphaSpan / bucketCount);
           glowContext.globalAlpha = a * opacity;
+          glowContext.fillStyle = a > 0.58 ? glowColor : baseColor;
+          glowContext.fill(buckets[b]);
+        }
+
+        // larger low-alpha halo circle replaces shadowBlur
+        glowContext.fillStyle = glowColor;
+        for (const h of halo) {
+          glowContext.globalAlpha = 0.18 * h.glow * opacity;
           glowContext.beginPath();
-          glowContext.arc(d.x, d.y, radius, 0, Math.PI * 2);
+          glowContext.arc(h.x, h.y, radius * 3, 0, Math.PI * 2);
           glowContext.fill();
         }
 
@@ -149,7 +153,7 @@
 
       const resize = () => {
         const rect = heroSection.getBoundingClientRect();
-        ratio = Math.min(window.devicePixelRatio || 1, 2);
+        ratio = Math.min(window.devicePixelRatio || 1, 1.5);
         width = Math.ceil(rect.width);
         height = Math.ceil(rect.height);
         glowCanvas.width = Math.ceil(width * ratio);
