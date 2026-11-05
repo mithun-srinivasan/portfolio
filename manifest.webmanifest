@@ -1,8 +1,12 @@
 {
   "name": "Mithun Srinivasan",
   "short_name": "mithun",
+  "description": "Mithun Srinivasan: CSE student in Chennai (MSEC, IIT Madras BS) building open-source tools in Go, TypeScript and Python. FOSS United Chennai contributor.",
+  "lang": "en-IN",
+  "id": "/",
+  "scope": "/",
   "start_url": "/",
-  "display": "browser",
+  "display": "standalone",
   "background_color": "#050505",
   "theme_color": "#050505",
   "icons": [
