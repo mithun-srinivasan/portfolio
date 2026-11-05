@@ -40,7 +40,7 @@
   /* Dark-first. The tiny head script has already set data-theme to avoid a flash. */
   applyTheme(isTheme(root.dataset.theme) ? root.dataset.theme : "dark", false);
 
-  /* ---------- hero-only dotted glow (exact Aceternity DottedGlowBackground algorithm) ---------- */
+  /* ---------- hero-only dotted glow (inspired by Aceternity Dotted Glow Background) ---------- */
   const heroSection = document.querySelector(".hero");
   if (heroSection) {
     const glowCanvas = document.createElement("canvas");
@@ -452,13 +452,13 @@
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;");
 
-  function renderPosts() {
-    const list = document.getElementById("post-list");
-    const empty = document.getElementById("post-empty");
+  function renderEntries({ listId, emptyId, entries, more, untitled, row }) {
+    const list = document.getElementById(listId);
+    const empty = document.getElementById(emptyId);
     if (!list || !empty) return;
 
-    const posts = Array.isArray(window.POSTS) ? window.POSTS : [];
-    if (!posts.length) {
+    const items = Array.isArray(entries) ? entries : [];
+    if (!items.length) {
       list.hidden = true;
       empty.hidden = false;
       return;
@@ -466,44 +466,12 @@
 
     empty.hidden = true;
     list.hidden = false;
-    list.innerHTML = posts.map((post, index) => `
-      <a class="entry" href="${esc(post.url || "#")}">
-        <time datetime="${esc(post.dateTime || post.date || "")}">${esc(post.date || "")}</time>
-        <h2>${esc(post.title || "Untitled")}</h2>
-        <p>${esc(post.excerpt || "")}</p>
-        <span class="entry-more">cat post →</span>
-      </a>
-    `).join("");
-    // add the index separately so empty titles still line up
-    list.querySelectorAll(".entry").forEach((entry, index) => {
-      const idx = document.createElement("span");
-      idx.className = "entry-idx";
-      idx.setAttribute("aria-hidden", "true");
-      idx.textContent = String(index + 1).padStart(2, "0");
-      entry.prepend(idx);
-    });
-  }
-
-  function renderTalks() {
-    const list = document.getElementById("talk-list");
-    const empty = document.getElementById("talk-empty");
-    if (!list || !empty) return;
-
-    const talks = Array.isArray(window.TALKS) ? window.TALKS : [];
-    if (!talks.length) {
-      list.hidden = true;
-      empty.hidden = false;
-      return;
-    }
-
-    empty.hidden = true;
-    list.hidden = false;
-    list.innerHTML = talks.map((talk, index) => `
-      <a class="entry" href="${esc(talk.url || "#")}">
-        <time datetime="${esc(talk.dateTime || "")}">${esc(talk.date || "")}</time>
-        <h2>${esc(talk.title || "Untitled talk")}</h2>
-        <p>${esc(talk.event || "")}${talk.location ? ` · ${esc(talk.location)}` : ""}</p>
-        <span class="entry-more">open slides →</span>
+    list.innerHTML = items.map((item) => `
+      <a class="entry" href="${esc(item.url || "#")}">
+        <time datetime="${esc(item.dateTime || item.date || "")}">${esc(item.date || "")}</time>
+        <h2>${esc(item.title || untitled)}</h2>
+        <p>${row(item)}</p>
+        <span class="entry-more">${more}</span>
       </a>
     `).join("");
     list.querySelectorAll(".entry").forEach((entry, index) => {
@@ -515,8 +483,22 @@
     });
   }
 
-  renderPosts();
-  renderTalks();
+  renderEntries({
+    listId: "post-list",
+    emptyId: "post-empty",
+    entries: window.POSTS,
+    more: "cat post →",
+    untitled: "Untitled",
+    row: (post) => esc(post.excerpt || ""),
+  });
+  renderEntries({
+    listId: "talk-list",
+    emptyId: "talk-empty",
+    entries: window.TALKS,
+    more: "open slides →",
+    untitled: "Untitled talk",
+    row: (talk) => `${esc(talk.event || "")}${talk.location ? ` · ${esc(talk.location)}` : ""}`,
+  });
 
 
   /* ---------- toast (sonner-style, native) ---------- */
@@ -729,7 +711,7 @@
     ["sticker-brains", "https://github.com/mithun-srinivasan/sticker-brains"]
   ];
   const paletteItems = [
-    ...[["work", "#work"], ["about", "#about"], ["experience", "#experience"], ["skills", "#skills"], ["contact", "#contact"]]
+    ...[["work", "#work"], ["experience", "#experience"], ["community", "#community"], ["skills", "#skills"], ["contact", "#contact"]]
       .map(([name, hash]) => ({ group: "go to", label: name, run: () => { window.location.assign(home(hash)); } })),
     ...(hasPosts ? [{ group: "go to", label: "blog", run: () => window.location.assign(`${siteRoot}blog.html`) }] : []),
     { group: "go to", label: "talks", run: () => window.location.assign(`${siteRoot}talks.html`) },
@@ -874,37 +856,10 @@
     function help() {
       print("<span class='term-ok'>mithun@portfolio — shell help</span>");
       print("<span class='term-dim'>──────────────────────────────────────────────</span>");
-      const rows = [
-        ["help / ?", "this page"],
-        ["whoami", "one-line identity"],
-        ["about", "the short bio"],
-        ["projects", "things I have shipped"],
-        ["ls", "files in this directory"],
-        ["cat FILE", "read a file (try .zshrc)"],
-        ["pwd", "print working directory"],
-        ["cd [blog|talks]", "move to a page"],
-        ["blog", "open the blog"],
-        ["talks", "open the talks page"],
-        ["theme [dark|light]", "toggle or set the theme"],
-        ["open PROJECT", "open a project (try: open ditch)"],
-        ["skills", "languages and tools"],
-        ["experience", "the short log"],
-        ["email", "copy my email address"],
-        ["contact", "email, phone, location"],
-        ["socials", "where else to find me"],
-        ["neofetch", "system + person info"],
-        ["date", "current time in IST"],
-        ["history", "commands from this session"],
-        ["clear", "clear the screen"],
-        ["echo TEXT", "print text"],
-        ["uname", "kernel-ish output"],
-        ["sudo", "permission denied, politely"],
-        ["rm", "nice try"],
-        ["exit", "exit 0"]
-      ];
-      rows.forEach(([key, value]) => {
+      CMD_TABLE.forEach((cmd) => {
+        const key = cmd.alias ? `${cmd.name} / ${cmd.alias}` : cmd.name;
         print(
-          `<span class="term-help-key">${key.padEnd(19, " ")}</span><span class="term-help-val">${value}</span>`
+          `<span class="term-help-key">${key.padEnd(19, " ")}</span><span class="term-help-val">${cmd.help}</span>`
         );
       });
       print("<span class='term-dim'>tip: ↑ / ↓ history · tab completes · ctrl+c clears input</span>");
@@ -930,7 +885,6 @@
       ],
       "contact.txt": [
         "email     omsaimithun@gmail.com",
-        "phone     +91 93420 99436",
         "location  Chennai, India · IST (UTC+05:30)",
         "book      cal.com/mithun-srinivasan/30min"
       ],
@@ -945,7 +899,35 @@
       ]
     };
 
-    const COMMANDS = ["help", "?", "whoami", "about", "projects", "ls", "cat", "pwd", "cd", "blog", "talks", "theme", "open", "skills", "experience", "email", "contact", "socials", "neofetch", "date", "history", "clear", "exit", "echo", "uname", "sudo", "rm"];
+    const CMD_TABLE = [
+      { name: "help", alias: "?", help: "this page", run: () => help() },
+      { name: "whoami", help: "one-line identity", run: () => text("Sophomore CSE Undergraduate - MSEC | BS Data Science & Applications (Foundational Level) - IITM | FOSS/Linux Enthusiast | Student Developer", "term-line term-ok") },
+      { name: "about", help: "the short bio", run: () => files["about.txt"].forEach((line) => text(line)) },
+      { name: "projects", help: "things I have shipped", run: () => { files["projects.txt"].forEach((line) => text(line)); text("run: blog / talks / contact", "term-line term-dim"); } },
+      { name: "ls", help: "files in this directory", run: (arg) => { if (arg === "-la") { text("drwxr-xr-x  mithun  portfolio"); text("-rw-r--r--  mithun  welcome.txt"); text("-rw-r--r--  mithun  about.txt"); text("-rw-r--r--  mithun  projects.txt"); text("-rw-r--r--  mithun  contact.txt"); text("-rw-r--r--  mithun  .zshrc"); text("-rw-r--r--  mithun  blog.html"); text("-rw-r--r--  mithun  talks.html"); } else { listFiles(); } } },
+      { name: "cat", help: "read a file (try .zshrc)", run: (arg) => { if (!arg) { text("usage: cat <file>", "term-line term-dim"); return; } const file = files[arg.toLowerCase()]; if (file) file.forEach((line) => text(line)); else text(`cat: ${arg}: No such file or directory`, "term-line term-dim"); } },
+      { name: "pwd", help: "print working directory", run: () => text("/home/mithun/portfolio") },
+      { name: "cd", help: "move to a page", run: (arg) => { if (!arg || arg === "~" || arg === ".") { text("/home/mithun/portfolio"); } else if (/^blog(\.html)?$/.test(arg)) { text("opening blog.html …", "term-line term-dim"); window.location.assign(`${siteRoot}blog.html`); } else if (/^talks(\.html)?$/.test(arg)) { text("opening talks.html …", "term-line term-dim"); window.location.assign(`${siteRoot}talks.html`); } else { text(`cd: no such file or directory: ${arg}`, "term-line term-dim"); } } },
+      { name: "blog", help: "open the blog", run: () => { text("opening blog.html …", "term-line term-dim"); window.location.assign(`${siteRoot}blog.html`); } },
+      { name: "talks", help: "open the talks page", run: () => { text("opening talks.html …", "term-line term-dim"); window.location.assign(`${siteRoot}talks.html`); } },
+      { name: "theme", help: "toggle or set the theme", run: (arg) => { const wanted = arg.toLowerCase(); if (wanted && !isTheme(wanted)) { text("usage: theme [dark|light]", "term-line term-dim"); return; } const next = wanted || (currentTheme() === "dark" ? "light" : "dark"); applyTheme(next); text(`theme → ${next}`); } },
+      { name: "open", help: "open a project (try: open ditch)", run: (arg) => { if (!arg) { text("usage: open PROJECT   (try: open ditch)", "term-line term-dim"); return; } const hit = PROJECTS.find(([name]) => name.startsWith(arg.toLowerCase()) || name.includes(arg.toLowerCase())); if (!hit) { text(`open: no project matches ${arg}`, "term-line term-dim"); return; } text(`opening ${hit[1]} …`, "term-line term-dim"); window.open(hit[1], "_blank", "noopener"); } },
+      { name: "skills", help: "languages and tools", run: () => { text("languages  C, C++, Python, Java, Go, TypeScript, MATLAB"); text("tools      Git, GitHub, Linux, Notion"); text("publication Open Source Is All You Need: Empowering Innovation Through Free and Open Source Software"); text("speaks     Tamil, English, Hindi, Japanese, Sanskrit"); } },
+      { name: "experience", help: "the short log", run: () => { text("Where I work:"); text("2026-now   Technical Consultant, Upfinity"); text("2025-2029   B.E. CSE, MSEC Chennai"); text("from May 2025   B.S. Data Science, IIT Madras"); text(""); text("Community (newest first):"); text("oct 2026   Volunteer, GDG Chennai DevFest 2026"); text("2026-now   Community volunteer, fromDevtoOps"); text("2026-now   Contributor, FOSS United Chennai"); text("2026-now   Contributor + volunteer, Sapiens Campus"); text("may-aug 2026   GSSoC contributor"); text("jan-may 2026   Campus Mantri, GeeksforGeeks"); text("sep 2025-now   Member, Sundarbans House, IITM BS"); } },
+      { name: "email", help: "copy my email address", run: () => { copyText(EMAIL).then((ok) => { text(ok ? `copied: ${EMAIL}` : `email: ${EMAIL}`, ok ? "term-line term-ok" : "term-line term-out-text"); }); } },
+      { name: "contact", help: "email, phone, location", run: () => files["contact.txt"].forEach((line) => text(line)) },
+      { name: "socials", help: "where else to find me", run: () => { text("github     github.com/mithun-srinivasan"); text("linkedin   linkedin.com/in/mithun-srinivasan-msec"); text("x          x.com/simply_mithun"); text("instagram  instagram.com/its_mithunsrinivasan"); text("mastodon   mastodon.social/@mithunsrinivasan"); text("notion     itsmithun06.notion.site"); } },
+      { name: "neofetch", help: "system + person info", run: () => { [ "   __  __ ____", "  |  \\/  / ___|", "  | |\\/| \\___ \\", "  | |  | |___) |", "  |_|  |_|____/", "", "  mithun@portfolio", "  ----------------", "  OS        Chennai, India (IST +05:30)", "  Shell     zsh + JetBrains Mono", "  WM        whatever tiling setup works", "  Editor    nvim", "  Focus     FOSS · Linux · DevOps", "  Status    learning in public" ].forEach((line) => text(line, "term-line term-out-text")); } },
+      { name: "date", help: "current time in IST", run: () => text(new Intl.DateTimeFormat("en-IN", { timeZone: "Asia/Kolkata", dateStyle: "medium", timeStyle: "medium" }).format(new Date()) + " IST") },
+      { name: "history", help: "commands from this session", run: () => { if (!history.length) text("no commands yet", "term-line term-dim"); else history.forEach((item, index) => text(`${String(index + 1).padStart(3, " ")}  ${item}`)); } },
+      { name: "clear", help: "clear the screen", run: () => termOut.replaceChildren() },
+      { name: "exit", help: "exit 0", run: () => { text("exit 0"); text("logout", "term-line term-dim"); } },
+      { name: "sudo", help: "permission denied, politely", run: () => text("mithun is not in the sudoers file. This incident will be reported.", "term-line term-dim") },
+      { name: "rm", help: "nice try", run: () => text("nice try.", "term-line term-dim") },
+      { name: "echo", help: "print text", run: (arg) => text(arg) },
+      { name: "uname", help: "kernel-ish output", run: () => text("Linux portfolio 6.x-zen #1 SMP PREEMPT_DYNAMIC x86_64 GNU/Linux") },
+    ];
+    const COMMANDS = [...new Set(CMD_TABLE.flatMap((c) => [c.name, c.alias].filter(Boolean)))];
 
     function listFiles() {
       text("welcome.txt   about.txt   projects.txt   contact.txt   .zshrc");
@@ -960,191 +942,12 @@
       const cmd = command.toLowerCase();
       const arg = args.join(" ");
 
-      switch (cmd) {
-        case "help":
-        case "?":
-          help();
-          break;
-
-        case "whoami":
-          text("Sophomore CSE Undergraduate - MSEC | BS Data Science & Applications (Foundational Level) - IITM | FOSS/Linux Enthusiast | Student Developer", "term-line term-ok");
-          break;
-
-        case "about":
-          files["about.txt"].forEach((line) => text(line));
-          break;
-
-        case "projects":
-          files["projects.txt"].forEach((line) => text(line));
-          text("run: blog / talks / contact", "term-line term-dim");
-          break;
-
-        case "ls":
-          if (arg === "-la") {
-            text("drwxr-xr-x  mithun  portfolio");
-            text("-rw-r--r--  mithun  welcome.txt");
-            text("-rw-r--r--  mithun  about.txt");
-            text("-rw-r--r--  mithun  projects.txt");
-            text("-rw-r--r--  mithun  contact.txt");
-            text("-rw-r--r--  mithun  .zshrc");
-            text("-rw-r--r--  mithun  blog.html");
-            text("-rw-r--r--  mithun  talks.html");
-          } else {
-            listFiles();
-          }
-          break;
-
-        case "cat": {
-          if (!arg) {
-            text("usage: cat <file>", "term-line term-dim");
-            break;
-          }
-          const file = files[arg.toLowerCase()];
-          if (file) file.forEach((line) => text(line));
-          else text(`cat: ${arg}: No such file or directory`, "term-line term-dim");
-          break;
-        }
-
-        case "pwd":
-          text("/home/mithun/portfolio");
-          break;
-
-        case "cd":
-          if (!arg || arg === "~" || arg === ".") {
-            text("/home/mithun/portfolio");
-          } else if (/^blog(\.html)?$/.test(arg)) {
-            text("opening blog.html …", "term-line term-dim");
-            window.location.assign(`${siteRoot}blog.html`);
-          } else if (/^talks(\.html)?$/.test(arg)) {
-            text("opening talks.html …", "term-line term-dim");
-            window.location.assign(`${siteRoot}talks.html`);
-          } else {
-            text(`cd: no such file or directory: ${arg}`, "term-line term-dim");
-          }
-          break;
-
-        case "blog":
-          text("opening blog.html …", "term-line term-dim");
-          window.location.assign(`${siteRoot}blog.html`);
-          break;
-
-        case "talks":
-          text("opening talks.html …", "term-line term-dim");
-          window.location.assign(`${siteRoot}talks.html`);
-          break;
-
-        case "theme": {
-          const wanted = arg.toLowerCase();
-          if (wanted && !isTheme(wanted)) { text("usage: theme [dark|light]", "term-line term-dim"); break; }
-          const next = wanted || (currentTheme() === "dark" ? "light" : "dark");
-          applyTheme(next);
-          text(`theme → ${next}`);
-          break;
-        }
-
-        case "open": {
-          if (!arg) { text("usage: open PROJECT   (try: open ditch)", "term-line term-dim"); break; }
-          const hit = PROJECTS.find(([name]) => name.startsWith(arg.toLowerCase()) || name.includes(arg.toLowerCase()));
-          if (!hit) { text(`open: no project matches ${arg}`, "term-line term-dim"); break; }
-          text(`opening ${hit[1]} …`, "term-line term-dim");
-          window.open(hit[1], "_blank", "noopener");
-          break;
-        }
-
-        case "skills":
-          text("languages  C, C++, Python, Java, MATLAB");
-          text("tools      Git, GitHub, Linux, Notion");
-          text("speaks     Tamil, English, Hindi, Japanese, Sanskrit");
-          break;
-
-        case "experience":
-          text("2026-now   Technical Consultant, Upfinity");
-          text("2026-now   Contributor, FOSS United Chennai");
-          text("2026-now   Contributor + volunteer, Sapiens Campus");
-          text("2026-now   Community volunteer, fromDevtoOps");
-          text("oct 2026   Volunteer, GDG Chennai DevFest 2026");
-          text("2026       GSSoC contributor, Campus Mantri @ GfG");
-          break;
-
-        case "email":
-          copyText(EMAIL).then((ok) => {
-            text(ok ? `copied: ${EMAIL}` : `email: ${EMAIL}`, ok ? "term-line term-ok" : "term-line term-out-text");
-          });
-          break;
-
-        case "contact":
-          files["contact.txt"].forEach((line) => text(line));
-          break;
-
-        case "socials":
-          text("github     github.com/mithun-srinivasan");
-          text("linkedin   linkedin.com/in/mithun-srinivasan-msec");
-          text("x          x.com/simply_mithun");
-          text("instagram  instagram.com/its_mithunsrinivasan");
-          text("mastodon   mastodon.social/@mithunsrinivasan");
-          text("notion     itsmithun06.notion.site");
-          break;
-
-        case "neofetch":
-          [
-            "   __  __ ____",
-            "  |  \\/  / ___|",
-            "  | |\\/| \\___ \\",
-            "  | |  | |___) |",
-            "  |_|  |_|____/",
-            "",
-            "  mithun@portfolio",
-            "  ----------------",
-            "  OS        Chennai, India (IST +05:30)",
-            "  Shell     zsh + JetBrains Mono",
-            "  WM        whatever tiling setup works",
-            "  Editor    nvim",
-            "  Focus     FOSS · Linux · DevOps",
-            "  Status    learning in public"
-          ].forEach((line) => text(line, "term-line term-out-text"));
-          break;
-
-        case "date":
-          text(new Intl.DateTimeFormat("en-IN", {
-            timeZone: "Asia/Kolkata",
-            dateStyle: "medium",
-            timeStyle: "medium"
-          }).format(new Date()) + " IST");
-          break;
-
-        case "history":
-          if (!history.length) text("no commands yet", "term-line term-dim");
-          else history.forEach((item, index) => text(`${String(index + 1).padStart(3, " ")}  ${item}`));
-          break;
-
-        case "clear":
-          termOut.replaceChildren();
-          break;
-
-        case "exit":
-          text("exit 0");
-          text("logout", "term-line term-dim");
-          break;
-
-        case "sudo":
-          text("mithun is not in the sudoers file. This incident will be reported.", "term-line term-dim");
-          break;
-
-        case "rm":
-          text("nice try.", "term-line term-dim");
-          break;
-
-        case "echo":
-          text(arg);
-          break;
-
-        case "uname":
-          text("Linux portfolio 6.x-zen #1 SMP PREEMPT_DYNAMIC x86_64 GNU/Linux");
-          break;
-
-        default:
-          text(`command not found: ${input}`, "term-line term-dim");
-          text("type 'help' for the list of commands.", "term-line term-dim");
+      const match = CMD_TABLE.find((c) => c.name === cmd || c.alias === cmd);
+      if (match) {
+        match.run(arg);
+      } else {
+        text(`command not found: ${input}`, "term-line term-dim");
+        text("type 'help' for the list of commands.", "term-line term-dim");
       }
     }
 
