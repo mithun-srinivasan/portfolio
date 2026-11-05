@@ -9,5 +9,5 @@ desktop.ini
 *.swp
 
 # Local verification output
-out.png
+out*.png
 *.log

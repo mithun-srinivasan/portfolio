@@ -4,11 +4,13 @@ A static personal portfolio built with semantic HTML, CSS, and vanilla JavaScrip
 
 ## Pages
 
-- `index.html` — home: hero, selected work, about, experience, skills, and contact.
+- `index.html` — home: hero, selected work, experience ("Where I work" + education), community (open-source contributions), skills, and contact.
 - `blog.html` — writing index, rendered from the `window.POSTS` array in `assets/js/posts.js`. The Blog navigation link stays hidden until that array has an entry.
 - `talks.html` — talk index, rendered from the `window.TALKS` array.
 - `404.html` — static not-found page.
-- `posts/_template.html` — static post page template with the shared header and footer.
+- `posts/hi.html` — the first static post, with the shared header and footer.
+- `posts/_template.html` — copyable static post page template.
+- `feed.xml` — Atom feed for the published posts.
 - `manifest.webmanifest`, `sitemap.xml`, and `robots.txt` — static site metadata.
 
 ## Structure
@@ -20,7 +22,9 @@ A static personal portfolio built with semantic HTML, CSS, and vanilla JavaScrip
 ├── talks.html
 ├── 404.html
 ├── posts/
+│   ├── hi.html
 │   └── _template.html
+├── feed.xml
 ├── manifest.webmanifest
 ├── sitemap.xml
 ├── robots.txt
@@ -28,7 +32,7 @@ A static personal portfolio built with semantic HTML, CSS, and vanilla JavaScrip
 ├── AGENTS.md
 └── assets/
     ├── fonts/
-    │   ├── jetbrains-mono-latin-variable.woff2
+    │   ├── jetbrains-mono-latin-wght-normal.woff2
     │   └── OFL.txt
     ├── css/
     │   └── style.css
@@ -44,9 +48,10 @@ A static personal portfolio built with semantic HTML, CSS, and vanilla JavaScrip
     ├── images/
     │   ├── mithun-portrait-{480,720,900}.{webp,jpg}
     │   ├── og-image.png
-    │   └── apple-touch-icon.png
-    └── logos/
-        └── ...
+    │   └── site-icon.svg
+    ├── logos/
+    │   └── ...
+└── favicon.ico
 ```
 
 See [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md) for the dotted-glow effect reference.
@@ -64,15 +69,15 @@ Open <http://127.0.0.1:4173/>. The site can also be opened directly from `index.
 ## Editing content
 
 - **Posts:** edit `window.POSTS` in `assets/js/posts.js`.
-- **Static posts:** copy `posts/_template.html` and replace its metadata, date, title, and article body; add its URL and summary to `window.POSTS` and the blog's `<noscript>` list.
+- **Static posts:** copy `posts/_template.html` and replace its metadata, date, title, and article body; add its URL and summary to `window.POSTS`, the blog's `<noscript>` list, `sitemap.xml`, and `feed.xml`.
 - **Talks:** edit `window.TALKS` near the bottom of `talks.html`.
-- **Canonical URLs:** page metadata, JSON-LD, `sitemap.xml`, and `robots.txt` use `https://mithunsrinivasan.is-a.dev`.
+- **Canonical URLs:** page metadata, JSON-LD, `sitemap.xml`, `feed.xml`, and `robots.txt` use `https://mithunsrinivasan.is-a.dev`.
 - **Styles:** shared tokens and component styles live in `assets/css/style.css`.
 - **Behaviour:** theme, navigation, typewriter, portrait card, pulse, and terminal live in `assets/js/script.js`; post content lives in `assets/js/posts.js`.
-- **Interactions:** Ctrl/Cmd+K opens the native command palette; work filters, scroll reveal, tools marquee, heading scramble, toast, and back-to-top remain dependency-free.
-- **Background:** the shared body canvas draws tiny 0.55px dots on the 22px grid. A few red dots pulse independently; the effect does not respond to pointer movement and becomes static for reduced motion. The 88px mesh remains in CSS.
-- **Terminal:** `help` lists `open PROJECT`, `skills`, `experience`, and `theme [dark|light]`; Tab completes commands and Ctrl+C clears the current input.
-- **GitHub pulse:** `assets/data/github.json` holds the dated contribution calendar and summary totals; refresh it from the public profile when updating those figures.
+- **Interactions:** Ctrl/Cmd+K opens the native command palette; work filters use a keyboard-operable radio group; scroll reveal, tools marquee, heading scramble, red project spotlight, toast, and back-to-top remain dependency-free.
+- **Background:** a fixed body layer holds the 22px dot grid and 88px mesh. The hero also draws a masked dotted glow; a few red dots pulse independently, it does not respond to pointer movement, and it becomes static for reduced motion.
+- **Terminal:** `help` lists every command, including `open PROJECT`, `skills`, `experience`, `theme [dark|light]`, and shell extras like `cd`, `echo`, `uname`, `sudo`, and `rm`; `?` aliases `help`, Tab completes commands, and Ctrl+C clears the current input.
+- **GitHub pulse:** `assets/data/github.json` holds the dated contribution calendar and summary totals; refresh it from the public profile when updating those figures. If the snapshot cannot load, a visible fallback keeps the saved totals in context.
 
 ## Deployment
 
@@ -81,3 +86,18 @@ Deploy the repository root as plain static files. The host should serve `index.h
 To activate `mithunsrinivasan.is-a.dev`, register it with is-a.dev, then set it as the custom domain in this repository's GitHub Pages settings and enable HTTPS. The is-a.dev record should CNAME to `mithun-srinivasan.github.io`.
 
 The footer on every page includes an AI-assistance disclosure.
+
+## SEO checklist
+
+When adding a post or page:
+
+1. **Title:** `<= 60` chars, unique, no pipe-dump.
+2. **Description:** `<= 155` chars, unique. Reuse for `og:description` and `twitter:description`.
+3. **Social tags:** `og:locale=en_IN`, `og:image:alt`, `twitter:image:alt`, `twitter:site=@simply_mithun`, `twitter:creator=@simply_mithun`.
+4. **Favicon:** identical `<link rel="icon">` set on every page (`/favicon.ico`, SVG, 192px PNG); root-relative on 404 and posts.
+5. **JSON-LD:** every block must parse. Index: `@graph` with `WebSite`, `ProfilePage` (mainEntity `Person`), `Person`, `SoftwareSourceCode` for projects. Blog/talks: `CollectionPage` + `ItemList`. Posts: `BlogPosting` + `BreadcrumbList`.
+6. **`rel="me"`:** in `<head>` and on the Mastodon social link.
+7. **Sitemap:** add URL with `<lastmod>` from the file's last git commit date. Keep `posts/_template.html` noindex.
+8. **`window.POSTS` / `window.TALKS`:** keep source of truth in sync with static HTML `<noscript>` lists, `sitemap.xml`, and `feed.xml`.
+9. **Phone number:** only in `index.html` contact section (tel link). Never in structured data.
+10. **Validate:** run `node --check assets/js/script.js`; verify every JSON-LD block parses; check one h1 per page; confirm canonical present (except 404).

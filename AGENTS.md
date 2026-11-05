@@ -21,15 +21,16 @@ Check dark and light themes, 390px width, `blog.html`, `talks.html`, and the foo
 
 ## File map
 
-- `index.html` — home: hero, work, about, experience, skills, contact.
+- `index.html` — home: hero, work, experience ("Where I work" + education), community (open-source contributions), skills, contact.
 - `blog.html` — post index. Add entries to `window.POSTS` in `assets/js/posts.js` (`title`, `date`, `dateTime`, `excerpt`, `url`).
 - `talks.html` — talk index. Add talks by editing the `window.TALKS` array near the bottom (`title`, `date`, `dateTime`, `event`, `location`, `url`).
-- `posts/_template.html` — copy this as a static post page, then update its title, metadata, date, and article body.
+- `posts/hi.html` — the first static post; copy `posts/_template.html` for the next one, then update its title, metadata, date, and article body.
+- `feed.xml` — Atom feed. Keep it current with `window.POSTS` and each static post.
 - `404.html`, `manifest.webmanifest`, `sitemap.xml`, and `robots.txt` — static site metadata and not-found page.
 - `assets/css/style.css` — all shared styling and design tokens.
 - `assets/js/script.js` — shared theme, navigation, palette, pulse, post/talk, pointer effects, and terminal behavior; `assets/js/posts.js` contains the post list.
-- `assets/images/` — responsive 480px, 720px, and 900px hero portrait sources in WebP with JPG fallbacks, plus the share card.
-- `assets/fonts/` — self-hosted JetBrains Mono variable WOFF2 and its OFL license.
+- `assets/images/` — responsive 480px, 720px, and 900px hero portrait sources in WebP with JPG fallbacks, plus the share card. `favicon.ico` (48x48) at root.
+- `assets/fonts/` — one self-hosted `jetbrains-mono-latin-wght-normal.woff2` file and its OFL license.
 - `assets/icons/` — apple touch icon and installable web app icons.
 - `assets/data/github.json` — dated GitHub pulse totals and daily contribution snapshot.
 - `assets/logos/` — red/white/black project marks used by the work covers.
@@ -41,9 +42,9 @@ Check dark and light themes, 390px width, `blog.html`, `talks.html`, and the foo
 - Strict red / white / black palette. Do not add a fourth hue.
 - Dark-first. `:root[data-theme="dark"]` is the primary theme; blood red is `--blood:#78080f`.
 - All text uses self-hosted JetBrains Mono WOFF2, with Tamil-capable system fallbacks. Do not reintroduce remote font requests or the old Bricolage Grotesque display font.
-- Keep the first-version dot/mesh background on `body` (22px dot spacing + 88px mesh lines). The tiny dots pulse independently; they do not react to pointer movement.
+- Keep the first-version dot/mesh background on `body` (22px dot spacing + 88px mesh lines). The masked hero canvas adds a separate red-and-white glow that pulses independently, does not react to pointer movement, and becomes static under reduced motion.
 - Keep a real terminal in the footer (`#term`), not a screenshot.
-- Keep the AI-assistance disclosure in all three page footers. The footer copy should say AI-assisted, not hand-written.
+- Keep the AI-assistance disclosure in every page footer. The footer copy should say AI-assisted, not hand-written.
 - Keep the hero portrait permanently red/white duotone. The comet card may tilt and add a white specular glare on fine-pointer hover; do not add a grayscale-to-color or hue-changing hover.
 - Contact and footer must follow the active theme: blood-red band and black footer in dark; paper contact/footer in light. The footer terminal stays black in both.
 - Project covers use their own marks from `assets/logos/`; keep them inside the red / white / black palette.
@@ -57,12 +58,12 @@ Check dark and light themes, 390px width, `blog.html`, `talks.html`, and the foo
 - Terminal output uses `innerHTML` for static strings and `esc()` for user input. Escape any new dynamic content. Avoid literal `<file>` in help text — it is parsed as a tag; use `FILE`.
 - `help` is the terminal's built-in command reference. Keep it in sync when adding commands.
 - The command palette is available with Ctrl/Cmd+K or `/`; keep its native `<dialog>` and generated trigger in the shared script.
-- Project filters, scroll reveal, marquee, text scramble, dotted-glow canvas, and back-to-top are native components; honor `prefers-reduced-motion` when changing their behavior. The Dotted Glow uses tiny 0.55px dots over the body mesh, pulses red dots independently, and has no pointer response. Reduced motion renders a static field.
-- Terminal commands include `open PROJECT`, `skills`, `experience`, and `theme [dark|light]`; Tab completes commands, Ctrl+C clears the current input, and `help` must stay current.
-- Refresh `assets/data/github.json` from the public GitHub contribution calendar when updating the pulse; retain its source and `generated` date.
-- Canonical, Open Graph, JSON-LD, sitemap, and robots URLs target `https://mithunsrinivasan.is-a.dev`.
+- Project filters, scroll reveal, marquee, text scramble, project spotlight, dotted-glow canvas, and back-to-top are native components; honor `prefers-reduced-motion` when changing their behavior. The filter bar is a `radiogroup` with roving tabindex and arrow-key support. The hero dotted glow has no pointer response; reduced motion renders a static field.
+- Terminal commands include `open PROJECT`, `skills`, `experience`, `theme [dark|light]`, and the shell extras `cd`, `echo`, `uname`, `sudo`, and `rm`; `?` aliases `help`, Tab completes commands, Ctrl+C clears the current input, and `help` must stay current.
+- Refresh `assets/data/github.json` from the public GitHub contribution calendar when updating the pulse; retain its source and `generated` date. Show the visible fallback when the snapshot cannot load.
+- Canonical, Open Graph, JSON-LD, sitemap, feed, and robots URLs target `https://mithunsrinivasan.is-a.dev`.
 - To activate the custom domain, register `mithunsrinivasan.is-a.dev` with is-a.dev first, then set it in the repository's GitHub Pages settings and enable HTTPS. The is-a.dev record should CNAME to `mithun-srinivasan.github.io`.
-- Keep the blog's `<noscript>` list current with `window.POSTS` when posts are added.
+- Keep the blog's `<noscript>` list, `sitemap.xml`, and `feed.xml` current with `window.POSTS` when posts are added.
 - The Blog navigation link stays hidden while `window.POSTS` is empty; the blog empty state is visitor-facing copy.
 
 ## Conventions

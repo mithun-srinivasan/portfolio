@@ -1,9 +1,4 @@
-/* Blog content hook.
-   window.POSTS = [
-     { title: "What I learned reinstalling Linux", date: "01 Nov 2026", dateTime: "2026-11-01",
-       excerpt: "One or two lines for the index.", url: "posts/reinstalling-linux.html" }
-   ];
-*/
+/* Published posts. Copy the shape below when adding an entry. */
 window.POSTS = [
   {
     title: "Hi, world",
