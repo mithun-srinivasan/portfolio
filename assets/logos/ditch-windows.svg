@@ -1,22 +1,19 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" role="img" aria-label="ditch-windows">
-  <!-- trash can (white body, black rim) -->
-  <rect x="34" y="38" width="12" height="18" fill="#f4f2ee" stroke="#050505" stroke-width="2" rx="1"/>
-  <rect x="32" y="34" width="16" height="6" fill="#050505"/>
-  <!-- stick figure: white -->
-  <circle cx="25" cy="15" r="4" fill="#f4f2ee"/>
-  <path d="M25 19v11" stroke="#f4f2ee" stroke-width="3" stroke-linecap="round"/>
-  <path d="M25 30L19 38" stroke="#f4f2ee" stroke-width="3" stroke-linecap="round"/>
-  <path d="M25 30L31 38" stroke="#f4f2ee" stroke-width="3" stroke-linecap="round"/>
-  <!-- throwing arm: white -->
-  <path d="M27 21L46 17" stroke="#f4f2ee" stroke-width="4" stroke-linecap="round"/>
-  <!-- Windows logo: 4 panes, red/white, no black bg -->
-  <g transform="translate(37, 10)">
-    <rect x="0" y="0" width="7" height="7" fill="#78080f"/>
-    <rect x="7" y="0" width="7" height="7" fill="#f4f2ee"/>
-    <rect x="0" y="7" width="7" height="7" fill="#f4f2ee"/>
-    <rect x="7" y="7" width="7" height="7" fill="#78080f"/>
-    <path d="M7 0v14M0 7h14" stroke="#050505" stroke-width="1"/>
+  <!-- stick figure, winding up a throw -->
+  <circle cx="15" cy="17" r="4.5" fill="#f4f2ee"/>
+  <path d="M15 23v14" stroke="#f4f2ee" stroke-width="4.5" stroke-linecap="round"/>
+  <path d="M15 37l-6.5 13M15 37l6.5 13" stroke="#f4f2ee" stroke-width="4.5" stroke-linecap="round"/>
+  <path d="M15 27l-5.5 6" stroke="#f4f2ee" stroke-width="4" stroke-linecap="round"/>
+  <path d="M16 26l15-6" stroke="#f4f2ee" stroke-width="4.5" stroke-linecap="round"/>
+  <!-- four-pane window, tumbling into the bin -->
+  <g transform="rotate(-18 40 16)">
+    <rect x="31" y="7" width="8" height="8" fill="#f4f2ee"/>
+    <rect x="41" y="7" width="8" height="8" fill="#f4f2ee"/>
+    <rect x="31" y="17" width="8" height="8" fill="#f4f2ee"/>
+    <rect x="41" y="17" width="8" height="8" fill="#c1121f"/>
   </g>
-  <!-- red accent swoosh -->
-  <path d="M46 17L53 13L46 9" stroke="#78080f" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+  <!-- trash can -->
+  <rect x="37" y="33" width="24" height="5" rx="1" fill="#f4f2ee"/>
+  <path d="M39 40l2.5 17h17L61 40z" fill="#f4f2ee"/>
+  <path d="M45 44v9M53 44v9" stroke="#050505" stroke-width="2" stroke-linecap="round"/>
 </svg>
