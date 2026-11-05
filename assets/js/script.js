@@ -619,62 +619,6 @@
     requestAnimationFrame(step);
   }
 
-  /* ---------- github pulse: snapshot json -> numbers + heatmap ---------- */
-  const heat = document.getElementById("heat");
-  const heatWrap = document.getElementById("heat-wrap");
-  const heatFallback = document.getElementById("heat-fallback");
-  const statEls = document.querySelectorAll(".stats [data-count]");
-  const startStats = () => {
-    if (!statEls.length) return;
-    if ("IntersectionObserver" in window) {
-      const io2 = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => { if (entry.isIntersecting) { countUp(entry.target); io2.unobserve(entry.target); } });
-      }, { threshold: 0.6 });
-      statEls.forEach((el) => io2.observe(el));
-    } else {
-      statEls.forEach(countUp);
-    }
-  };
-  startStats();
-  if (heat && window.location.protocol !== "file:") {
-    fetch(`${siteRoot}assets/data/github.json`)
-      .then((r) => (r.ok ? r.json() : Promise.reject()))
-      .then((data) => {
-        const set = (index, value) => { if (statEls[index] && Number.isFinite(value)) statEls[index].dataset.count = String(value); };
-        set(0, data.repos);
-        set(1, data.contributions);
-        const days = data.days || [];
-        if (days.length) {
-          if (heatFallback) heatFallback.hidden = true;
-          const pad = new Date(`${days[0][0]}T00:00:00`).getDay();
-          const frag = document.createDocumentFragment();
-          for (let i = 0; i < pad; i += 1) { const p = document.createElement("i"); p.className = "pad"; frag.appendChild(p); }
-          days.forEach(([date, level, count]) => {
-            const cell = document.createElement("i");
-            cell.dataset.l = String(level);
-            cell.title = `${count} contribution${count === 1 ? "" : "s"} on ${date}`;
-            frag.appendChild(cell);
-          });
-          heat.replaceChildren(frag);
-          heat.setAttribute("aria-label", `GitHub contributions over the last 12 months: ${data.contributions} in total`);
-          heatWrap.hidden = false;
-          heatWrap.scrollLeft = heatWrap.scrollWidth;
-        } else if (heatFallback) {
-          heatFallback.hidden = false;
-        }
-        // count may already have run; refresh the displayed text to the fetched target
-        statEls.forEach((el) => {
-          const target = Number(el.dataset.count);
-          if (Number.isFinite(target) && el.textContent !== String(target)) el.textContent = String(target);
-        });
-      })
-      .catch(() => {
-        if (heatFallback) heatFallback.hidden = false;
-      });
-  } else if (heatFallback) {
-    heatFallback.hidden = false;
-  }
-
   /* ---------- text scramble on heading hover (once per hover) ---------- */
   if (!reduceMotion.matches && window.matchMedia("(hover: hover)").matches) {
     const GLYPHS = "!<>-_\\/[]{}=+*^?#";
