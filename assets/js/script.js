@@ -649,6 +649,7 @@
       statEls.forEach(countUp);
     }
   };
+  startStats();
   if (heat && window.location.protocol !== "file:") {
     fetch(`${siteRoot}assets/data/github.json`)
       .then((r) => (r.ok ? r.json() : Promise.reject()))
@@ -675,13 +676,17 @@
         } else if (heatFallback) {
           heatFallback.hidden = false;
         }
+        // count may already have run; refresh the displayed text to the fetched target
+        statEls.forEach((el) => {
+          const target = Number(el.dataset.count);
+          if (Number.isFinite(target) && el.textContent !== String(target)) el.textContent = String(target);
+        });
       })
       .catch(() => {
         if (heatFallback) heatFallback.hidden = false;
-      })
-      .finally(startStats);
-  } else {
-    startStats();
+      });
+  } else if (heatFallback) {
+    heatFallback.hidden = false;
   }
 
   /* ---------- text scramble on heading hover (once per hover) ---------- */
