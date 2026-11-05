@@ -192,6 +192,8 @@ code{font-family:var(--mono);font-size:.9em;color:var(--red-text);background:col
 .btn:hover{background-color:var(--ink);border-color:var(--ink);color:var(--paper);transform:translate(-2px,-2px);box-shadow:var(--shadow)}
 .text-link{display:inline-flex;align-items:center;min-height:46px;color:var(--ink);font-weight:700;font-size:.8rem;text-decoration:underline;text-decoration-color:var(--red);text-underline-offset:.28em}
 .text-link:hover{color:var(--red-text)}
+.back-link{display:inline-block;margin-top:.75rem;color:var(--muted);font-size:.75rem;text-decoration:underline;text-decoration-color:var(--line)}
+.back-link:hover{color:var(--ink);text-decoration-color:var(--ink)}
 /* comet card — native port of Aceternity's pointer tilt + glare, no React */
 .hero-portrait{width:100%;max-width:360px;justify-self:end;margin:0;perspective:1000px}
 .hero-portrait .comet-card__tilt{position:relative;transform-style:preserve-3d;will-change:transform;transition:box-shadow .24s ease}
