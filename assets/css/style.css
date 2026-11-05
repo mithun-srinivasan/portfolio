@@ -189,7 +189,10 @@ code{font-family:var(--mono);font-size:.9em;color:var(--red-text);background:col
   transition:background-color .15s,color .15s,border-color .15s,transform .15s,box-shadow .15s;
 }
 .btn::after{content:"→";font-size:.9em}
-.btn-cal::after{content:""}
+.btn-cal{width:100%;max-width:260px}
+.btn-cal::after{content:"↗";font-size:.9em}
+.btn-cal:active{transform:translate(0,0);box-shadow:none}
+@media (max-width:640px){.btn-cal{width:100%}}
 .btn:hover{background-color:var(--ink);border-color:var(--ink);color:var(--paper);transform:translate(-2px,-2px);box-shadow:var(--shadow)}
 .text-link{display:inline-flex;align-items:center;min-height:46px;color:var(--ink);font-weight:700;font-size:.8rem;text-decoration:underline;text-decoration-color:var(--red);text-underline-offset:.28em}
 .text-link:hover{color:var(--red-text)}
