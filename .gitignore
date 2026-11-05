@@ -10,4 +10,5 @@ desktop.ini
 
 # Local verification output
 out*.png
+/portfolio-*.png
 *.log
