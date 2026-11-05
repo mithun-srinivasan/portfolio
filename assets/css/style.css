@@ -126,11 +126,8 @@ code{font-family:var(--mono);font-size:.9em;color:var(--red-text);background:col
 .brand{display:inline-flex;align-items:center;gap:.65rem;text-decoration:none;font-weight:700;white-space:nowrap;color:var(--white)}
 .brand:hover{color:var(--white)}
 .brand-mark{
-  width:30px;height:30px;display:grid;place-items:center;flex:none;
-  background:var(--white);color:var(--black);font-size:.7rem;font-weight:800;
-  border:1px solid var(--white);position:relative;
+  width:30px;height:30px;flex:none;
 }
-.brand-mark::after{content:"";position:absolute;right:-3px;bottom:-3px;width:7px;height:7px;background:var(--red);border:2px solid var(--black)}
 .brand-text{font-size:.82rem;letter-spacing:-.02em}
 .nav{display:flex;align-items:center;gap:clamp(.65rem,1.6vw,1.3rem);margin-left:auto}
 .nav a{position:relative;padding-block:.55rem;font-size:.76rem;text-decoration:none;color:#9a9a9a;white-space:nowrap}
