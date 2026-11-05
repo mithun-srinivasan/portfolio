@@ -183,17 +183,22 @@ code{font-family:var(--mono);font-size:.9em;color:var(--red-text);background:col
 .hero-actions{display:flex;flex-wrap:wrap;align-items:center;gap:.9rem 1.2rem;margin-top:clamp(1.4rem,3vw,1.9rem)}
 .btn{
   display:inline-flex;align-items:center;justify-content:center;gap:.5rem;
-  min-height:46px;padding:.7rem 1.1rem;border:1px solid var(--red);
+  min-height:46px;padding:.7rem 1.3rem;border:1px solid var(--red);
   background:var(--red);color:var(--on-red);text-decoration:none;
-  font-weight:700;font-size:.8rem;line-height:1.2;
+  font-weight:800;font-size:.85rem;line-height:1.2;letter-spacing:.02em;
+  box-shadow:0 0 0 1px color-mix(in srgb,var(--red) 35%,transparent),3px 3px 0 var(--red);
   transition:background-color .15s,color .15s,border-color .15s,transform .15s,box-shadow .15s;
 }
-.btn::after{content:"→";font-size:.9em}
-.btn-cal{width:100%;max-width:260px}
-.btn-cal::after{content:"↗";font-size:.9em}
+.btn::after{content:"→";font-size:.85em;opacity:0;transform:translateX(-3px);transition:opacity .15s,transform .15s}
+.btn:hover::after{opacity:1;transform:translateX(3px)}
+.btn:hover{background-color:var(--ink);border-color:var(--ink);color:var(--paper);transform:translate(-2px,-2px);box-shadow:0 0 0 1px color-mix(in srgb,var(--red) 35%,transparent),5px 5px 0 var(--red)}
+.btn:active{transform:translate(0,0);box-shadow:0 0 0 1px color-mix(in srgb,var(--red) 35%,transparent),2px 2px 0 var(--red)}
+.btn:focus-visible{outline:2px solid var(--red);outline-offset:2px}
+.btn-cal{width:100%;max-width:260px;position:relative;overflow:hidden}
+.btn-cal::after{content:"↗";font-size:.9em;opacity:0;transform:translateX(-4px);transition:opacity .15s,transform .15s}
+.btn-cal:hover::after{opacity:1;transform:translateX(2px)}
 .btn-cal:active{transform:translate(0,0);box-shadow:none}
 @media (max-width:640px){.btn-cal{width:100%}}
-.btn:hover{background-color:var(--ink);border-color:var(--ink);color:var(--paper);transform:translate(-2px,-2px);box-shadow:var(--shadow)}
 .text-link{display:inline-flex;align-items:center;min-height:46px;color:var(--ink);font-weight:700;font-size:.8rem;text-decoration:underline;text-decoration-color:var(--red);text-underline-offset:.28em}
 .text-link:hover{color:var(--red-text)}
 .back-link{display:inline-block;margin-top:.75rem;padding:.35rem .8rem;border:1px solid var(--line);border-radius:3px;color:var(--ink);font-size:.75rem;font-weight:700;text-decoration:none}
