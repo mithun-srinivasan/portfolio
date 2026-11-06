@@ -101,6 +101,16 @@ To activate `mithunsrinivasan.is-a.dev`, register it with is-a.dev, then set it 
 
 The footer on every page includes an AI-assistance disclosure.
 
+## Getting indexed
+
+Publishing a page does not put it in search results; the crawler has to be told.
+
+- **Google:** verify the site in [Search Console](https://search.google.com/search-console) (HTML tag or the uploaded HTML file — either is a one-line change to `index.html` or a single file at the root), then submit `sitemap.xml` under *Sitemaps* and use *URL inspection → Request indexing* for the home page. Nothing in the repo can do this step; it needs the account owner.
+- **Bing / Yandex / DuckDuckGo:** handled by IndexNow. The root key file `de4a7c5906b82f13.txt` proves ownership, and URLs are submitted to `https://api.indexnow.org/indexnow` after a change (a `202 Accepted` response means it was queued).
+- **Identity:** search engines decide *which* person a name refers to from repeated, linked signals. The `Person` schema `sameAs` array, the `<link rel="me">` tags, and the same name/handle on GitHub, LinkedIn, FOSS United, X, Instagram, Mastodon, and Notion are what tie this site to the right Mithun Srinivasan. A site never outranks profiles for a personal name without those links pointing back.
+
+`robots.txt` allows everything and advertises the sitemap, so no page needs authorising beyond that.
+
 ## SEO checklist
 
 When adding a post or page:
@@ -109,8 +119,8 @@ When adding a post or page:
 2. **Description:** `<= 155` chars, unique. Reuse for `og:description` and `twitter:description`.
 3. **Social tags:** `og:locale=en_IN`, `og:image:alt`, `twitter:image:alt`, `twitter:site=@simply_mithun`, `twitter:creator=@simply_mithun`.
 4. **Favicon:** identical `<link rel="icon">` set on every page (`/favicon.ico`, `/assets/images/site-icon.svg`, `/assets/icons/icon-192.png`); root-relative on 404 and posts.
-5. **JSON-LD:** every block must parse. Index: `@graph` with `WebSite`, `ProfilePage` (mainEntity `Person`), `Person`, `SoftwareSourceCode` for projects. Blog/talks: `CollectionPage` + `ItemList`. Posts: `BlogPosting` + `BreadcrumbList`.
-6. **`rel="me"`:** in `<head>` and on the Mastodon social link.
+5. **JSON-LD:** every block must parse. Index: first block is the identity graph (`WebSite` + `ProfilePage` + `Person`, joined by `@id` anchors, with `sameAs` pointing at every public profile); second block is `SoftwareSourceCode` for projects. Blog/talks: `CollectionPage` + `ItemList`. Posts: `BlogPosting` + `BreadcrumbList`.
+6. **`rel="me"`:** seven `<link rel="me">` tags in the home page `<head>` (GitHub, LinkedIn, FOSS United, X, Instagram, Mastodon, Notion) plus the Mastodon social link in the footer. Add a new profile to both places at once.
 7. **Sitemap:** add the URL with a `<lastmod>`, and bump dates for pages whose content changed. Keep `posts/_template.html` out of the sitemap and `noindex`.
 8. **`window.POSTS` / `window.TALKS`:** keep the source of truth in sync with static HTML `<noscript>` lists, `sitemap.xml`, and `feed.xml`.
 9. **Phone number:** only in `index.html` contact section (tel link). Never in structured data.

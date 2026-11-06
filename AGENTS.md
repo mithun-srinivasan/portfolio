@@ -30,6 +30,7 @@ Check dark and light themes, 390px width, `blog.html`, `talks.html`, and the foo
 - `feed.xml` — Atom feed. Keep it current with `window.POSTS` and each static post, and keep it committed (it is linked from `blog.html` and every post).
 - `404.html`, `manifest.webmanifest`, `sitemap.xml`, and `robots.txt` — static site metadata and not-found page.
 - `CNAME` — GitHub Pages custom domain.
+- `de4a7c5906b82f13.txt` — IndexNow key file at the root (proves ownership for Bing/Yandex URL submission). Keep it, and keep the filename matching the key inside.
 - `assets/css/style.css` — all shared styling and design tokens.
 - `assets/js/script.js` — shared theme, navigation, command palette, post/talk rendering, pointer effects, and terminal behavior; `assets/js/posts.js` contains the post list.
 - `assets/images/` — responsive 480px, 720px, and 900px hero portrait sources in WebP with JPG fallbacks, `site-icon.svg` (brand mark and icon source), and `og-image.png`/`og-image.svg` (share card).
@@ -64,6 +65,7 @@ Check dark and light themes, 390px width, `blog.html`, `talks.html`, and the foo
 - Project filters, scroll reveal, marquee, text scramble, project spotlight, dotted-glow canvas, and back-to-top are native components; honor `prefers-reduced-motion` when changing their behavior. The filter bar is a `radiogroup` with roving tabindex and arrow-key support. The hero dotted glow has no pointer response; reduced motion renders a static field.
 - Terminal commands include `open PROJECT`, `skills`, `experience`, `theme [dark|light]`, and the shell extras `cd`, `echo`, `uname`, `sudo`, and `rm`; `?` aliases `help`, Tab completes commands, Ctrl+C clears the current input, and `help` must stay current.
 - Canonical, Open Graph, JSON-LD, sitemap, feed, and robots URLs target `https://mithunsrinivasan.is-a.dev`.
+- The home page's first JSON-LD block is the identity graph (`WebSite` + `ProfilePage` + `Person` with `@id` anchors). Keep its `sameAs` array and the `<link rel="me">` tags in sync whenever a new public profile is added — that pairing is what tells search engines which "Mithun Srinivasan" this site belongs to.
 - The favicon set is identical on every page: `/favicon.ico`, `/assets/images/site-icon.svg`, and `/assets/icons/icon-192.png` (note `icons`, not `images`). The 404 page and posts must use root-relative paths.
 - Never ship placeholder metadata. Do not add `google-site-verification` with a `TODO` value, and do not leave `TODO` comments in rendered copy.
 - `og:image` is the 1200x630 terminal share card, so `og:image:alt` and `twitter:image:alt` describe the card, not the portrait.
