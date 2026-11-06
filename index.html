@@ -12,7 +12,13 @@
 <link rel="icon" href="/favicon.ico" sizes="48x48" type="image/x-icon">
 <link rel="icon" href="/assets/images/site-icon.svg" type="image/svg+xml">
 <link rel="icon" href="/assets/icons/icon-192.png" sizes="192x192" type="image/png">
+<link rel="me" href="https://github.com/mithun-srinivasan">
+<link rel="me" href="https://www.linkedin.com/in/mithun-srinivasan-msec">
+<link rel="me" href="https://fossunited.org/u/mithun_srinivasan">
+<link rel="me" href="https://x.com/simply_mithun">
+<link rel="me" href="https://www.instagram.com/its_mithunsrinivasan/">
 <link rel="me" href="https://mastodon.social/@mithunsrinivasan">
+<link rel="me" href="https://itsmithun06.notion.site/">
 <script>
   // set the theme before paint so there is no light flash
   (() => {
@@ -26,6 +32,7 @@
 </script>
 <link rel="preload" as="image" type="image/webp" href="assets/images/mithun-portrait-900.webp" imagesrcset="assets/images/mithun-portrait-480.webp 480w, assets/images/mithun-portrait-720.webp 720w, assets/images/mithun-portrait-900.webp 900w" imagesizes="(max-width: 620px) 290px, 360px">
 <link rel="preload" href="assets/fonts/jetbrains-mono-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="alternate" type="application/atom+xml" title="Mithun Srinivasan - posts" href="/feed.xml">
 <link rel="canonical" href="https://mithunsrinivasan.is-a.dev/">
 <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png">
 <link rel="manifest" href="/manifest.webmanifest">
@@ -55,53 +62,111 @@
   "@graph": [
     {
       "@type": "WebSite",
+      "@id": "https://mithunsrinivasan.is-a.dev/#website",
       "name": "Mithun Srinivasan",
+      "alternateName": [
+        "Mithun Srinivasan portfolio",
+        "mithunsrinivasan.is-a.dev"
+      ],
       "url": "https://mithunsrinivasan.is-a.dev/",
-      "description": "Mithun Srinivasan: CSE student in Chennai (MSEC, IIT Madras BS) building open-source tools in Go, TypeScript and Python. FOSS United Chennai contributor."
+      "description": "Mithun Srinivasan: CSE student in Chennai (MSEC, IIT Madras BS) building open-source tools in Go, TypeScript and Python. FOSS United Chennai contributor.",
+      "inLanguage": "en-IN",
+      "publisher": {
+        "@id": "https://mithunsrinivasan.is-a.dev/#person"
+      }
     },
     {
       "@type": "ProfilePage",
+      "@id": "https://mithunsrinivasan.is-a.dev/#profilepage",
       "url": "https://mithunsrinivasan.is-a.dev/",
+      "name": "Mithun Srinivasan",
+      "isPartOf": {
+        "@id": "https://mithunsrinivasan.is-a.dev/#website"
+      },
+      "about": {
+        "@id": "https://mithunsrinivasan.is-a.dev/#person"
+      },
       "mainEntity": {
-        "@type": "Person",
-        "name": "Mithun Srinivasan",
-        "url": "https://mithunsrinivasan.is-a.dev/",
-        "image": "https://mithunsrinivasan.is-a.dev/assets/images/mithun-portrait-900.webp",
-        "description": "Mithun Srinivasan: CSE student in Chennai (MSEC, IIT Madras BS) building open-source tools in Go, TypeScript and Python. FOSS United Chennai contributor.",
-        "jobTitle": "Technical Consultant",
-        "worksFor": {
-          "@type": "Organization",
-          "name": "Upfinity"
+        "@id": "https://mithunsrinivasan.is-a.dev/#person"
+      },
+      "inLanguage": "en-IN"
+    },
+    {
+      "@type": "Person",
+      "@id": "https://mithunsrinivasan.is-a.dev/#person",
+      "name": "Mithun Srinivasan",
+      "givenName": "Mithun",
+      "familyName": "Srinivasan",
+      "alternateName": [
+        "Mithun",
+        "Mithun S",
+        "mithunsrinivasan",
+        "simply_mithun",
+        "its_mithunsrinivasan"
+      ],
+      "url": "https://mithunsrinivasan.is-a.dev/",
+      "mainEntityOfPage": {
+        "@id": "https://mithunsrinivasan.is-a.dev/#profilepage"
+      },
+      "image": "https://mithunsrinivasan.is-a.dev/assets/images/mithun-portrait-900.webp",
+      "description": "Mithun Srinivasan: CSE student in Chennai (MSEC, IIT Madras BS) building open-source tools in Go, TypeScript and Python. FOSS United Chennai contributor.",
+      "jobTitle": "Technical Consultant",
+      "worksFor": {
+        "@type": "Organization",
+        "name": "Upfinity"
+      },
+      "alumniOf": [
+        {
+          "@type": "CollegeOrUniversity",
+          "name": "Meenakshi Sundararajan Engineering College"
         },
-        "alumniOf": [
-          {
-            "@type": "CollegeOrUniversity",
-            "name": "Meenakshi Sundararajan Engineering College"
-          },
-          {
-            "@type": "CollegeOrUniversity",
-            "name": "Indian Institute of Technology Madras"
-          }
-        ],
-        "homeLocation": {
-          "@type": "Place",
-          "name": "Chennai",
-          "address": {
-            "@type": "PostalAddress",
-            "addressLocality": "Chennai",
-            "addressCountry": "IN"
-          }
-        },
-        "knowsAbout": ["C", "C++", "Python", "Java", "Go", "TypeScript", "Linux", "Free and open source software"],
-        "sameAs": [
-          "https://github.com/mithun-srinivasan",
-          "https://www.linkedin.com/in/mithun-srinivasan-msec",
-          "https://x.com/simply_mithun",
-          "https://www.instagram.com/its_mithunsrinivasan/",
-          "https://mastodon.social/@mithunsrinivasan",
-          "https://itsmithun06.notion.site/"
-        ]
-      }
+        {
+          "@type": "CollegeOrUniversity",
+          "name": "Indian Institute of Technology Madras"
+        }
+      ],
+      "homeLocation": {
+        "@type": "Place",
+        "name": "Chennai",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Chennai",
+          "addressRegion": "Tamil Nadu",
+          "addressCountry": "IN"
+        }
+      },
+      "nationality": {
+        "@type": "Country",
+        "name": "India"
+      },
+      "knowsLanguage": [
+        "en",
+        "ta"
+      ],
+      "knowsAbout": [
+        "C",
+        "C++",
+        "Python",
+        "Java",
+        "Go",
+        "TypeScript",
+        "Linux",
+        "Free and open source software"
+      ],
+      "sameAs": [
+        "https://github.com/mithun-srinivasan",
+        "https://www.linkedin.com/in/mithun-srinivasan-msec",
+        "https://fossunited.org/u/mithun_srinivasan",
+        "https://x.com/simply_mithun",
+        "https://www.instagram.com/its_mithunsrinivasan/",
+        "https://mastodon.social/@mithunsrinivasan",
+        "https://itsmithun06.notion.site/",
+        "https://codeforces.com/profile/mithunsrinivasan",
+        "https://leetcode.com/u/mithunsrinivasan",
+        "https://www.codechef.com/users/mithun_1307",
+        "https://www.hackerrank.com/profile/mithun01",
+        "https://www.codedex.io/@mithun-srini"
+      ]
     }
   ]
 }
