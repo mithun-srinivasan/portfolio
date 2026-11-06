@@ -6,7 +6,7 @@ Live at <https://mithunsrinivasan.is-a.dev>.
 
 ## Pages
 
-- `index.html` — home: hero, selected work, experience ("Where I work" + education), community (open-source contributions), skills, and contact.
+- `index.html` - home: hero (with the Tamil motto), selected work, experience ("Where I work" + education), community (open-source contributions), skills, and contact.
 - `blog.html` — writing index, rendered from the `window.POSTS` array in `assets/js/posts.js`. The Blog navigation link stays hidden until that array has an entry.
 - `talks.html` — talk index, rendered from the `window.TALKS` array.
 - `404.html` — static not-found page (`noindex`).

@@ -23,7 +23,7 @@ Check dark and light themes, 390px width, `blog.html`, `talks.html`, and the foo
 
 ## File map
 
-- `index.html` — home: hero, work, experience ("Where I work" + education), community (open-source contributions), skills, contact.
+- `index.html` — home: hero (with the Tamil motto), work, experience ("Where I work" + education), community (open-source contributions), skills, contact.
 - `blog.html` — post index. Add entries to `window.POSTS` in `assets/js/posts.js` (`title`, `date`, `dateTime`, `excerpt`, `url`).
 - `talks.html` — talk index. Add talks by editing the `window.TALKS` array near the bottom (`title`, `date`, `dateTime`, `event`, `location`, `url`).
 - `posts/hi.html` — the first static post; copy `posts/_template.html` for the next one, then update its title, metadata, date, and article body.
@@ -44,6 +44,7 @@ Check dark and light themes, 390px width, `blog.html`, `talks.html`, and the foo
 - Strict red / white / black palette. Do not add a fourth hue.
 - Dark-first. `:root[data-theme="dark"]` is the primary theme; blood red is `--blood:#78080f`.
 - All text uses self-hosted JetBrains Mono WOFF2, with Tamil-capable system fallbacks. Do not reintroduce remote font requests or the old Bricolage Grotesque display font.
+- The hero motto is the only mixed-script copy on the site: keep `lang="ta"` on the Tamil line so it renders with the correct fallback, and keep the trailing emoji grayscale-filtered (`.motto-emoji`) so they stay inside the palette.
 - Keep the first-version dot/mesh background on `body` (22px dot spacing + 88px mesh lines). The masked hero canvas adds a separate red-and-white glow that pulses independently, does not react to pointer movement, and becomes static under reduced motion.
 - Keep a real terminal in the footer (`#term`), not a screenshot.
 - Keep the AI-assistance disclosure in every page footer. The footer copy should say AI-assisted, not hand-written.
