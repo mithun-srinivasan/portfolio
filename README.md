@@ -59,6 +59,17 @@ Live at <https://mithunsrinivasan.is-a.dev>.
 
 See [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md) for the dotted-glow effect reference.
 
+## Mobile behaviour
+
+The layout is tuned for phones first, not downscaled from desktop.
+
+- **Compact header.** Below 620px the header is a single 58px row instead of wrapping to two rows. The nav turns into a horizontally scrollable strip with its scrollbar hidden; a red `›` with a gradient fade appears on the right edge while more links sit off-screen, and disappears once you scroll to the end.
+- **Anchor offsets stay correct.** `assets/js/script.js` writes the live header height to the `--header-h` custom property through a `ResizeObserver`, so `scroll-padding-top` and `.section[id]` scroll margins can never drift as the header changes.
+- **Touch targets.** Nav links, the theme toggle, and the brand mark are 44px; chips are 36px; inline links get extra vertical padding.
+- **No sticky hover.** Everything that lifts or glows on `:hover` is reset inside `@media (hover:none)`, so tapped cards and buttons do not stay in their hover state.
+- **Safe areas.** `env(safe-area-inset-*)` is applied to the header top, footer bottom, and back-to-top button for notched devices.
+- **No zoom-on-focus.** The terminal input is forced to 16px on small screens so iOS does not zoom the page when it is focused.
+
 ## Preview locally
 
 From the project root:

@@ -220,6 +220,33 @@
   window.addEventListener("resize", updateProgress);
   updateProgress();
 
+  /* ---------- keep anchor offsets in sync with the sticky header ---------- */
+  function syncHeaderHeight() {
+    if (!header) return;
+    const h = header.offsetHeight;
+    if (h > 0) document.documentElement.style.setProperty("--header-h", h + "px");
+  }
+  syncHeaderHeight();
+  if (header && "ResizeObserver" in window) {
+    new ResizeObserver(syncHeaderHeight).observe(header);
+  } else {
+    window.addEventListener("resize", syncHeaderHeight);
+  }
+  window.addEventListener("load", syncHeaderHeight);
+
+  /* ---------- mobile nav: flag when more links sit off-screen ---------- */
+  const nav = document.querySelector(".nav");
+  if (nav) {
+    const syncNavEdge = () => {
+      const more = nav.scrollWidth - nav.clientWidth - nav.scrollLeft > 4;
+      nav.classList.toggle("nav-more", more);
+    };
+    nav.addEventListener("scroll", syncNavEdge, { passive: true });
+    window.addEventListener("resize", syncNavEdge);
+    window.addEventListener("load", syncNavEdge);
+    syncNavEdge();
+  }
+
   /* ---------- active section nav ---------- */
   const navLinks = Array.from(document.querySelectorAll(".nav a[href^='#']"));
   const navSections = navLinks
