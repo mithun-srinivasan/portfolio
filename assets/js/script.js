@@ -504,6 +504,20 @@
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;");
 
+  const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+  /* Accepts YYYY, YYYY-MM and YYYY-MM-DD and renders "2026", "Oct 2026"
+     or "12 Oct 2026". Unknown shapes fall back to the stored date string. */
+  function formatWhen(item) {
+    const raw = String(item.dateTime || "");
+    const match = /^(\d{4})(?:-(\d{2})(?:-(\d{2}))?)?$/.exec(raw);
+    if (!match) return item.date || "";
+    const [, year, month, day] = match;
+    if (!month || !MONTHS[Number(month) - 1]) return item.date || year;
+    const label = MONTHS[Number(month) - 1];
+    return day ? `${Number(day)} ${label} ${year}` : `${label} ${year}`;
+  }
+
   function renderEntries({ listId, emptyId, entries, more, untitled, row }) {
     const list = document.getElementById(listId);
     const empty = document.getElementById(emptyId);
@@ -520,10 +534,10 @@
     list.hidden = false;
     list.innerHTML = items.map((item) => `
       <a class="entry" href="${esc(item.url || "#")}">
-        <time datetime="${esc(item.dateTime || item.date || "")}">${esc(item.date || "")}</time>
+        <time datetime="${esc(item.dateTime || item.date || "")}">${esc(formatWhen(item))}</time>
         <h2>${esc(item.title || untitled)}</h2>
         <p>${row(item)}</p>
-        <span class="entry-more">${more}</span>
+        <span class="entry-more">${esc(typeof more === "function" ? more(item) : more)}</span>
       </a>
     `).join("");
     list.querySelectorAll(".entry").forEach((entry, index) => {
@@ -547,7 +561,7 @@
     listId: "talk-list",
     emptyId: "talk-empty",
     entries: window.TALKS,
-    more: "open slides →",
+    more: (talk) => talk.linkLabel || "view →",
     untitled: "Untitled talk",
     row: (talk) => `${esc(talk.event || "")}${talk.location ? ` · ${esc(talk.location)}` : ""}`,
   });
@@ -910,7 +924,7 @@
       { name: "skills", help: "languages and tools", run: () => { text("languages  C, C++, Python, Java, Go, TypeScript, MATLAB"); text("tools      Git, GitHub, Linux, Notion"); text("publication Open Source Is All You Need: Empowering Innovation Through Free and Open Source Software"); text("speaks     Tamil, English, Hindi, Japanese, Sanskrit"); } },
       { name: "experience", help: "the short log", run: () => { text("Where I work:"); text("2026-now   Technical Consultant, Upfinity"); text("2025-2029   B.E. CSE, MSEC Chennai"); text("from May 2025   B.S. Data Science, IIT Madras"); text(""); text("Community (newest first):"); text("oct 2026   Volunteer, GDG Chennai DevFest 2026"); text("2026-now   Community volunteer, fromDevtoOps"); text("2026-now   Contributor, FOSS United Chennai"); text("2026-now   Contributor + volunteer, Sapiens Campus"); text("may-aug 2026   GSSoC contributor"); text("jan-may 2026   Campus Mantri, GeeksforGeeks"); text("sep 2025-now   Member, Sundarbans House, IITM BS"); } },
       { name: "email", help: "copy my email address", run: () => { copyText(EMAIL).then((ok) => { text(ok ? `copied: ${EMAIL}` : `email: ${EMAIL}`, ok ? "term-line term-ok" : "term-line term-out-text"); }); } },
-      { name: "contact", help: "email, phone, location", run: () => files["contact.txt"].forEach((line) => text(line)) },
+      { name: "contact", help: "email, location, booking", run: () => files["contact.txt"].forEach((line) => text(line)) },
       { name: "socials", help: "where else to find me", run: () => { text("github     github.com/mithun-srinivasan"); text("linkedin   linkedin.com/in/mithun-srinivasan-msec"); text("x          x.com/simply_mithun"); text("instagram  instagram.com/its_mithunsrinivasan"); text("mastodon   mastodon.social/@mithunsrinivasan"); text("notion     itsmithun06.notion.site"); } },
       { name: "neofetch", help: "system + person info", run: () => { [ "   __  __ ____", "  |  \\/  / ___|", "  | |\\/| \\___ \\", "  | |  | |___) |", "  |_|  |_|____/", "", "  mithun@portfolio", "  ----------------", "  OS        Chennai, India (IST +05:30)", "  Shell     zsh + JetBrains Mono", "  WM        whatever tiling setup works", "  Editor    nvim", "  Focus     FOSS · Linux · DevOps", "  Status    learning in public" ].forEach((line) => text(line, "term-line term-out-text")); } },
       { name: "date", help: "current time in IST", run: () => text(new Intl.DateTimeFormat("en-IN", { timeZone: "Asia/Kolkata", dateStyle: "medium", timeStyle: "medium" }).format(new Date()) + " IST") },

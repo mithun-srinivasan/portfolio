@@ -123,5 +123,5 @@ When adding a post or page:
 6. **`rel="me"`:** seven `<link rel="me">` tags in the home page `<head>` (GitHub, LinkedIn, FOSS United, X, Instagram, Mastodon, Notion) plus the Mastodon social link in the footer. Add a new profile to both places at once.
 7. **Sitemap:** add the URL with a `<lastmod>`, and bump dates for pages whose content changed. Keep `posts/_template.html` out of the sitemap and `noindex`.
 8. **`window.POSTS` / `window.TALKS`:** keep the source of truth in sync with static HTML `<noscript>` lists, `sitemap.xml`, and `feed.xml`.
-9. **Phone number:** only in `index.html` contact section (tel link). Never in structured data.
+9. **Contact:** the site publishes an email address and a booking link only. There is no phone number, so do not add a `tel:` link or a phone field to structured data.
 10. **Validate:** run `node --check assets/js/script.js`; verify every JSON-LD block parses; check one h1 per page; confirm canonical is present (except 404); confirm every local `href`/`src` resolves.
