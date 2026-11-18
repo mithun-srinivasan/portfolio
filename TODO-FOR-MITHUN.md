@@ -2,6 +2,10 @@
 
 Real information only you can supply. Nothing here is linked from the site, and the site works without it.
 
+## Links
+
+- [ ] Verify `https://cal.com/mithun-srinivasan/30min` still resolves and accepts bookings.
+
 ## Projects
 
 - [ ] meeting-transcriber-and-summarizer, spank-for-windows and sticker-brains need a real outcome: stars, downloads, users, or what you learned. Their outcome lines were removed because they only restated the description.

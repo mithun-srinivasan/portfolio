@@ -9,6 +9,7 @@
   /* Every page is served from the site root (including /404.html on deep URLs),
      so absolute paths are the only ones that resolve from every location. */
   const siteRoot = "/";
+  const CAL_URL = "https://cal.com/mithun-srinivasan/30min";
   const themeToggle = document.getElementById("theme-toggle");
   const themeMeta = document.querySelector('meta[name="theme-color"]');
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -598,7 +599,7 @@
 
   /* ---------- scroll reveal ---------- */
   if (!reduceMotion.matches && "IntersectionObserver" in window) {
-    const targets = document.querySelectorAll(".section-head, .project, .timeline li, .skill, .about-grid > *, .coding, .workshop");
+    const targets = document.querySelectorAll(".section-head, .project, .timeline li, .skill, .coding, .workshop");
     root.classList.add("js-reveal");
     const io = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
@@ -667,20 +668,6 @@
   const hasPosts = Array.isArray(window.POSTS) && window.POSTS.length > 0;
   document.querySelectorAll("[data-blog-link]").forEach((link) => { link.hidden = !hasPosts; });
 
-  /* ---------- count-up numbers ---------- */
-  function countUp(el) {
-    const target = Number(el.dataset.count);
-    if (!Number.isFinite(target)) return;
-    if (reduceMotion.matches) { el.textContent = String(target); return; }
-    const start = performance.now();
-    const step = (now) => {
-      const t = Math.min(1, (now - start) / 900);
-      el.textContent = String(Math.round(target * (1 - Math.pow(1 - t, 3))));
-      if (t < 1) requestAnimationFrame(step);
-    };
-    requestAnimationFrame(step);
-  }
-
   /* ---------- text scramble on heading hover (once per hover) ---------- */
   if (!reduceMotion.matches && window.matchMedia("(hover: hover)").matches) {
     const GLYPHS = "!<>-_\\/[]{}=+*^?#";
@@ -727,7 +714,7 @@
     ...PROJECTS.map(([name, url]) => ({ group: "projects", label: name, run: () => window.open(url, "_blank", "noopener") })),
     { group: "actions", label: "toggle theme", run: () => applyTheme(currentTheme() === "dark" ? "light" : "dark") },
     { group: "actions", label: "copy email", run: async () => { const ok = await copyText("omsaimithun@gmail.com"); toast(ok ? "copied: omsaimithun@gmail.com" : "email: omsaimithun@gmail.com"); } },
-    { group: "actions", label: "book 30 minutes", run: () => window.open("https://cal.com/mithun-srinivasan/30min", "_blank", "noopener") },
+    { group: "actions", label: "book 30 minutes", run: () => window.open(CAL_URL, "_blank", "noopener") },
     ...[["github", "https://github.com/mithun-srinivasan"], ["linkedin", "https://www.linkedin.com/in/mithun-srinivasan-msec"], ["x", "https://x.com/simply_mithun"], ["instagram", "https://www.instagram.com/its_mithunsrinivasan/"], ["mastodon", "https://mastodon.social/@mithunsrinivasan"], ["notion", "https://itsmithun06.notion.site/"]]
       .map(([name, url]) => ({ group: "elsewhere", label: name, run: () => window.open(url, "_blank", "noopener") }))
   ];
@@ -763,7 +750,6 @@
 
     const paint = () => {
       results = paletteItems
-        .filter((item) => !item.when || item.when())
         .map((item) => ({ item, score: fuzzy(input.value.trim(), `${item.label} ${item.group}`) }))
         .filter((r) => r.score > 0)
         .sort((a, b) => b.score - a.score)
@@ -895,7 +881,7 @@
       "contact.txt": [
         "email     omsaimithun@gmail.com",
         "location  Chennai, India · IST (UTC+05:30)",
-        "book      cal.com/mithun-srinivasan/30min"
+        `book      ${CAL_URL.replace(/^https?:\/\//, "")}`
       ],
       ".zshrc": [
         "export EDITOR=nvim",
