@@ -4,6 +4,8 @@ Real information only you can supply. Nothing here is linked from the site, and 
 
 ## Assets
 
+- [ ] Résumé PDF at `assets/Mithun-Srinivasan-Resume.pdf`. The home page shows a `resume` link only when that file exists at build time, so right now it is simply absent rather than pointing at a 404.
+
 - [ ] `assets/logos/spank-for-windows.svg` still draws "SPANK" with an SVG `<text>` element, so it depends on the visitor having JetBrains Mono or a monospace fallback. Converting it to paths needs a font-outline tool that isn't installed here.
 
 ## Links

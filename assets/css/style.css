@@ -597,7 +597,7 @@ pre code{white-space:pre}
   .js-reveal .reveal{opacity:0;transform:translateY(14px);transition:opacity .5s ease,transform .5s cubic-bezier(.2,.8,.2,1)}
   .js-reveal .reveal.is-in{opacity:1;transform:none}
 }
-@media print{.to-top,.toast,.palette-trigger,.chips,.marquee{display:none!important}.js-reveal .reveal{opacity:1!important;transform:none!important}}
+/* print rules live in one block at the end of this file */
 
 /* ---------- marquee ---------- */
 .marquee{overflow:hidden;border-block:1px solid var(--line-strong);background:var(--black);color:var(--white);-webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)}
@@ -718,12 +718,30 @@ pre code{white-space:pre}
   *,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
 }
 @media print{
-  .site-header,.skip-link,.theme-toggle,.hero-actions,.project-links,.socials,.footer,.contact .copy-btn{display:none!important}
-  body{color:#000;background:#fff}
-  .section{padding-block:1.2rem;break-inside:avoid}
-  .contact{background:#fff;color:#000}
-  .contact .cmd{color:#333}
+  /* clean one-pager: no chrome, no motion, no dark panels */
+  @page{margin:14mm}
+  .site-header,.skip-link,.theme-toggle,.nav,.hero-actions,.project-links,.socials,.contact .copy-btn,
+  .hero-dotted-glow,.marquee,.to-top,.toast,.palette,.palette-trigger,.chips,.term-live-hint,.footer{display:none!important}
+  body{color:#000;background:#fff;font-size:11pt;line-height:1.45}
+  body::before{display:none!important}
+  .js-reveal .reveal{opacity:1!important;transform:none!important}
+  .hero{padding-block:.2rem 1rem}
+  .hero-grid{display:block}
+  .hero-portrait{display:none}
+  .hero-lead{max-width:none}
+  .section{padding-block:1.1rem;break-inside:avoid}
+  .section-head{grid-template-columns:1fr;gap:.3rem}
+  .work-list,.experience-grid,.skills-grid{grid-template-columns:1fr!important;gap:.9rem}
+  .project{grid-template-columns:56px minmax(0,1fr);gap:.8rem}
+  .project-cover{box-shadow:none}
+  .contact{background:#fff;color:#000;padding-block:1rem}
+  .contact .cmd,.contact .contact-lead,.contact a{color:#000}
   .contact .cmd::before{color:#000}
-  .contact a{color:#000}
-  .project,.timeline li,.entry{break-inside:avoid}
+  .contact-email{font-size:1rem}
+  main a{color:#000;text-decoration:underline}
+  /* print the destination of off-site links, since the href is unclickable on paper */
+  main a[href^="http"]::after{content:" (" attr(href) ")";font-size:.82em;font-weight:400;word-break:break-all}
+  .project,.timeline li,.entry,.edu-item,.skill,.coding{break-inside:avoid}
+  .timeline li{grid-template-columns:9rem minmax(0,1fr)}
+  h1,h2,h3{break-after:avoid}
 }

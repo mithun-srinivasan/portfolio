@@ -615,6 +615,13 @@ ${talks.map((talk) => `          <a class="entry" href="${escapeAttr(talk.url ||
       </noscript>`)) changed.push("talks.html");
   if (replaceRegion(path.join(ROOT, "index.html"), "home-latest-posts", renderLatestWriting(published))) changed.push("index.html");
 
+  /* The resume link exists only when the PDF does; never point at nothing. */
+  const resume = path.join(ROOT, "assets", "Mithun-Srinivasan-Resume.pdf");
+  const resumeLink = fs.existsSync(resume)
+    ? '<a class="text-link" href="/assets/Mithun-Srinivasan-Resume.pdf">resume</a>'
+    : "";
+  if (replaceRegion(path.join(ROOT, "index.html"), "resume-link", resumeLink)) changed.push("index.html");
+
   /* now.html carries its own real last-modified date, taken from git. */
   const nowFile = path.join(ROOT, "now.html");
   if (fs.existsSync(nowFile)) {
