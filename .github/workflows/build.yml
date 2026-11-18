@@ -1,0 +1,85 @@
+# Publishing from a phone: create content/posts/YYYY-MM-DD-slug.md in the
+# GitHub web editor (or edit content/talks.json) and commit to main. This
+# workflow builds the HTML, feed, sitemap and posts.js, commits them back as
+# github-actions[bot], then runs the checks. Pull requests only verify.
+
+name: build
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "content/**"
+      - "scripts/**"
+      - "assets/css/**"
+      - "assets/js/**"
+      - "!assets/js/posts.js"
+      - ".github/workflows/build.yml"
+  pull_request:
+    paths:
+      - "content/**"
+      - "scripts/**"
+      - "assets/css/**"
+      - "assets/js/**"
+      - "!assets/js/posts.js"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  rebuild:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+
+      - name: Build generated files
+        run: node scripts/build.mjs
+
+      - name: Commit regenerated files
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if [ -n "$(git status --porcelain)" ]; then
+            git add -A
+            git commit -m "chore: rebuild generated files [skip ci]"
+            git push
+          else
+            echo "generated files already up to date"
+          fi
+
+      - name: Check the site
+        run: node scripts/check.mjs
+
+  verify:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+
+      - name: Build generated files
+        run: node scripts/build.mjs
+
+      - name: Fail if generated output is stale
+        run: |
+          if ! git diff --exit-code; then
+            echo "::error::generated files are out of date — run node scripts/build.mjs and commit the result"
+            exit 1
+          fi
+
+      - name: Check the site
+        run: node scripts/check.mjs
