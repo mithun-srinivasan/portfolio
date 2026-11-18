@@ -157,6 +157,10 @@
         else if (!document.hidden && isVisible && !frame) frame = requestAnimationFrame(draw);
       };
 
+      let lastWidth = 0;
+      let lastHeight = 0;
+      let resizeFrame = 0;
+
       const resize = () => {
         const rect = heroSection.getBoundingClientRect();
         ratio = Math.min(window.devicePixelRatio || 1, 1.5);
@@ -165,8 +169,23 @@
         glowCanvas.width = Math.ceil(width * ratio);
         glowCanvas.height = Math.ceil(height * ratio);
         glowContext.setTransform(ratio, 0, 0, ratio, 0, 0);
-        buildDots();
+        /* Mobile URL bars fire resize on every scroll. Rebuilding the random
+           field each time makes the glow flicker, so only rebuild when the
+           width changes or the height moves meaningfully. */
+        if (!dots.length || width !== lastWidth || Math.abs(height - lastHeight) > 80) {
+          buildDots();
+          lastWidth = width;
+          lastHeight = height;
+        }
         start();
+      };
+
+      const scheduleResize = () => {
+        if (resizeFrame) return;
+        resizeFrame = requestAnimationFrame(() => {
+          resizeFrame = 0;
+          resize();
+        });
       };
 
       readColors();
@@ -178,7 +197,7 @@
       }, { threshold: 0.05 });
       heroObserver.observe(heroSection);
 
-      window.addEventListener("resize", resize, { passive: true });
+      window.addEventListener("resize", scheduleResize, { passive: true });
       document.addEventListener("visibilitychange", start);
       document.addEventListener("themechange", () => { readColors(); start(); });
       reduceMotion.addEventListener?.("change", start);
