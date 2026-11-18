@@ -542,6 +542,37 @@ function gitLastmod(file) {
   }
 }
 
+/* WebP dimensions straight from the container header: no image library, and
+   the <img> gets real width/height so the card never jumps while loading. */
+function webpSize(file) {
+  const bytes = fs.readFileSync(file);
+  if (bytes.length < 30 || bytes.toString("ascii", 0, 4) !== "RIFF" || bytes.toString("ascii", 8, 12) !== "WEBP") return null;
+  const chunk = bytes.toString("ascii", 12, 16);
+  if (chunk === "VP8X") {
+    return { width: 1 + bytes.readUIntLE(24, 3), height: 1 + bytes.readUIntLE(27, 3) };
+  }
+  if (chunk === "VP8 ") {
+    if (bytes[23] !== 0x9d || bytes[24] !== 0x01 || bytes[25] !== 0x2a) return null;
+    return { width: bytes.readUInt16LE(26) & 0x3fff, height: bytes.readUInt16LE(28) & 0x3fff };
+  }
+  if (chunk === "VP8L") {
+    const bits = bytes.readUInt32LE(21);
+    return { width: (bits & 0x3fff) + 1, height: ((bits >> 14) & 0x3fff) + 1 };
+  }
+  return null;
+}
+
+function renderProjectShot(slug, file) {
+  const size = webpSize(file);
+  if (!size || !size.width || !size.height) {
+    warn(`assets/images/projects/${slug}.webp: could not read the image size, so the screenshot was skipped`);
+    return "";
+  }
+  return `<figure class="project-shot">
+              <img src="/assets/images/projects/${slug}.webp" alt="Screenshot of ${escapeAttr(slug)}" width="${size.width}" height="${size.height}" loading="lazy" decoding="async">
+            </figure>`;
+}
+
 /* ---------- main ---------- */
 
 function build() {
@@ -621,6 +652,15 @@ ${talks.map((talk) => `          <a class="entry" href="${escapeAttr(talk.url ||
     ? '<a class="text-link" href="/assets/Mithun-Srinivasan-Resume.pdf">resume</a>'
     : "";
   if (replaceRegion(path.join(ROOT, "index.html"), "resume-link", resumeLink)) changed.push("index.html");
+
+  /* Project screenshots are optional: the <figure> exists only when the image
+     does, so the card never ships a placeholder. Drop a WebP at
+     assets/images/projects/<project-slug>.webp and rebuild. */
+  for (const slug of ["ditch-windows", "srigurugranthsahib", "meeting-transcriber-and-summarizer", "spank-for-windows", "sticker-brains"]) {
+    const shot = path.join(ROOT, "assets", "images", "projects", `${slug}.webp`);
+    const html = fs.existsSync(shot) ? renderProjectShot(slug, shot) : "";
+    if (replaceRegion(path.join(ROOT, "index.html"), `project-shot-${slug}`, html)) changed.push("index.html");
+  }
 
   /* now.html carries its own real last-modified date, taken from git. */
   const nowFile = path.join(ROOT, "now.html");
