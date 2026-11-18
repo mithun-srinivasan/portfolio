@@ -6,7 +6,9 @@
   "use strict";
 
   const root = document.documentElement;
-  const siteRoot = document.querySelector("#term")?.dataset.root || "";
+  /* Every page is served from the site root (including /404.html on deep URLs),
+     so absolute paths are the only ones that resolve from every location. */
+  const siteRoot = "/";
   const themeToggle = document.getElementById("theme-toggle");
   const themeMeta = document.querySelector('meta[name="theme-color"]');
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -676,8 +678,7 @@
   }
 
   /* ---------- command palette (Ctrl/Cmd+K or /) ---------- */
-  const onHome = !!document.getElementById("work");
-  const home = (hash) => (onHome ? hash : `${siteRoot}index.html${hash}`);
+  const home = (hash) => `${siteRoot}${hash}`;
   const PROJECTS = [
     ["ditch-windows", "https://github.com/mithun-srinivasan/ditch-windows"],
     ["srigurugranthsahib", "https://srigurugranthsahib.vercel.app/"],
@@ -882,7 +883,7 @@
       { name: "ls", help: "files in this directory", run: (arg) => { if (arg === "-la") { text("drwxr-xr-x  mithun  portfolio"); text("-rw-r--r--  mithun  welcome.txt"); text("-rw-r--r--  mithun  about.txt"); text("-rw-r--r--  mithun  projects.txt"); text("-rw-r--r--  mithun  contact.txt"); text("-rw-r--r--  mithun  .zshrc"); text("-rw-r--r--  mithun  blog.html"); text("-rw-r--r--  mithun  talks.html"); } else { listFiles(); } } },
       { name: "cat", help: "read a file (try .zshrc)", run: (arg) => { if (!arg) { text("usage: cat <file>", "term-line term-dim"); return; } const file = files[arg.toLowerCase()]; if (file) file.forEach((line) => text(line)); else text(`cat: ${arg}: No such file or directory`, "term-line term-dim"); } },
       { name: "pwd", help: "print working directory", run: () => text("/home/mithun/portfolio") },
-      { name: "cd", help: "move to a page", run: (arg) => { if (!arg || arg === "~" || arg === ".") { text("/home/mithun/portfolio"); } else if (/^blog(\.html)?$/.test(arg)) { text("opening blog.html …", "term-line term-dim"); window.location.assign(`${siteRoot}blog.html`); } else if (/^talks(\.html)?$/.test(arg)) { text("opening talks.html …", "term-line term-dim"); window.location.assign(`${siteRoot}talks.html`); } else { text(`cd: no such file or directory: ${arg}`, "term-line term-dim"); } } },
+      { name: "cd", help: "move to a page", run: (arg) => { if (!arg || arg === "~" || arg === ".") { text("/home/mithun/portfolio"); } else if (/^blog(\.html)?$/.test(arg)) { text("opening blog.html …", "term-line term-dim"); window.location.assign(`${siteRoot}blog.html`); } else if (/^talks(\.html)?$/.test(arg)) { text("opening talks.html …", "term-line term-dim"); window.location.assign(`${siteRoot}talks.html`); } else if (/^now(\.html)?$/.test(arg)) { text("opening now.html …", "term-line term-dim"); window.location.assign(`${siteRoot}now.html`); } else if (/^uses(\.html)?$/.test(arg)) { text("opening uses.html …", "term-line term-dim"); window.location.assign(`${siteRoot}uses.html`); } else { text(`cd: no such file or directory: ${arg}`, "term-line term-dim"); } } },
       { name: "blog", help: "open the blog", run: () => { text("opening blog.html …", "term-line term-dim"); window.location.assign(`${siteRoot}blog.html`); } },
       { name: "talks", help: "open the talks page", run: () => { text("opening talks.html …", "term-line term-dim"); window.location.assign(`${siteRoot}talks.html`); } },
       { name: "theme", help: "toggle or set the theme", run: (arg) => { const wanted = arg.toLowerCase(); if (wanted && !isTheme(wanted)) { text("usage: theme [dark|light]", "term-line term-dim"); return; } const next = wanted || (currentTheme() === "dark" ? "light" : "dark"); applyTheme(next); text(`theme → ${next}`); } },
