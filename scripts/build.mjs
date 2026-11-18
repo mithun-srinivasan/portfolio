@@ -343,6 +343,7 @@ function footer({ prompt = "mithun@portfolio:~$", title = "mithun@portfolio: ~",
       </div>
     </div>
     <p class="term-hint" id="term-hint">Try <b>help</b>, <b>open PROJECT</b>, <b>skills</b>, <b>experience</b>, <b>theme dark|light</b>, or <b>email</b>.</p>
+    <p class="term-live-hint">This terminal is live — tap it and type <b>help</b>.</p>
     <blockquote class="footer-motto">
       <p>Failure is nothing till you lose the ability to try things.</p>
       <p lang="ta">எல்லாம் மாறும்!!<span class="motto-emoji" aria-hidden="true">💯🏃</span></p>
