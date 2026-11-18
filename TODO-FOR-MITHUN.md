@@ -2,6 +2,10 @@
 
 Real information only you can supply. Nothing here is linked from the site, and the site works without it.
 
+## Assets
+
+- [ ] `assets/logos/spank-for-windows.svg` still draws "SPANK" with an SVG `<text>` element, so it depends on the visitor having JetBrains Mono or a monospace fallback. Converting it to paths needs a font-outline tool that isn't installed here.
+
 ## Links
 
 - [ ] Verify `https://cal.com/mithun-srinivasan/30min` still resolves and accepts bookings.
