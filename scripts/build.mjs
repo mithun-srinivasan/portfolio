@@ -336,6 +336,7 @@ function footer({ prompt = "mithun@portfolio:~$", title = "mithun@portfolio: ~",
           <a href="/">~/home</a>
           <a href="/blog.html" data-blog-link>blog</a>
           <a href="/talks.html">talks</a>
+          <a href="/feed.xml">rss</a>
           <a href="https://github.com/mithun-srinivasan">github</a>
           <a href="mailto:omsaimithun@gmail.com">email</a>
         </div>

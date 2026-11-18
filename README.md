@@ -90,7 +90,7 @@ Open <http://127.0.0.1:4173/>. A local server is required — the shared stylesh
 - **Behaviour:** theme, navigation, typewriter, portrait card, post/talk rendering, pointer effects, and terminal live in `assets/js/script.js`; post content lives in `assets/js/posts.js`. There is no network or GitHub API call at runtime.
 - **Interactions:** Ctrl/Cmd+K opens the native command palette; work filters use a keyboard-operable radio group; scroll reveal, tools marquee, heading scramble, red project spotlight, toast, and back-to-top remain dependency-free.
 - **Background:** a fixed body layer holds the 22px dot grid and 88px mesh. The hero also draws a masked dotted glow; a few red dots pulse independently, it does not respond to pointer movement, and it becomes static for reduced motion.
-- **Terminal:** `help` lists every command, including `open PROJECT`, `skills`, `experience`, `theme [dark|light]`, and shell extras like `cd`, `echo`, `uname`, `sudo`, and `rm`; `?` aliases `help`, Tab completes commands, and Ctrl+C clears the current input.
+- **Terminal:** `help` lists every command, including `open PROJECT`, `skills`, `experience`, `theme [dark|light]`, `rss` for the Atom feed, and shell extras like `cd`, `echo`, `uname`, `sudo`, and `rm`; `?` aliases `help`, Tab completes commands, and Ctrl+C clears the current input.
 - **Brand mark and icons:** `assets/images/site-icon.svg` is the header mark and the source of truth for `favicon.ico`, `assets/icons/icon-192.png`, `assets/icons/icon-512.png`, and `assets/icons/apple-touch-icon.png`. Keep the ICO at true 16/32/48 sizes and keep the touch icon opaque (no transparency).
 
 ## Deployment
