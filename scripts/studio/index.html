@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Studio · Mithun Srinivasan</title>
+<link rel="icon" href="/assets/images/site-icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/css/style.css">
+<style>
+  :root{color-scheme:dark}
+  body{background:#050505;color:#f4f2ee;font-family:"JetBrains Mono",ui-monospace,monospace;margin:0}
+  .shell-wide{max-width:1500px;margin:0 auto;padding:1.2rem}
+  header.bar{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center;justify-content:space-between;border-bottom:1px solid #2c2c2c;padding-bottom:.8rem;margin-bottom:1rem}
+  header.bar h1{font-size:1rem;margin:0;letter-spacing:.02em}
+  header.bar h1 span{color:#e23b49}
+  .acts{display:flex;flex-wrap:wrap;gap:.4rem}
+  button,.btn{font:inherit;font-size:.8rem;padding:.45rem .8rem;border:1px solid #3a3a3a;background:#101010;color:#f4f2ee;cursor:pointer;border-radius:3px}
+  button:hover{border-color:#e23b49;color:#fff}
+  button:disabled{opacity:.45;cursor:not-allowed}
+  button.danger:hover{border-color:#e23b49;background:#2a0a0d}
+  .grid{display:grid;grid-template-columns:260px minmax(0,1fr) minmax(0,1fr);gap:1rem;align-items:start}
+  @media (max-width:1100px){.grid{grid-template-columns:1fr}}
+  .panel{border:1px solid #2c2c2c;background:#0a0a0a;border-radius:4px;overflow:hidden}
+  .panel h2{font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:#8b8b8b;margin:0;padding:.6rem .8rem;border-bottom:1px solid #2c2c2c}
+  .list{max-height:70vh;overflow:auto}
+  .list button{display:block;width:100%;text-align:left;border:0;border-bottom:1px solid #1c1c1c;border-radius:0;background:transparent;padding:.6rem .8rem;font-size:.8rem}
+  .list button.active{background:#17090b;box-shadow:inset 2px 0 0 #e23b49}
+  .list .meta{display:block;color:#7c7c7c;font-size:.7rem;margin-top:.2rem}
+  .badge{display:inline-block;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;padding:.05rem .35rem;border:1px solid #3a3a3a;color:#8b8b8b;margin-left:.35rem;border-radius:2px}
+  .badge.draft{color:#e23b49;border-color:#e23b49}
+  form{padding:.8rem;display:grid;gap:.6rem}
+  label{display:grid;gap:.25rem;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:#8b8b8b}
+  input,textarea,select{font:inherit;font-size:.85rem;padding:.45rem .55rem;border:1px solid #2c2c2c;background:#050505;color:#f4f2ee;border-radius:3px;width:100%;box-sizing:border-box}
+  textarea{resize:vertical;min-height:16rem;line-height:1.55}
+  input:focus,textarea:focus{outline:2px solid #78080f;outline-offset:1px}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:.6rem}
+  .counter{font-size:.7rem;color:#7c7c7c}
+  .counter.over{color:#e23b49}
+  .drop{border:1px dashed #3a3a3a;padding:.7rem;text-align:center;font-size:.75rem;color:#8b8b8b;border-radius:3px}
+  .drop.hot{border-color:#e23b49;color:#e23b49}
+  .toolbar{display:flex;flex-wrap:wrap;gap:.25rem;margin-bottom:.2rem}
+  .toolbar button{padding:.2rem .45rem;font-size:.72rem}
+  iframe{width:100%;height:78vh;border:0;background:#fff}
+  .out{margin:0;padding:.8rem;font-size:.75rem;line-height:1.5;white-space:pre-wrap;max-height:18vh;overflow:auto;color:#b9b9b9}
+  .ok{color:#8bd18b}
+  .err{color:#e23b49}
+  .hint{font-size:.7rem;color:#7c7c7c;margin:0;padding:0 .8rem .8rem}
+  dialog{border:1px solid #3a3a3a;background:#0a0a0a;color:#f4f2ee;font:inherit;font-size:.85rem;max-width:44rem}
+  dialog::backdrop{background:rgba(0,0,0,.75)}
+  dialog form{display:block;padding:0}
+</style>
+</head>
+<body>
+<div class="shell-wide">
+  <header class="bar">
+    <h1>mithun@studio:<span>~$</span> content/</h1>
+    <div class="acts">
+      <button id="new-post" type="button">new post</button>
+      <button id="new-talk" type="button">new talk</button>
+      <button id="build" type="button">build + check</button>
+      <button id="publish" type="button">publish</button>
+    </div>
+  </header>
+
+  <div class="grid">
+    <section class="panel">
+      <h2>content</h2>
+      <div class="list" id="list"></div>
+      <p class="hint">drafts stay out of the feed, sitemap and blog until you clear <b>draft</b>.</p>
+    </section>
+
+    <section class="panel">
+      <h2 id="editor-title">post</h2>
+      <form id="post-form" hidden>
+        <label>title<input name="title" required></label>
+        <div class="row">
+          <label>slug<input name="slug" pattern="[a-z0-9-]+"></label>
+          <label>date<input name="date" type="date" required></label>
+        </div>
+        <label>description
+          <input name="description" maxlength="200" required>
+          <span class="counter" id="desc-count">0 / 155</span>
+        </label>
+        <div class="row">
+          <label>tags (comma separated)<input name="tags"></label>
+          <label>cover image (optional)<input name="image" placeholder="/assets/images/posts/…"></label>
+        </div>
+        <label style="display:flex;gap:.5rem;align-items:center;text-transform:none;letter-spacing:0;color:#f4f2ee;font-size:.8rem">
+          <input type="checkbox" name="draft" style="width:auto"> draft (noindex, not published)
+        </label>
+        <label>markdown
+          <div class="toolbar" id="md-tools">
+            <button type="button" data-md="bold">bold</button>
+            <button type="button" data-md="italic">italic</button>
+            <button type="button" data-md="link">link</button>
+            <button type="button" data-md="code">code</button>
+            <button type="button" data-md="h2">heading</button>
+            <button type="button" data-md="list">list</button>
+            <button type="button" data-md="quote">quote</button>
+          </div>
+          <textarea name="body" spellcheck="true"></textarea>
+        </label>
+        <div class="drop" id="drop">drop or paste an image here (png, jpg, webp, gif · 5 MB) — you will be asked for alt text</div>
+        <div class="acts">
+          <button type="submit">save</button>
+          <button type="button" id="preview">refresh preview</button>
+          <button type="button" class="danger" id="delete-post">delete</button>
+        </div>
+        <p class="hint" id="post-hint"></p>
+      </form>
+
+      <form id="talk-form" hidden>
+        <label>title<input name="title" required></label>
+        <div class="row">
+          <label>date (YYYY-MM or YYYY-MM-DD)<input name="date" placeholder="2026-10" required></label>
+          <label>event<input name="event" required></label>
+        </div>
+        <div class="row">
+          <label>location<input name="location"></label>
+          <label>link label<input name="linkLabel" placeholder="view →"></label>
+        </div>
+        <label>url (slides, video or repo)<input name="url" type="url" required></label>
+        <label style="display:flex;gap:.5rem;align-items:center;text-transform:none;letter-spacing:0;color:#f4f2ee;font-size:.8rem">
+          <input type="checkbox" name="draft" style="width:auto"> draft
+        </label>
+        <div class="acts">
+          <button type="submit">save talk</button>
+          <button type="button" class="danger" id="delete-talk">delete talk</button>
+        </div>
+        <p class="hint">the date must be real. If the month is unknown, leave the talk as a draft.</p>
+      </form>
+    </section>
+
+    <section class="panel">
+      <h2>live preview</h2>
+      <iframe id="frame" title="Post preview" sandbox="allow-same-origin"></iframe>
+      <pre class="out" id="out">ready.</pre>
+    </section>
+  </div>
+</div>
+
+<script>
+(() => {
+  "use strict";
+  const token = new URLSearchParams(location.search).get("token") || "";
+  const list = document.getElementById("list");
+  const frame = document.getElementById("frame");
+  const out = document.getElementById("out");
+  const postForm = document.getElementById("post-form");
+  const talkForm = document.getElementById("talk-form");
+  const editorTitle = document.getElementById("editor-title");
+  const descCount = document.getElementById("desc-count");
+  const postHint = document.getElementById("post-hint");
+
+  let state = { posts: [], talks: [], today: "" };
+  let current = null; // {kind:"post"|"talk", index|file}
+
+  const say = (text, bad) => {
+    out.textContent = text;
+    out.className = bad ? "out err" : "out ok";
+  };
+
+  async function api(path, options = {}) {
+    const url = `/api/${path}${path.includes("?") ? "&" : "?"}token=${encodeURIComponent(token)}`;
+    const response = await fetch(url, options);
+    const data = await response.json().catch(() => ({ error: "bad response" }));
+    if (!response.ok) throw Object.assign(new Error(data.error || "request failed"), { data });
+    return data;
+  }
+
+  const postJSON = (path, body) => api(path, {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify(body),
+  });
+
+  function slugify(value) {
+    return String(value).normalize("NFKD").replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 60);
+  }
+
+  function renderList() {
+    list.innerHTML = "";
+    state.posts.forEach((post) => {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = current && current.kind === "post" && current.file === post.file ? "active" : "";
+      button.innerHTML = `${escapeHtml(post.title)}<span class="badge ${post.draft ? "draft" : ""}">${post.draft ? "draft" : "live"}</span><span class="meta">${post.date} · ${post.slug}</span>`;
+      button.addEventListener("click", () => openPost(post));
+      list.append(button);
+    });
+    state.talks.forEach((talk, index) => {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = current && current.kind === "talk" && current.index === index ? "active" : "";
+      button.innerHTML = `${escapeHtml(talk.title)}<span class="badge ${talk.draft ? "draft" : ""}">${talk.draft ? "draft" : "talk"}</span><span class="meta">${escapeHtml(talk.date || "")} · ${escapeHtml(talk.event || "")}</span>`;
+      button.addEventListener("click", () => openTalk(talk, index));
+      list.append(button);
+    });
+    if (!list.children.length) list.innerHTML = '<p class="hint">nothing here yet.</p>';
+  }
+
+  function escapeHtml(value) {
+    return String(value == null ? "" : value).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  }
+
+  const field = (form, name) => form.elements[name];
+
+  function openPost(post) {
+    current = { kind: "post", file: post.file };
+    postForm.hidden = false;
+    talkForm.hidden = true;
+    editorTitle.textContent = "post";
+    field(postForm, "title").value = post.title;
+    field(postForm, "slug").value = post.slug;
+    field(postForm, "date").value = post.date;
+    field(postForm, "description").value = post.description;
+    field(postForm, "tags").value = post.tags.join(", ");
+    field(postForm, "image").value = post.image;
+    field(postForm, "draft").checked = post.draft;
+    field(postForm, "body").value = post.body;
+    countDescription();
+    postHint.textContent = post.file;
+    renderList();
+    schedulePreview();
+  }
+
+  function openTalk(talk, index) {
+    current = { kind: "talk", index };
+    postForm.hidden = true;
+    talkForm.hidden = false;
+    editorTitle.textContent = "talk";
+    field(talkForm, "title").value = talk.title || "";
+    field(talkForm, "date").value = talk.date || "";
+    field(talkForm, "event").value = talk.event || "";
+    field(talkForm, "location").value = talk.location || "";
+    field(talkForm, "linkLabel").value = talk.linkLabel || "view →";
+    field(talkForm, "url").value = talk.url || "";
+    field(talkForm, "draft").checked = !!talk.draft;
+    renderList();
+    say("edit the talk, then save. builds run on save.");
+  }
+
+  function newPost() {
+    openPost({
+      file: "", title: "", slug: "", date: state.today, description: "",
+      tags: [], image: "", draft: true, body: "",
+    });
+    field(postForm, "title").focus();
+  }
+
+  function newTalk() {
+    openTalk({ title: "", date: state.today.slice(0, 7), event: "", location: "Chennai", linkLabel: "view →", url: "", draft: true }, -1);
+    field(talkForm, "title").focus();
+  }
+
+  function countDescription() {
+    const length = field(postForm, "description").value.length;
+    descCount.textContent = `${length} / 155`;
+    descCount.className = length > 155 ? "counter over" : "counter";
+  }
+
+  function collectPost() {
+    return {
+      file: current && current.kind === "post" ? current.file : "",
+      title: field(postForm, "title").value.trim(),
+      slug: field(postForm, "slug").value.trim(),
+      date: field(postForm, "date").value,
+      description: field(postForm, "description").value.trim(),
+      tags: field(postForm, "tags").value,
+      image: field(postForm, "image").value.trim(),
+      draft: field(postForm, "draft").checked,
+      body: field(postForm, "body").value,
+    };
+  }
+
+  let timer = 0;
+  function schedulePreview() {
+    clearTimeout(timer);
+    timer = setTimeout(refreshPreview, 450);
+  }
+
+  async function refreshPreview() {
+    if (postForm.hidden) return;
+    try {
+      const data = await postJSON("preview", collectPost());
+      frame.srcdoc = data.html;
+    } catch (error) {
+      say(`preview: ${error.message}`, true);
+    }
+  }
+
+  async function load() {
+    state = await api("state");
+    renderList();
+  }
+
+  /* ---------- toolbar ---------- */
+
+  const wrap = {
+    bold: (text) => `**${text || "bold text"}**`,
+    italic: (text) => `*${text || "italic text"}*`,
+    code: (text) => `\`${text || "code"}\``,
+    link: (text) => `[${text || "label"}](https://example.com)`,
+    h2: (text) => `## ${text || "Heading"}`,
+    list: (text) => `- ${text || "item"}`,
+    quote: (text) => `> ${text || "quoted"}`,
+  };
+
+  document.getElementById("md-tools").addEventListener("click", (event) => {
+    const button = event.target.closest("button[data-md]");
+    if (!button) return;
+    const area = field(postForm, "body");
+    const { selectionStart: start, selectionEnd: end, value } = area;
+    const selected = value.slice(start, end);
+    const insert = wrap[button.dataset.md](selected);
+    area.value = `${value.slice(0, start)}${insert}${value.slice(end)}`;
+    area.focus();
+    area.setSelectionRange(start + insert.length, start + insert.length);
+    schedulePreview();
+  });
+
+  /* ---------- upload ---------- */
+
+  const drop = document.getElementById("drop");
+
+  async function upload(file, alt, slug) {
+    const response = await fetch(`/api/upload?token=${encodeURIComponent(token)}&slug=${encodeURIComponent(slug)}&alt=${encodeURIComponent(alt)}&name=${encodeURIComponent(file.name)}`, {
+      method: "POST",
+      headers: { "content-type": file.type || "application/octet-stream" },
+      body: file,
+    });
+    const data = await response.json().catch(() => ({ error: "bad response" }));
+    if (!response.ok) throw new Error(data.error || "upload failed");
+    return data;
+  }
+
+  async function handleFiles(files) {
+    if (!files || !files.length) return;
+    const post = collectPost();
+    const slug = slugify(post.slug || post.title);
+    if (!slug) return say("give the post a title first.", true);
+    for (const file of files) {
+      const alt = window.prompt(`Alt text for ${file.name} (required):`, "");
+      if (alt === null) return;
+      if (!alt.trim()) return say("upload cancelled: alt text is required.", true);
+      try {
+        const data = await upload(file, alt.trim(), slug);
+        const area = field(postForm, "body");
+        area.value = `${area.value.replace(/\s*$/, "")}\n\n${data.markdown}\n`;
+        say(`uploaded ${data.src}`);
+        schedulePreview();
+      } catch (error) {
+        say(`upload: ${error.message}`, true);
+      }
+    }
+  }
+
+  drop.addEventListener("dragover", (event) => { event.preventDefault(); drop.classList.add("hot"); });
+  drop.addEventListener("dragleave", () => drop.classList.remove("hot"));
+  drop.addEventListener("drop", (event) => {
+    event.preventDefault();
+    drop.classList.remove("hot");
+    handleFiles(event.dataTransfer.files);
+  });
+  postForm.addEventListener("paste", (event) => {
+    const files = [...(event.clipboardData?.files || [])];
+    if (files.length) { event.preventDefault(); handleFiles(files); }
+  });
+
+  /* ---------- wiring ---------- */
+
+  document.getElementById("new-post").addEventListener("click", newPost);
+  document.getElementById("new-talk").addEventListener("click", newTalk);
+  document.getElementById("preview").addEventListener("click", refreshPreview);
+  field(postForm, "title").addEventListener("input", () => {
+    if (!current || !current.file) field(postForm, "slug").value = slugify(field(postForm, "title").value);
+    schedulePreview();
+  });
+  field(postForm, "description").addEventListener("input", countDescription);
+  postForm.addEventListener("input", schedulePreview);
+
+  postForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    try {
+      say("saving…");
+      const saved = await postJSON("post", collectPost());
+      current = { kind: "post", file: saved.file };
+      postHint.textContent = saved.file;
+      say(`saved ${saved.file}\n${saved.build.output}`, saved.build.code !== 0);
+      await load();
+      renderList();
+      refreshPreview();
+    } catch (error) {
+      say(`save: ${error.message}`, true);
+    }
+  });
+
+  talkForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    try {
+      say("saving…");
+      const data = Object.fromEntries(new FormData(talkForm).entries());
+      data.index = current && current.kind === "talk" ? current.index : -1;
+      data.draft = field(talkForm, "draft").checked;
+      const saved = await postJSON("talk", data);
+      current = { kind: "talk", index: saved.index };
+      say(`saved talk\n${saved.build.output}`, saved.build.code !== 0);
+      await load();
+    } catch (error) {
+      say(`save: ${error.message}`, true);
+    }
+  });
+
+  document.getElementById("delete-post").addEventListener("click", async () => {
+    if (!current || current.kind !== "post" || !current.file) return;
+    if (!window.confirm(`move ${current.file} to content/.trash/ ?`)) return;
+    try {
+      const result = await postJSON("delete", { kind: "post", file: current.file });
+      current = null;
+      postForm.hidden = true;
+      talkForm.hidden = true;
+      say(`deleted\n${result.build.output}`, result.build.code !== 0);
+      await load();
+    } catch (error) { say(`delete: ${error.message}`, true); }
+  });
+
+  document.getElementById("delete-talk").addEventListener("click", async () => {
+    if (!current || current.kind !== "talk" || current.index < 0) return;
+    if (!window.confirm("remove this talk from content/talks.json ?")) return;
+    try {
+      const result = await postJSON("delete", { kind: "talk", index: current.index });
+      current = null;
+      postForm.hidden = true;
+      talkForm.hidden = true;
+      say(`deleted\n${result.build.output}`, result.build.code !== 0);
+      await load();
+    } catch (error) { say(`delete: ${error.message}`, true); }
+  });
+
+  document.getElementById("build").addEventListener("click", async () => {
+    try {
+      say("building…");
+      const result = await postJSON("run", { what: "check" });
+      say(result.output, !result.ok);
+    } catch (error) { say(`check: ${error.message}`, true); }
+  });
+
+  document.getElementById("publish").addEventListener("click", async () => {
+    if (!window.confirm("build, check, commit and push to main?")) return;
+    try {
+      say("publishing…");
+      const result = await postJSON("run", { what: "publish" });
+      say(`${result.committed}\n\n${result.pushed}\n\nlive: ${result.url}`, !result.pushOk);
+    } catch (error) {
+      const extra = error.data && error.data.unrelated ? `\nunrelated changes:\n${error.data.unrelated.join("\n")}` : "";
+      const log = error.data && error.data.output ? `\n\n${error.data.output}` : "";
+      say(`publish: ${error.message}${extra}${log}`, true);
+    }
+  });
+
+  load().catch((error) => say(`load: ${error.message}`, true));
+})();
+</script>
+</body>
+</html>

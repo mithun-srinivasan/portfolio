@@ -12,3 +12,6 @@ desktop.ini
 out*.png
 /portfolio-*.png
 *.log
+
+# Deleted from the studio, kept locally
+content/.trash/
