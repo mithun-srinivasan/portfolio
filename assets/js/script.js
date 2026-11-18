@@ -358,7 +358,7 @@
   const typedEl = document.querySelector("[data-typed]");
   if (typedEl) {
     const phrases = [
-      "CSE undergrad at MSEC",
+      "Sophomore CSE Undergraduate - MSEC",
       "data science at IIT Madras",
       "FOSS/Linux enthusiast",
       "student developer in Chennai"
@@ -921,7 +921,7 @@
       { name: "talks", help: "open the talks page", run: () => { text("opening talks.html …", "term-line term-dim"); window.location.assign(`${siteRoot}talks.html`); } },
       { name: "theme", help: "toggle or set the theme", run: (arg) => { const wanted = arg.toLowerCase(); if (wanted && !isTheme(wanted)) { text("usage: theme [dark|light]", "term-line term-dim"); return; } const next = wanted || (currentTheme() === "dark" ? "light" : "dark"); applyTheme(next); text(`theme → ${next}`); } },
       { name: "open", help: "open a project (try: open ditch)", run: (arg) => { if (!arg) { text("usage: open PROJECT   (try: open ditch)", "term-line term-dim"); return; } const hit = PROJECTS.find(([name]) => name.startsWith(arg.toLowerCase()) || name.includes(arg.toLowerCase())); if (!hit) { text(`open: no project matches ${arg}`, "term-line term-dim"); return; } text(`opening ${hit[1]} …`, "term-line term-dim"); window.open(hit[1], "_blank", "noopener"); } },
-      { name: "skills", help: "languages and tools", run: () => { text("languages  C, C++, Python, Java, Go, TypeScript, MATLAB"); text("tools      Git, GitHub, Linux, Notion"); text("publication Open Source Is All You Need: Empowering Innovation Through Free and Open Source Software"); text("speaks     Tamil, English, Hindi, Japanese, Sanskrit"); } },
+      { name: "skills", help: "languages and tools", run: () => { text("languages  C, C++, Python, Java, Go, TypeScript, MATLAB"); text("tools      Git, GitHub, Linux, Notion"); text("publication “Open Source Is All You Need: Empowering Innovation Through Free and Open Source Software”"); text("speaks     Tamil, English, Hindi, Japanese, Sanskrit"); } },
       { name: "experience", help: "the short log", run: () => { text("Where I work:"); text("2026-now   Technical Consultant, Upfinity"); text("2025-2029   B.E. CSE, MSEC Chennai"); text("from May 2025   B.S. Data Science, IIT Madras"); text(""); text("Community (newest first):"); text("oct 2026   Volunteer, GDG Chennai DevFest 2026"); text("2026-now   Community volunteer, fromDevtoOps"); text("2026-now   Contributor, FOSS United Chennai"); text("2026-now   Contributor + volunteer, Sapiens Campus"); text("may-aug 2026   GSSoC contributor"); text("jan-may 2026   Campus Mantri, GeeksforGeeks"); text("sep 2025-now   Member, Sundarbans House, IITM BS"); } },
       { name: "email", help: "copy my email address", run: () => { copyText(EMAIL).then((ok) => { text(ok ? `copied: ${EMAIL}` : `email: ${EMAIL}`, ok ? "term-line term-ok" : "term-line term-out-text"); }); } },
       { name: "contact", help: "email, location, booking", run: () => files["contact.txt"].forEach((line) => text(line)) },
