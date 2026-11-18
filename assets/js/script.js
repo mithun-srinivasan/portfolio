@@ -515,7 +515,7 @@
     const [, year, month, day] = match;
     if (!month || !MONTHS[Number(month) - 1]) return item.date || year;
     const label = MONTHS[Number(month) - 1];
-    return day ? `${Number(day)} ${label} ${year}` : `${label} ${year}`;
+    return day ? `${day} ${label} ${year}` : `${label} ${year}`;
   }
 
   function renderEntries({ listId, emptyId, entries, more, untitled, row }) {
