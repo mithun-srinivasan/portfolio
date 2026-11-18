@@ -31,8 +31,6 @@ Check dark and light themes, 390px width, `blog.html`, `talks.html`, and the foo
 ## File map
 
 - `index.html` — home: hero, work, experience ("Where I work" + education), community (open-source contributions), skills, contact.
-- `now.html` — what's being built and learned right now.
-- `uses.html` — tools, setup, and languages reached for daily.
 - `blog.html` — post index. Add entries by writing `content/posts/YYYY-MM-DD-slug.md` and running `node scripts/build.mjs` (the `window.POSTS` array in `assets/js/posts.js` is regenerated from Markdown sources).
 - `talks.html` — talk index. Add talks by editing `content/talks.json` (`title`, `date`, `event`, `location`, `url`, optional `linkLabel`, `draft`), then running `node scripts/build.mjs`.
 - `posts/hi.html` — the first static post; regenerated from `content/posts/2026-11-01-hi.md`. Copy `content/posts/_TEMPLATE.md.txt` for the next post, then update its frontmatter, date, and article body.
@@ -43,7 +41,7 @@ Check dark and light themes, 390px width, `blog.html`, `talks.html`, and the foo
 - `content/posts/*.md` — Markdown post sources with YAML frontmatter (`title`, `slug`, `date`, `description`, `draft`, `tags`, optional `image`). Never hand-edit `posts/<slug>.html`; the build overwrites it.
 - `content/talks.json` — talk sources; regenerated into `window.TALKS` on `talks.html`.
 - `content/posts/_TEMPLATE.md.txt` — frontmatter template + Markdown cheat sheet (`.txt` so the build ignores it).
-- `scripts/build.mjs` — builds everything: post pages, `assets/js/posts.js`, `blog.html`, `talks.html`, `index.html` (latest-writing strip, resume link, now-updated date), `sitemap.xml`, `feed.xml`, `404.html`, `posts/_template.html`; applies `?v=` asset hash; `--drafts` previews drafts.
+- `scripts/build.mjs` — builds everything: post pages, `assets/js/posts.js`, `blog.html`, `talks.html`, `index.html` (latest-writing strip, resume link), `sitemap.xml`, `feed.xml`, `404.html`, `posts/_template.html`; applies `?v=` asset hash; `--drafts` previews drafts.
 - `scripts/check.mjs` — dependency-free static checks (syntax, one h1/page, unique titles ≤60, canonical, JSON-LD, no TODO, no duplicate ids, local refs resolve, sitemap/feed/source sync, idempotence). Run after every build.
 - `scripts/new.mjs` — `node scripts/new.mjs post "Title"` / `talk "Title"` creates a draft source file.
 - `scripts/publish.mjs` — build → check → commit → push, one command; `--yes` skips prompts.
@@ -106,7 +104,6 @@ Marker regions that must never be hand-edited:
 - `blog.html`: `posts-noscript`, `posts-jsonld`
 - `talks.html`: `talks-meta`, `talks-jsonld`, `talks-data`, `talks-noscript`
 - `index.html`: `home-latest-posts`, `resume-link`
-- `now.html`: `now-updated`
 - `posts/_template.html`: inherits the generated post-page shell from build.mjs
 
 ## Conventions

@@ -27,11 +27,6 @@ Real information only you can supply. Nothing here is linked from the site, and 
 - [ ] Per-post og images — each post can have `image: /assets/images/posts/<slug>/cover.webp` in frontmatter; build.mjs reads it. Currently missing for every post.
 - [ ] Testimonials — collect a few one-line endorsements from collaborators or clients and add them where they fit (community page or home).
 
-## Pages
-
-- [ ] `uses.html` covers only tools the rest of the site already names. Add the missing specifics: your machine and its specs, your dotfiles repository (nvim and zsh configs), your terminal and prompt setup, and anything you read regularly.
-- [ ] `now.html` is generated from facts already on the site. Update it by hand when it goes stale — the "last updated" line follows the file's real commit date, so a commit is all it needs.
-
 ## Projects
 
 - [ ] meeting-transcriber-and-summarizer, spank-for-windows and sticker-brains need a real outcome: stars, downloads, users, or what you learned. Their outcome lines were removed because they only restated the description.

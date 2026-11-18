@@ -7,8 +7,6 @@ Live at <https://mithunsrinivasan.is-a.dev>.
 ## Pages
 
 - `index.html` — home: hero, selected work, experience ("Where I work" + education), community (open-source contributions), skills, and contact.
-- `now.html` — what's being built and learned right now.
-- `uses.html` — tools, setup, and languages reached for daily.
 - `blog.html` — writing index, rendered from `content/posts/*.md` by `scripts/build.mjs`. The Blog navigation link stays hidden until at least one post is published.
 - `talks.html` — talk index, rendered from `content/talks.json`.
 - `404.html` — static not-found page (`noindex`).
@@ -22,8 +20,6 @@ Live at <https://mithunsrinivasan.is-a.dev>.
 ```text
 .
 ├── index.html
-├── now.html
-├── uses.html
 ├── blog.html
 ├── talks.html
 ├── 404.html
