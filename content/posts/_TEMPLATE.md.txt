@@ -1,0 +1,68 @@
+TEMPLATE — copy this to content/posts/YYYY-MM-DD-slug.md
+
+The .md.txt extension is deliberate: build.mjs only reads *.md, so this file
+is never published. Duplicate it, rename the copy, replace the values.
+
+--- 8< --- frontmatter: everything between the two --- lines ---
+---
+title: A title a person would click
+slug: lowercase-hyphen-slug
+date: 2026-11-19
+description: One sentence, max 155 characters. This is the search result and the feed summary, so write it first.
+draft: true
+tags: linux, go, foss
+image: /assets/images/posts/slug/cover.webp
+---
+--- 8< --- body starts here ---
+
+Opening paragraph. Two or three sentences is plenty for the first one.
+
+## A section heading
+
+Regular paragraph with **bold**, *italic*, `inline code` and a [link](https://example.com).
+External links get rel="noopener" automatically.
+
+### A smaller heading
+
+- a bullet
+- another bullet
+
+1. a numbered item
+2. another numbered item
+
+> A blockquote renders with a red rule down the left.
+
+```go
+func main() {
+    fmt.Println("fenced code keeps its formatting")
+}
+```
+
+![Alt text is required, describe what the image shows](/assets/images/posts/slug/photo.webp "800x600")
+
+---
+
+CHEAT SHEET
+
+  ## Heading            section heading (h2)
+  ### Heading           smaller heading (h3); h1 comes from the title
+  **bold**  *italic*   inline emphasis
+  `code`                inline code
+  [label](https://…)    link
+  ![alt](/path.webp)    image; alt is mandatory
+  ![alt](/p.webp "800x600")   also sets width/height
+  - item                bullet list
+  1. item               numbered list
+  > quote               blockquote
+  ---                   horizontal rule
+  ```lang … ```         fenced code block with an optional language class
+  <div>…</div>          raw HTML passes through untouched
+
+RULES
+
+  - description must be 155 characters or fewer; the build warns past that.
+  - keep draft: true while writing, then set it to false and run the build.
+  - titles get " · Mithun Srinivasan" appended, so keep the title under 38 characters
+    if you want the whole page title within 60.
+  - images live in assets/images/posts/<slug>/ and use an absolute /assets/… path.
+  - never edit posts/<slug>.html by hand — the next build overwrites it.
