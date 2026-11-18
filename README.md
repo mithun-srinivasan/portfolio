@@ -6,11 +6,13 @@ Live at <https://mithunsrinivasan.is-a.dev>.
 
 ## Pages
 
-- `index.html` - home: hero, selected work, experience ("Where I work" + education), community (open-source contributions), skills, and contact.
-- `blog.html` — writing index, rendered from the `window.POSTS` array in `assets/js/posts.js`. The Blog navigation link stays hidden until that array has an entry.
-- `talks.html` — talk index, rendered from the `window.TALKS` array.
+- `index.html` — home: hero, selected work, experience ("Where I work" + education), community (open-source contributions), skills, and contact.
+- `now.html` — what's being built and learned right now.
+- `uses.html` — tools, setup, and languages reached for daily.
+- `blog.html` — writing index, rendered from `content/posts/*.md` by `scripts/build.mjs`. The Blog navigation link stays hidden until at least one post is published.
+- `talks.html` — talk index, rendered from `content/talks.json`.
 - `404.html` — static not-found page (`noindex`).
-- `posts/hi.html` — the first static post, with the shared header and footer.
+- `posts/hi.html` — the first static post; regenerated from `content/posts/2026-11-01-hi.md`.
 - `posts/_template.html` — copyable static post page template (`noindex`).
 - `feed.xml` — Atom feed for the published posts.
 - `manifest.webmanifest`, `sitemap.xml`, and `robots.txt` — static site metadata.
@@ -20,6 +22,8 @@ Live at <https://mithunsrinivasan.is-a.dev>.
 ```text
 .
 ├── index.html
+├── now.html
+├── uses.html
 ├── blog.html
 ├── talks.html
 ├── 404.html
@@ -35,6 +39,19 @@ Live at <https://mithunsrinivasan.is-a.dev>.
 ├── README.md
 ├── AGENTS.md
 ├── THIRD_PARTY_NOTICES.md
+├── content/
+│   ├── posts/
+│   │   ├── 2026-11-01-hi.md
+│   │   └── _TEMPLATE.md.txt
+│   └── talks.json
+├── scripts/
+│   ├── build.mjs
+│   ├── check.mjs
+│   ├── new.mjs
+│   ├── publish.mjs
+│   └── studio/
+│       ├── studio.mjs
+│       └── index.html
 └── assets/
     ├── fonts/
     │   ├── jetbrains-mono-latin-wght-normal.woff2
@@ -82,9 +99,10 @@ Open <http://127.0.0.1:4173/>. A local server is required — the shared stylesh
 
 ## Editing content
 
-- **Posts:** edit `window.POSTS` in `assets/js/posts.js`.
-- **Static posts:** copy `posts/_template.html` and replace its metadata, date, title, and article body; add its URL and summary to `window.POSTS`, the blog's `<noscript>` list, `sitemap.xml`, and `feed.xml`.
-- **Talks:** edit `window.TALKS` near the bottom of `talks.html`.
+- **Posts:** write a Markdown file in `content/posts/YYYY-MM-DD-slug.md` with frontmatter (`title`, `slug`, `date`, `description` ≤155 chars, `draft`, `tags`) and a Markdown body. Copy `content/posts/_TEMPLATE.md.txt` for a ready-made frontmatter block and Markdown cheat sheet. Then run `node scripts/build.mjs` to regenerate `posts/<slug>.html`, `assets/js/posts.js`, `blog.html`, `sitemap.xml`, and `feed.xml`. Draft posts stay out of the feed, sitemap, and blog index until you set `draft: false`.
+- **Talks:** edit `content/talks.json` (each entry: `title`, `date` as `YYYY-MM` or `YYYY-MM-DD`, `event`, `location`, `url`, optional `linkLabel`, `draft`). Then run `node scripts/build.mjs` to regenerate `talks.html`.
+- **New post shortcut:** `node scripts/new.mjs post "A title"` creates a draft Markdown file and prints the next commands. `talk` works the same way for `content/talks.json`.
+- **Studio (local editor):** `node scripts/studio.mjs` starts a token-protected editor on `http://127.0.0.1:4321` for editing posts/talks, previewing Markdown, uploading images to `assets/images/posts/<slug>/`, and publishing with one button.
 - **Canonical URLs:** page metadata, JSON-LD, `sitemap.xml`, `feed.xml`, and `robots.txt` use `https://mithunsrinivasan.is-a.dev`.
 - **Styles:** shared tokens and component styles live in `assets/css/style.css`.
 - **Behaviour:** theme, navigation, typewriter, portrait card, post/talk rendering, pointer effects, and terminal live in `assets/js/script.js`; post content lives in `assets/js/posts.js`. There is no network or GitHub API call at runtime.
@@ -92,6 +110,25 @@ Open <http://127.0.0.1:4173/>. A local server is required — the shared stylesh
 - **Background:** a fixed body layer holds the 22px dot grid and 88px mesh. The hero also draws a masked dotted glow; a few red dots pulse independently, it does not respond to pointer movement, and it becomes static for reduced motion.
 - **Terminal:** `help` lists every command, including `open PROJECT`, `skills`, `experience`, `theme [dark|light]`, `rss` for the Atom feed, and shell extras like `cd`, `echo`, `uname`, `sudo`, and `rm`; `?` aliases `help`, Tab completes commands, and Ctrl+C clears the current input.
 - **Brand mark and icons:** `assets/images/site-icon.svg` is the header mark and the source of truth for `favicon.ico`, `assets/icons/icon-192.png`, `assets/icons/icon-512.png`, and `assets/icons/apple-touch-icon.png`. Keep the ICO at true 16/32/48 sizes and keep the touch icon opaque (no transparency).
+
+## Publishing
+
+Three paths, each no more than five commands:
+
+1. **Studio (local, recommended):** `node scripts/studio.mjs` → open the token URL → write/edit → save → click **Publish**. It builds, runs checks, commits (`post:`/`talk:`/`chore:`), and pushes. Aborts if `check.mjs` fails or the tree has unrelated changes.
+2. **GitHub web / phone:** create `content/posts/YYYY-MM-DD-slug.md` or edit `content/talks.json` in the GitHub web editor, commit to `main`. The CI workflow (`.github/workflows/build.yml`) builds, commits regenerated files back as `github-actions[bot]`, and runs checks. Pull requests only verify — they never push.
+3. **CLI:** edit `content/posts/*.md` or `content/talks.json` locally, run `node scripts/build.mjs` then `node scripts/check.mjs`, then `node scripts/publish.mjs --yes` (prompts before commit/push unless `--yes`).
+
+All paths produce plain static files; GitHub Pages serves `index.html` from the `main` branch root. Nothing is ever pushed without a successful `check.mjs` run.
+
+## Writing tips
+
+- **Description first:** write the `description` field before the body — it becomes the search snippet, feed summary, and card description. Keep it ≤155 chars.
+- **Draft while writing:** keep `draft: true` until the post is ready; only `draft: false` posts appear in the feed, sitemap, and blog index.
+- **Title length:** the page title appends ` · Mithun Srinivasan`, so keep the post title under 38 chars if you want the full title within 60.
+- **Talk dates:** use real `YYYY-MM` or `YYYY-MM-DD` dates; year-only dates render but trigger a build warning (see `TODO-FOR-MITHUN.md`). Fill in real slide/video links on talk day.
+- **Images:** save post images under `assets/images/posts/<slug>/` and reference them with absolute `/assets/…` paths. Never edit `posts/<slug>.html` by hand — the next build overwrites it.
+- **Validation:** `node scripts/check.mjs` runs after every build and catches broken links, duplicate titles, missing canonical/JSON-LD, and stale generated output before anything is published.
 
 ## Deployment
 
@@ -122,6 +159,6 @@ When adding a post or page:
 5. **JSON-LD:** every block must parse. Index: first block is the identity graph (`WebSite` + `ProfilePage` + `Person`, joined by `@id` anchors, with `sameAs` pointing at every public profile); second block is `SoftwareSourceCode` for projects. Blog/talks: `CollectionPage` + `ItemList`. Posts: `BlogPosting` + `BreadcrumbList`.
 6. **`rel="me"`:** seven `<link rel="me">` tags in the home page `<head>` (GitHub, LinkedIn, FOSS United, X, Instagram, Mastodon, Notion) plus the Mastodon social link in the footer. Add a new profile to both places at once.
 7. **Sitemap:** add the URL with a `<lastmod>`, and bump dates for pages whose content changed. Keep `posts/_template.html` out of the sitemap and `noindex`.
-8. **`window.POSTS` / `window.TALKS`:** keep the source of truth in sync with static HTML `<noscript>` lists, `sitemap.xml`, and `feed.xml`.
+8. **`content/posts/*.md` / `content/talks.json`:** keep the source of truth in sync with static HTML `<noscript>` lists, `sitemap.xml`, and `feed.xml` — `scripts/build.mjs` regenerates all of them.
 9. **Contact:** the site publishes an email address and a booking link only. There is no phone number, so do not add a `tel:` link or a phone field to structured data.
-10. **Validate:** run `node --check assets/js/script.js`; verify every JSON-LD block parses; check one h1 per page; confirm canonical is present (except 404); confirm every local `href`/`src` resolves.
+10. **Validate:** run `node scripts/check.mjs` (it syntax-checks scripts, checks one h1 per page, unique titles ≤60 chars, canonical except 404, valid JSON-LD, no TODO markers, no duplicate ids, resolves all local references, verifies sitemap/feed/sitemap sync with sources, and confirms build idempotence).
