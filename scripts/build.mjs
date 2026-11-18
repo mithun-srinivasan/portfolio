@@ -289,7 +289,7 @@ function nav(current) {
     const active = key === current ? ' aria-current="page"' : "";
     return `<a href="${href}"${extra}${active}>${label}</a>`;
   };
-  return `<nav class="nav" aria-label="Main">${link("/#work", "work", "work")}${link("/#experience", "experience", "experience")}${link("/#community", "community", "community")}${link("/#skills", "skills", "skills")}${link("/blog.html", "blog", "blog", " data-blog-link")}${link("/talks.html", "talks", "talks")}<a href="#contact">contact</a></nav>`;
+  return `<nav class="nav" aria-label="Main">${link("/#work", "work", "work")}${link("/#experience", "experience", "experience")}${link("/#community", "community", "community")}${link("/#skills", "skills", "skills")}${link("/blog.html", "blog", "blog", " data-blog-link")}${link("/talks.html", "talks", "talks")}${link("/now.html", "now", "now")}${link("/uses.html", "uses", "uses")}<a href="#contact">contact</a></nav>`;
 }
 
 function header(current) {
@@ -528,6 +528,12 @@ function htmlFiles() {
   return files;
 }
 
+function localDate() {
+  const now = new Date();
+  const pad = (value) => String(value).padStart(2, "0");
+  return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
+}
+
 function gitLastmod(file) {
   try {
     return execFileSync("git", ["log", "-1", "--format=%cs", "--", rel(file)], { cwd: ROOT, encoding: "utf8" }).trim();
@@ -608,6 +614,16 @@ ${talks.map((talk) => `          <a class="entry" href="${escapeAttr(talk.url ||
         </div>
       </noscript>`)) changed.push("talks.html");
   if (replaceRegion(path.join(ROOT, "index.html"), "home-latest-posts", renderLatestWriting(published))) changed.push("index.html");
+
+  /* now.html carries its own real last-modified date, taken from git. */
+  const nowFile = path.join(ROOT, "now.html");
+  if (fs.existsSync(nowFile)) {
+    /* "last updated" must be a real date: the file's last commit, or today
+       (local, not UTC) before the first commit exists. */
+    const stamp = gitLastmod(nowFile) || localDate();
+    const label = `last updated <time datetime="${stamp}">${formatDate(stamp)}</time>`;
+    if (replaceRegion(nowFile, "now-updated", label)) changed.push("now.html");
+  }
 
   /* 5. sitemap. */
   const urls = [

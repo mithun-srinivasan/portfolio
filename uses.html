@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Uses · Mithun Srinivasan</title>
+<meta name="author" content="Mithun Srinivasan">
+<meta name="robots" content="index,follow">
+<meta name="color-scheme" content="dark light">
+<meta name="theme-color" content="#050505">
+<meta name="description" content="The tools and languages Mithun Srinivasan reaches for: Linux, git and GitHub, nvim, zsh, Notion, and C, C++, Python, Java, Go, TypeScript and MATLAB.">
+<link rel="icon" href="/favicon.ico" sizes="48x48" type="image/x-icon">
+<link rel="icon" href="/assets/images/site-icon.svg" type="image/svg+xml">
+<link rel="icon" href="/assets/icons/icon-192.png" sizes="192x192" type="image/png">
+<link rel="me" href="https://mastodon.social/@mithunsrinivasan">
+<script>
+  (() => {
+    try {
+      const saved = localStorage.getItem("theme");
+      document.documentElement.dataset.theme = saved === "light" ? "light" : "dark";
+    } catch {
+      document.documentElement.dataset.theme = "dark";
+    }
+  })();
+</script>
+<link rel="preload" href="/assets/fonts/jetbrains-mono-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="canonical" href="https://mithunsrinivasan.is-a.dev/uses.html">
+<link rel="alternate" type="application/atom+xml" title="Mithun Srinivasan — Blog" href="/feed.xml">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-touch-icon.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta property="og:locale" content="en_IN">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Mithun Srinivasan">
+<meta property="og:title" content="Uses · Mithun Srinivasan">
+<meta property="og:description" content="The tools and languages Mithun Srinivasan reaches for: Linux, git and GitHub, nvim, zsh, Notion, and C, C++, Python, Java, Go, TypeScript and MATLAB.">
+<meta property="og:url" content="https://mithunsrinivasan.is-a.dev/uses.html">
+<meta property="og:image" content="https://mithunsrinivasan.is-a.dev/assets/images/og-image.png">
+<meta property="og:image:alt" content="Mithun Srinivasan portfolio share card in a terminal style">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@simply_mithun">
+<meta name="twitter:creator" content="@simply_mithun">
+<meta name="twitter:title" content="Uses · Mithun Srinivasan">
+<meta name="twitter:description" content="The tools and languages Mithun Srinivasan reaches for: Linux, git and GitHub, nvim, zsh, Notion, and C, C++, Python, Java, Go, TypeScript and MATLAB.">
+<meta name="twitter:image" content="https://mithunsrinivasan.is-a.dev/assets/images/og-image.png">
+<meta name="twitter:image:alt" content="Mithun Srinivasan portfolio share card in a terminal style">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebPage",
+      "@id": "https://mithunsrinivasan.is-a.dev/uses.html",
+      "url": "https://mithunsrinivasan.is-a.dev/uses.html",
+      "name": "Uses",
+      "description": "The tools and languages Mithun Srinivasan reaches for.",
+      "inLanguage": "en-IN",
+      "isPartOf": { "@type": "WebSite", "name": "Mithun Srinivasan", "url": "https://mithunsrinivasan.is-a.dev/" },
+      "about": { "@type": "Person", "name": "Mithun Srinivasan", "url": "https://mithunsrinivasan.is-a.dev/" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "url": "https://mithunsrinivasan.is-a.dev/" },
+        { "@type": "ListItem", "position": 2, "name": "Uses", "url": "https://mithunsrinivasan.is-a.dev/uses.html" }
+      ]
+    }
+  ]
+}
+</script>
+<link rel="stylesheet" href="/assets/css/style.css?v=7f30d1e4">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header" id="site-header">
+  <div class="shell header-inner">
+    <a class="brand" href="/" aria-label="Mithun Srinivasan, home">
+      <img class="brand-mark" src="/assets/images/site-icon.svg" alt="" width="30" height="30" aria-hidden="true" loading="eager">
+      <span class="brand-text">mithun@portfolio:~$</span>
+    </a>
+    <nav class="nav" aria-label="Main">
+      <a href="/#work">work</a>
+      <a href="/#experience">experience</a>
+      <a href="/#community">community</a>
+      <a href="/#skills">skills</a>
+      <a href="/blog.html" data-blog-link>blog</a>
+      <a href="/talks.html">talks</a>
+      <a href="/now.html">now</a>
+      <a href="/uses.html" aria-current="page">uses</a>
+      <a href="#contact">contact</a>
+    </nav>
+    <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch to light theme">
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.66 6.34l1.41-1.41"></path></svg>
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5 8.5 8.5 0 1 0 20.5 14.5Z"></path></svg>
+    </button>
+  </div>
+</header>
+
+<main id="main">
+  <header class="page-head">
+    <div class="shell">
+      <p class="cmd"><span class="path">cat</span> uses.md</p>
+      <h1>Uses<span class="dot">.</span></h1>
+      <p>The tools I reach for. No proficiency bars: either I’ve shipped with it or I’m learning it.</p>
+      <a class="back-link" href="/">back</a>
+    </div>
+  </header>
+
+  <article class="section">
+    <div class="shell article-body">
+      <h2>daily drivers</h2>
+      <ul>
+        <li><strong>Linux.</strong> My desktop, my servers, and most of what I learn comes from it.</li>
+        <li><strong>nvim and zsh.</strong> The editor and the shell. Configuration is a hobby that occasionally produces work.</li>
+        <li><strong>git and GitHub.</strong> Every project, every pull request, and the version control I maintain for clients.</li>
+        <li><strong>Notion.</strong> Notes, plans, and the reading I keep meaning to finish.</li>
+      </ul>
+
+      <h2>languages</h2>
+      <ul>
+        <li><strong>Go</strong> for command-line tools, including <a href="https://github.com/mithun-srinivasan/ditch-windows" rel="noopener">ditch-windows</a>.</li>
+        <li><strong>TypeScript</strong> for the web, with React and Next.js when the project needs a screen.</li>
+        <li><strong>Python</strong> for transcription, scripting, and coursework.</li>
+        <li><strong>C and C++</strong> for fundamentals, and the data structures and algorithms behind everything else.</li>
+        <li><strong>Java</strong> from the IIT Madras BS curriculum, and <strong>MATLAB</strong> from its onramp course.</li>
+      </ul>
+
+      <h2>learning</h2>
+      <p>AI pair programming is part of how I work now: I read what it writes, rewrite what I don’t understand, and never ship something I can’t explain. The data science side of my degree is where the statistics and the Python live.</p>
+
+      <h2>this site</h2>
+      <p>Plain HTML, CSS and JavaScript. No framework and no runtime dependencies. Self-hosted JetBrains Mono, a dot grid, and three colours. The posts and talks are built from Markdown and JSON by a small Node script, then committed as static files to GitHub Pages.</p>
+    </div>
+  </article>
+
+  <section class="contact" id="contact" aria-labelledby="contact-title">
+    <div class="shell contact-inner">
+      <div class="contact-grid">
+        <div>
+          <p class="cmd"><span class="path">mail</span> --to mithun</p>
+          <h2 id="contact-title">Curious about a tool?</h2>
+          <p class="contact-lead">If you want the config, the reason for a choice, or just want to compare notes, send a message.</p>
+          <div class="contact-email-row">
+            <a class="contact-email" href="mailto:omsaimithun@gmail.com">omsaimithun@gmail.com</a>
+            <button class="copy-btn" id="copy-email" type="button" data-email="omsaimithun@gmail.com">Copy</button>
+          </div>
+          <p class="copy-status" id="copy-status" role="status" aria-live="polite"></p>
+          <div class="contact-meta">
+            <p>Chennai, India / IST (UTC+05:30)</p>
+            <p><a class="btn btn-cal" href="https://cal.com/mithun-srinivasan/30min" rel="noopener">book 30 minutes</a></p>
+          </div>
+        </div>
+        <nav class="socials" aria-label="Elsewhere">
+          <a class="social" href="https://github.com/mithun-srinivasan"><b>GitHub</b><span>mithun-srinivasan</span></a>
+          <a class="social" href="https://www.linkedin.com/in/mithun-srinivasan-msec"><b>LinkedIn</b><span>mithun-srinivasan-msec</span></a>
+          <a class="social" href="https://x.com/simply_mithun"><b>X</b><span>@simply_mithun</span></a>
+          <a class="social" href="https://www.instagram.com/its_mithunsrinivasan/"><b>Instagram</b><span>its_mithunsrinivasan</span></a>
+          <a class="social" href="https://mastodon.social/@mithunsrinivasan" rel="me"><b>Mastodon</b><span>@mithunsrinivasan</span></a>
+          <a class="social" href="https://itsmithun06.notion.site/"><b>Notion</b><span>itsmithun06.notion.site</span></a>
+        </nav>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="shell">
+    <div class="footer-grid">
+      <div class="term-window" id="term" role="region" data-prompt="mithun@portfolio:~/uses$" aria-label="Guest terminal">
+        <div class="term-head">
+          <i aria-hidden="true"></i><i aria-hidden="true"></i><i aria-hidden="true"></i>
+          <span class="term-title">mithun@portfolio: ~/uses</span>
+        </div>
+        <div class="term-out" id="term-out" role="log" aria-live="polite" aria-label="Terminal output" tabindex="0">
+          <p class="term-line term-dim" data-last-login>Last login: today on ttys001</p>
+          <p class="term-line term-ok">You are in ~/uses. The shell works here too.</p>
+          <p class="term-line term-out-text">Type <span class="term-help-key">help</span> and press Enter.</p>
+        </div>
+        <form class="term-form" id="term-form">
+          <label class="sr-only" for="term-input">Terminal command</label>
+          <span class="term-ps1" aria-hidden="true">mithun@portfolio:~/uses$</span>
+          <input class="term-input" id="term-input" name="command" type="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="type a command" aria-describedby="term-hint">
+          <button class="sr-only" type="submit">Run command</button>
+        </form>
+      </div>
+      <div class="footer-copy">
+        <h3>Made in Chennai, one file at a time.</h3>
+        <p>AI-assisted, human-reviewed. HTML, CSS and JavaScript. JetBrains Mono, a dot grid, and three colours doing the work. No framework, no build step.</p>
+        <div class="footer-links">
+          <a href="/">~/home</a>
+          <a href="/blog.html" data-blog-link>blog</a>
+          <a href="/talks.html">talks</a>
+          <a href="/feed.xml">rss</a>
+          <a href="https://github.com/mithun-srinivasan">github</a>
+          <a href="mailto:omsaimithun@gmail.com">email</a>
+        </div>
+      </div>
+    </div>
+    <p class="term-hint" id="term-hint">Try <b>help</b>, <b>open PROJECT</b>, <b>skills</b>, <b>experience</b>, <b>theme dark|light</b>, or <b>email</b>.</p>
+    <p class="term-live-hint">This terminal is live — tap it and type <b>help</b>.</p>
+    <blockquote class="footer-motto">
+      <p>Failure is nothing till you lose the ability to try things.</p>
+      <p lang="ta">எல்லாம் மாறும்!!<span class="motto-emoji" aria-hidden="true">💯🏃</span></p>
+    </blockquote>
+    <div class="footer-bottom">
+      <span>© 2026 Mithun Srinivasan</span>
+      <span>Chennai, India / <time id="local-time">--:--</time> IST</span>
+      <span>Red, white, black. Nothing else.</span>
+    </div>
+    <p class="ai-note">This site was built with AI assistance. I reviewed, edited, and approved the code and content.</p>
+  </div>
+</footer>
+
+<script src="/assets/js/posts.js?v=7f30d1e4" defer></script>
+<script src="/assets/js/script.js?v=7f30d1e4" defer></script>
+</body>
+</html>
