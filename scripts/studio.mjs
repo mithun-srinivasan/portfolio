@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 /* Local studio for content/.
    node scripts/studio.mjs  →  http://127.0.0.1:4321/?token=…
+   The Studio only works at http://127.0.0.1:4321 (loopback only).
 
    Node's http module only. Loopback only, token on every API call,
    Origin/Host checks, fixed child processes, writes confined to
@@ -437,6 +438,12 @@ async function api(req, res, url) {
       const built = await build();
       const checked = await check();
       if (checked.code !== 0) throw new HttpError(409, "check failed, so nothing was committed", { output: `${built.output}\n${checked.output}` });
+
+      /* Refuse to publish from a branch other than main unless forced. */
+      const branch = await run("git", ["branch", "--show-current"]);
+      if (branch.output.trim() !== "main" && !body.force) {
+        throw new HttpError(409, `refusing to publish from branch "${branch.output.trim()}" — pass force:true to override`);
+      }
 
       const porcelain = await status();
       const lines = porcelain.output.split(/\r?\n/).filter((line) => line.trim());
