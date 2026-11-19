@@ -536,7 +536,11 @@ function localDate() {
 
 function gitLastmod(file) {
   try {
-    return execFileSync("git", ["log", "-1", "--format=%cs", "--", rel(file)], { cwd: ROOT, encoding: "utf8" }).trim();
+    return execFileSync("git", ["log", "-1", "--format=%cs", "--", rel(file)], {
+      cwd: ROOT,
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "ignore"],
+    }).trim();
   } catch {
     return "";
   }
