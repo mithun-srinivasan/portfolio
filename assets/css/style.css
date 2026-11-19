@@ -541,6 +541,14 @@ pre code{white-space:pre}
 .article-body img{max-width:100%;height:auto;border:1px solid var(--line)}
 .article-body hr{margin-block:2rem;border:0;border-top:1px solid var(--line)}
 
+.article-body table{
+  width:100%;border-collapse:collapse;margin-block:1.5rem;font-size:.82rem;
+}
+.article-body th,.article-body td{
+  border:1px solid var(--line);padding:.45rem .6rem;text-align:left;
+}
+.article-body th{background:var(--panel);color:var(--ink);font-weight:700}
+
 /* generated post extras: tags and prev/next */
 .post-tags{
   display:flex;flex-wrap:wrap;align-items:baseline;gap:.4rem 1rem;
