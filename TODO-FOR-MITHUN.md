@@ -19,14 +19,6 @@ Real information only you can supply. Nothing here is linked from the site, and 
 - [ ] PR #563 / PR #201 — confirm these are merged into `main` before treating the site as stable.
 - [ ] Lighthouse SEO score — verify it's at 92+; if lower, fix the flagged items and re-run.
 
-## Assets
-
-- [ ] Résumé PDF at `assets/Mithun-Srinivasan-Resume.pdf`. The home page shows a `resume` link only when that file exists at build time, so right now it is simply absent rather than pointing at a 404.
-- [ ] `assets/logos/spank-for-windows.svg` still draws "SPANK" with an SVG `<text>` element, so it depends on the visitor having JetBrains Mono or a monospace fallback. Converting it to paths needs a font-outline tool that isn't installed here.
-- [ ] A screenshot or short GIF for each project. Save it as `assets/images/projects/<project-slug>.webp` and rebuild; the card shows it lazily with real width and height, and shows nothing at all until the file exists. The slugs are `ditch-windows`, `srigurugranthsahib`, `meeting-transcriber-and-summarizer`, `spank-for-windows`, `sticker-brains`.
-- [ ] Per-post og images — each post can have `image: /assets/images/posts/<slug>/cover.webp` in frontmatter; build.mjs reads it. Currently missing for every post.
-- [ ] Testimonials — collect a few one-line endorsements from collaborators or clients and add them where they fit (community page or home).
-
 ## Projects
 
 - [ ] meeting-transcriber-and-summarizer, spank-for-windows and sticker-brains need a real outcome: stars, downloads, users, or what you learned. Their outcome lines were removed because they only restated the description.
