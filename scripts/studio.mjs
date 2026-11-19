@@ -75,6 +75,30 @@ function safeFile(base, ...parts) {
   return file;
 }
 
+/* Verify that the uploaded buffer's magic bytes match the declared extension. */
+function verifyMagicBytes(buffer, ext) {
+  if (buffer.length < 4) return false;
+  switch (ext) {
+    case "png":
+      return buffer.length >= 8
+        && buffer[0] === 0x89 && buffer[1] === 0x50 && buffer[2] === 0x4e && buffer[3] === 0x47
+        && buffer[4] === 0x0d && buffer[5] === 0x0a && buffer[6] === 0x1a && buffer[7] === 0x0a;
+    case "jpg":
+    case "jpeg":
+      return buffer.length >= 3
+        && buffer[0] === 0xff && buffer[1] === 0xd8 && buffer[2] === 0xff;
+    case "webp":
+      return buffer.length >= 12
+        && buffer.toString("ascii", 0, 4) === "RIFF"
+        && buffer.toString("ascii", 8, 12) === "WEBP";
+    case "gif":
+      return buffer.length >= 6
+        && (buffer.toString("ascii", 0, 6) === "GIF87a" || buffer.toString("ascii", 0, 6) === "GIF89a");
+    default:
+      return false;
+  }
+}
+
 function postFile(date, slug) {
   const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(date);
   const real = match && (() => {
@@ -381,12 +405,15 @@ async function api(req, res, url) {
     const buffer = await readBody(req);
     if (!buffer.length) throw new HttpError(400, "empty file");
     if (buffer.length > MAX_UPLOAD) throw new HttpError(413, "that file is too large (5 MB max)");
+    if (!verifyMagicBytes(buffer, ext)) throw new HttpError(415, "file content does not match the declared image type");
     const folder = safeFile(IMAGES, slug);
     fs.mkdirSync(folder, { recursive: true });
     const clean = `${slugify(path.basename(name, path.extname(name))) || "image"}.${ext}`;
     fs.writeFileSync(safeFile(folder, clean), buffer);
     const src = `/assets/images/posts/${slug}/${clean}`;
-    json(res, 200, { src, markdown: `![${alt}](${src})` });
+    /* Escape [ ] and newlines in alt so they cannot break the Markdown image syntax. */
+    const safeAlt = alt.replace(/\[/g, "&#91;").replace(/\]/g, "&#93;").replace(/\r?\n/g, " ");
+    json(res, 200, { src, markdown: `![${safeAlt}](${src})` });
     return;
   }
 
