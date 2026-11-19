@@ -130,18 +130,32 @@ function readPosts() {
 }
 
 function writePost(input) {
-  const title = String(input.title || "").trim();
-  const slug = slugify(input.slug || title);
+  const rawTitle = String(input.title || "");
+  const rawDescription = String(input.description || "");
+
+  /* Reject newlines in title/description: a frontmatter injection vector
+     that could splice extra YAML keys into the generated post. Strip them
+     silently from slug, tags and image (they cannot inject frontmatter). */
+  if (/\r|\n/.test(rawTitle)) throw new HttpError(400, "title must not contain newlines");
+  if (/\r|\n/.test(rawDescription)) throw new HttpError(400, "description must not contain newlines");
+
+  const title = rawTitle.replace(/[\r\n]+/g, "").trim();
+  const slug = slugify(String(input.slug || title).replace(/[\r\n]+/g, ""));
   const date = String(input.date || localDate()).trim();
-  const description = String(input.description || "").trim();
+  const description = rawDescription.replace(/[\r\n]+/g, "").trim();
   const body = String(input.body || "");
   const tags = Array.isArray(input.tags) ? input.tags : String(input.tags || "").split(",");
   const draft = input.draft === true || input.draft === "true";
-  const image = String(input.image || "").trim();
+  const image = String(input.image || "").replace(/[\r\n]+/g, "").trim();
 
   if (!title) throw new HttpError(400, "a post needs a title");
   if (!description) throw new HttpError(400, "a post needs a description");
   if (description.length > 155) throw new HttpError(400, `description is ${description.length} characters (max 155)`);
+
+  if (image) {
+    if (!image.startsWith("/assets/images/posts/")) throw new HttpError(400, "image must start with /assets/images/posts/");
+    if (image.includes("..")) throw new HttpError(400, "image path must not contain ..");
+  }
 
   const file = postFile(date, slug);
   const lines = [
