@@ -1,0 +1,93 @@
+# CI for mithunsrinivasan.is-a.dev.
+#
+# On push to main: rebuild generated files from content/ and scripts/, run the
+# static checks, then commit the regenerated files back as github-actions[bot].
+# On pull requests: rebuild, run the static checks, and fail when the committed
+# generated files are stale. Pull requests never push.
+#
+# Required repo setting: Settings → Actions → General → Workflow permissions
+# must be "Read and write" so the push step can commit back to main.
+
+name: build
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "content/**"
+      - "scripts/**"
+      - "assets/css/**"
+      - "assets/js/**"
+      - "!assets/js/posts.js"
+      - ".github/workflows/build.yml"
+  pull_request:
+    paths:
+      - "content/**"
+      - "scripts/**"
+      - "assets/css/**"
+      - "assets/js/**"
+      - "!assets/js/posts.js"
+      - ".github/workflows/build.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  rebuild:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+
+      - name: Build generated files
+        run: node scripts/build.mjs
+
+      # Check first: never commit regenerated output that fails validation.
+      - name: Check the site
+        run: node scripts/check.mjs
+
+      - name: Commit regenerated files
+        run: |
+          if ! git diff --quiet; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add -A
+            git commit -m "chore: rebuild generated files [skip ci]"
+            git pull --rebase origin main
+            git push
+          else
+            echo "generated files already up to date"
+          fi
+
+  verify:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+
+      - name: Build generated files
+        run: node scripts/build.mjs
+
+      - name: Check the site
+        run: node scripts/check.mjs
+
+      # A pull request must not change generated output: rebuild and diff.
+      - name: Fail if generated output is stale
+        run: git diff --exit-code
