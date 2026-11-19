@@ -28,7 +28,7 @@ Real information only you can supply. Nothing here is linked from the site, and 
 
 1. ditch-windows backup and restore — how one encrypted backup rebuilds a Windows 11 machine, and the `--apply` safety gate.
 2. Hack Day learnings — what building ditch-windows for Hacktoberfest Hack Day Chennai taught about Windows restore flows and Gemma 4.
-3. Linux setup — the nvim/zsh dotfiles, terminal prompt, and daily-driver configuration behind `uses.html`.
+3. Linux setup — the nvim/zsh dotfiles, terminal prompt, and daily-driver configuration.
 
 ## Talks
 
