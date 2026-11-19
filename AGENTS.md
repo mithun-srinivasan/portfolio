@@ -11,12 +11,7 @@ python -m http.server 4173 --bind 127.0.0.1
 
 A server is required: the shared stylesheet and icons use root-relative paths, so `file://` loads render unstyled.
 
-There is no test suite. Verify by loading the pages and exercising the UI:
-
-```powershell
-python -m http.server 4173 --bind 127.0.0.1
-# open http://127.0.0.1:4173/
-```
+There is no test suite. Verify by loading the pages and exercising the UI.
 
 After editing `content/`, rebuild and check before anything is published:
 

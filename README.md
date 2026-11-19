@@ -31,10 +31,17 @@ Live at <https://mithunsrinivasan.is-a.dev>.
 ├── sitemap.xml
 ├── robots.txt
 ├── CNAME
+├── de4a7c5906b82f13.txt
 ├── favicon.ico
 ├── README.md
 ├── AGENTS.md
+├── TODO-FOR-MITHUN.md
 ├── THIRD_PARTY_NOTICES.md
+├── .gitattributes
+├── .gitignore
+├── .github/
+│   └── workflows/
+│       └── build.yml
 ├── content/
 │   ├── posts/
 │   │   ├── 2026-11-01-hi.md
@@ -43,10 +50,11 @@ Live at <https://mithunsrinivasan.is-a.dev>.
 ├── scripts/
 │   ├── build.mjs
 │   ├── check.mjs
+│   ├── md.mjs
 │   ├── new.mjs
 │   ├── publish.mjs
+│   ├── studio.mjs
 │   └── studio/
-│       ├── studio.mjs
 │       └── index.html
 └── assets/
     ├── fonts/
