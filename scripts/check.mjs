@@ -11,7 +11,8 @@ import { fileURLToPath } from "node:url";
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const failures = [];
 const fail = (message) => failures.push(message);
-const read = (file) => fs.readFileSync(file, "utf8");
+/* Normalise CRLF to LF so checks and hashes match on Windows and Linux. */
+const read = (file) => fs.readFileSync(file, "utf8").replace(/\r\n/g, "\n");
 const rel = (file) => path.relative(ROOT, file).split(path.sep).join("/");
 
 function relExists(urlPath) {

@@ -23,7 +23,9 @@ const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "
 
 /* ---------- small helpers ---------- */
 
-const read = (file) => fs.readFileSync(file, "utf8");
+/* Always read text as LF, so a Windows CRLF checkout and a Linux LF checkout
+   hash and rewrite to identical bytes. */
+const read = (file) => fs.readFileSync(file, "utf8").replace(/\r\n/g, "\n");
 const rel = (file) => path.relative(ROOT, file).split(path.sep).join("/");
 const warnings = [];
 
