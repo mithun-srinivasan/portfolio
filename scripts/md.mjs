@@ -9,6 +9,91 @@ export const escapeHtml = (value) => String(value)
   .replace(/>/g, "&gt;")
   .replace(/"/g, "&quot;");
 
+/* Scan forward from an opening paren, tracking nesting depth, to find the
+   matching closing paren. Returns -1 when unbalanced. */
+function scanBalanced(text, openIdx) {
+  let depth = 0;
+  for (let i = openIdx; i < text.length; i += 1) {
+    if (text[i] === "(") depth += 1;
+    else if (text[i] === ")") {
+      depth -= 1;
+      if (depth === 0) return i;
+    }
+  }
+  return -1;
+}
+
+/* Only these URL schemes are rendered as active links or images.
+   Anything else (javascript:, data:, vbscript:, file:, …) renders as plain text. */
+function validUrl(href) {
+  return /^https?:\/\//i.test(href)
+    || /^mailto:/i.test(href)
+    || href.startsWith("/")
+    || href.startsWith("#");
+}
+
+/* Replace ![alt](url) and [label](url) patterns, scanning for balanced
+   parentheses so URLs like https://en.wikipedia.org/wiki/Foo_(bar) work.
+   Invalid schemes render as plain text. */
+function scanInlineLinksAndImages(text) {
+  let result = "";
+  let i = 0;
+  while (i < text.length) {
+    const rest = text.slice(i);
+    const imgMatch = rest.match(/^!\[([^\]]*)\]\(/);
+    const lnkMatch = rest.match(/^\[([^\]]+)\]\(/);
+
+    if (imgMatch) {
+      const openPos = i + imgMatch[0].length - 1;
+      const close = scanBalanced(text, openPos);
+      if (close === -1) { result += text[i]; i += 1; continue; }
+      const inner = text.slice(i + imgMatch[0].length, close);
+      const alt = imgMatch[1];
+
+      const m = /^(\S+)(?:\s+&quot;([^&]*)&quot;)?\s*$/.exec(inner);
+      if (!m) { result += text[i]; i += 1; continue; }
+      const src = m[1];
+      const dims = m[2] || "";
+
+      if (!alt.trim()) {
+        result += `![${alt}](${src})`;
+        i = close + 1;
+        continue;
+      }
+      if (!validUrl(src)) {
+        result += `![${alt}](${src})`;
+        i = close + 1;
+        continue;
+      }
+
+      const size = /^(\d+)x(\d+)$/.exec((dims || "").trim());
+      const attrs = size ? ` width="${size[1]}" height="${size[2]}"` : "";
+      result += `<img src="${src.replace(/"/g, "&quot;")}" alt="${alt}"${attrs} loading="lazy">`;
+      i = close + 1;
+    } else if (lnkMatch) {
+      const openPos = i + lnkMatch[0].length - 1;
+      const close = scanBalanced(text, openPos);
+      if (close === -1) { result += text[i]; i += 1; continue; }
+      const href = text.slice(i + lnkMatch[0].length, close).trim();
+      const label = lnkMatch[1];
+
+      if (!validUrl(href)) {
+        result += `[${label}](${href})`;
+        i = close + 1;
+        continue;
+      }
+
+      const external = /^https?:\/\//i.test(href);
+      result += `<a href="${href.replace(/"/g, "%22")}"${external ? ' rel="noopener"' : ""}>${label}</a>`;
+      i = close + 1;
+    } else {
+      result += text[i];
+      i += 1;
+    }
+  }
+  return result;
+}
+
 function renderInline(source) {
   const slots = [];
   const stash = (html) => `\u0000${slots.push(html) - 1}\u0000`;
@@ -18,17 +103,7 @@ function renderInline(source) {
   text = text.replace(/<\/?[a-zA-Z][^>]*>/g, (tag) => stash(tag));
   text = escapeHtml(text);
 
-  text = text.replace(/!\[([^\]]*)\]\(([^)\s]+)(?:\s+"([^"]*)")?\)/g, (_, alt, src, dims) => {
-    if (!alt.trim()) throw new Error(`Markdown image needs alt text: ${src}`);
-    const size = /^(\d+)x(\d+)$/.exec((dims || "").trim());
-    const attrs = size ? ` width="${size[1]}" height="${size[2]}"` : "";
-    return `<img src="${src.replace(/"/g, "&quot;")}" alt="${alt}"${attrs} loading="lazy">`;
-  });
-
-  text = text.replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, (_, label, href) => {
-    const external = /^https?:\/\//i.test(href);
-    return `<a href="${href.replace(/"/g, "%22")}"${external ? ' rel="noopener"' : ""}>${label}</a>`;
-  });
+  text = scanInlineLinksAndImages(text);
 
   text = text.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
   text = text.replace(/(^|[^*])\*([^*\n]+)\*/g, "$1<em>$2</em>");
