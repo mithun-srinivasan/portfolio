@@ -94,7 +94,8 @@ for (const file of pages) {
   /* local references resolve */
   const refs = [...source.matchAll(/(?:href|src|imagesrcset|srcset)="([^"]*)"/g)].map((match) => match[1]);
   for (const ref of refs) {
-    if (!ref || /^(https?:|mailto:|tel:|data:|javascript:|\/\/)/i.test(ref)) continue;
+    if (/^javascript:/i.test(ref)) fail(`${name}: javascript: URL found: ${ref}`);
+    if (!ref || /^(https?:|mailto:|tel:|data:|\/\/)/i.test(ref)) continue;
     if (ref.startsWith("#")) continue;
     const candidates = ref.split(",").map((part) => part.trim().split(/\s+/)[0]).filter(Boolean);
     for (const candidate of candidates) {
@@ -152,6 +153,20 @@ const sources = fs.existsSync(sourceDir)
 for (const name of sources) {
   const file = path.join(sourceDir, name);
   const body = read(file);
+
+  /* duplicate frontmatter key check */
+  const fmMatch = /^---\r?\n([\s\S]*?)\r?\n---/.exec(body);
+  if (fmMatch) {
+    const keys = [];
+    for (const line of fmMatch[1].split(/\r?\n/)) {
+      const split = line.indexOf(":");
+      if (split < 0) continue;
+      const key = line.slice(0, split).trim();
+      if (keys.includes(key)) fail(`${name}: duplicated frontmatter key "${key}"`);
+      keys.push(key);
+    }
+  }
+
   if (/^draft:\s*true\s*$/im.test(body)) continue;
   const slug = (/^slug:\s*(.+)$/im.exec(body)?.[1] || name.replace(/^\d{4}-\d{2}-\d{2}-/, "").replace(/\.md$/, "")).trim();
   if (!sitemap.includes(`/posts/${slug}.html`)) fail(`sitemap.xml: missing /posts/${slug}.html`);
@@ -159,6 +174,16 @@ for (const name of sources) {
   const postsJs = read(path.join(ROOT, "assets/js/posts.js"));
   if (!postsJs.includes(`/posts/${slug}.html`)) fail(`assets/js/posts.js: missing /posts/${slug}.html`);
   if (!fs.existsSync(path.join(postsDir, `${slug}.html`))) fail(`posts/${slug}.html: not built`);
+}
+
+/* duplicate slug check across all post sources */
+const slugs = new Map();
+for (const name of sources) {
+  const file = path.join(sourceDir, name);
+  const body = read(file);
+  const slug = (/^slug:\s*(.+)$/im.exec(body)?.[1] || name.replace(/^\d{4}-\d{2}-\d{2}-/, "").replace(/\.md$/, "")).trim();
+  if (slugs.has(slug)) fail(`duplicate slug "${slug}" (${name} and ${slugs.get(slug)})`);
+  slugs.set(slug, name);
 }
 
 /* ---------- generated output is up to date ---------- */
