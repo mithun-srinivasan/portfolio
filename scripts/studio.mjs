@@ -244,6 +244,8 @@ function writeTalk(input) {
   if (!talk.title) throw new HttpError(400, "a talk needs a title");
   if (!/^\d{4}-\d{2}(-\d{2})?$/.test(talk.date)) throw new HttpError(400, "talk date must be YYYY-MM or YYYY-MM-DD");
   if (!/^https?:\/\//.test(talk.url)) throw new HttpError(400, "a talk needs an http(s) link");
+  if (input.slides && !/^https?:\/\//.test(String(input.slides))) throw new HttpError(400, "slides must be an http(s) URL");
+  if (input.video && !/^https?:\/\//.test(String(input.video))) throw new HttpError(400, "video must be an http(s) URL");
   if (input.draft) talk.draft = true;
   if (input.slides) talk.slides = String(input.slides);
   if (input.video) talk.video = String(input.video);
@@ -386,6 +388,8 @@ async function api(req, res, url) {
       const talks = readTalks();
       const index = Number(body.index);
       if (!Number.isInteger(index) || index < 0 || index >= talks.length) throw new HttpError(404, "that talk is already gone");
+      /* Keep a backup of talks.json before mutating it. */
+      fs.copyFileSync(TALKS, safeFile(TRASH, `${Date.now()}-talks.json`));
       talks.splice(index, 1);
       fs.writeFileSync(TALKS, `${JSON.stringify(talks, null, 2)}\n`);
     }
