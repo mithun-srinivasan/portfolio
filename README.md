@@ -1,6 +1,6 @@
 # Mithun Srinivasan — Portfolio
 
-A static personal portfolio built with semantic HTML, CSS, and vanilla JavaScript. There are no dependencies, no package manager, and no build step.
+A static personal portfolio built with semantic HTML, CSS, and vanilla JavaScript. No framework. Plain static files, generated from Markdown by a small Node script.
 
 Live at <https://mithunsrinivasan.is-a.dev>.
 

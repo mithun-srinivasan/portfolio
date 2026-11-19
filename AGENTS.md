@@ -1,6 +1,6 @@
 # AGENTS.md
 
-Static personal portfolio for Mithun Srinivasan. No framework, no package manager, no build step. Live at `https://mithunsrinivasan.is-a.dev` (GitHub Pages, repo root on `main`).
+Static personal portfolio for Mithun Srinivasan. No framework. Plain static files, generated from Markdown by a small Node script. Live at `https://mithunsrinivasan.is-a.dev` (GitHub Pages, repo root on `main`).
 
 ## Run and verify
 
@@ -110,7 +110,7 @@ Marker regions that must never be hand-edited:
 
 - Semantic HTML, lowercase UI copy, `aria-current` on the active nav link.
 - CSS is organised by component with section comments; shared tokens live at the top of `assets/css/style.css`.
-- No dependencies, bundlers, or build step. Keep deployment to plain static files (root serves `index.html`).
+- No dependencies or bundlers. A small Node script generates the static files; deployment stays plain static files (root serves `index.html`).
 - Keep generated binaries in sync with `assets/images/site-icon.svg`. There is no icon-generation script in the repo, so regenerate `favicon.ico` and the PNG icons by hand when the mark changes.
 - Screenshots are local-only: `out*.png` and `/portfolio-*.png` are git-ignored. Do not commit verification images.
 - Mobile is a first-class target. Below 620px the header collapses to one 58px row: the nav becomes a horizontally scrollable strip (hidden scrollbar) with a `›` fade affordance driven by the `nav-more` class in `assets/js/script.js`. Vertical position of anchor jumps comes from `--header-h`, which the script keeps in sync with the real header height via `ResizeObserver`; never hard-code a `scroll-margin-top` again.
