@@ -112,7 +112,7 @@ Open <http://127.0.0.1:4173/>. A local server is required — the shared stylesh
 Three paths, each no more than five commands:
 
 1. **Studio (local, recommended):** `node scripts/studio.mjs` → open the token URL → write/edit → save → click **Publish**. It builds, runs checks, commits (`post:`/`talk:`/`chore:`), and pushes. Aborts if `check.mjs` fails or the tree has unrelated changes.
-2. **GitHub web / phone:** create `content/posts/YYYY-MM-DD-slug.md` or edit `content/talks.json` in the GitHub web editor, commit to `main`. The CI workflow (`.github/workflows/build.yml`) builds, commits regenerated files back as `github-actions[bot]`, and runs checks. Pull requests only verify — they never push.
+2. **GitHub web / phone:** create `content/posts/YYYY-MM-DD-slug.md` or edit `content/talks.json` in the GitHub web editor, commit to `main`. The CI workflow (`.github/workflows/build.yml`) builds, commits regenerated files back as `github-actions[bot]`, and runs checks. Pull requests only verify — they never push. In *Settings → Actions → General → Workflow permissions*, set it to **"Read and write"** so the push step can commit back to `main`.
 3. **CLI:** edit `content/posts/*.md` or `content/talks.json` locally, run `node scripts/build.mjs` then `node scripts/check.mjs`, then `node scripts/publish.mjs --yes` (prompts before commit/push unless `--yes`).
 
 All paths produce plain static files; GitHub Pages serves `index.html` from the `main` branch root. Nothing is ever pushed without a successful `check.mjs` run.

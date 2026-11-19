@@ -98,7 +98,7 @@ Posts and talks now live as source files in `content/`. Never hand-edit generate
 - `node scripts/new.mjs post "Title"` / `talk "Title"` — creates a draft source file; prints next commands.
 - `node scripts/publish.mjs --yes` — build → check → commit → push in one command (prompts unless `--yes`; aborts if check fails).
 - `node scripts/studio.mjs` — local token-protected editor on `127.0.0.1:4321` for posts/talks, preview, image upload, delete-to-trash, and publish.
-- CI (`.github/workflows/build.yml`) builds on push to `main`, commits regenerated files back as `github-actions[bot]`, runs checks, and verifies on pull requests.
+- CI (`.github/workflows/build.yml`) builds on push to `main`, commits regenerated files back as `github-actions[bot]`, runs checks, and verifies on pull requests. Requires *Settings → Actions → General → Workflow permissions* set to "Read and write".
 
 Marker regions that must never be hand-edited:
 - `blog.html`: `posts-noscript`, `posts-jsonld`
