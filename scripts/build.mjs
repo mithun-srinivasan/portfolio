@@ -289,7 +289,7 @@ function nav(current) {
     const active = key === current ? ' aria-current="page"' : "";
     return `<a href="${href}"${extra}${active}>${label}</a>`;
   };
-  return `<nav class="nav" aria-label="Main">${link("/#work", "work", "work")}${link("/#experience", "experience", "experience")}${link("/#community", "community", "community")}${link("/#skills", "skills", "skills")}${link("/blog.html", "blog", "blog", " data-blog-link")}${link("/talks.html", "talks", "talks")}<a href="#contact">contact</a></nav>`;
+  return `<nav class="nav" aria-label="Main">${link("/#work", "work", "work")}${link("/#experience", "experience", "experience")}${link("/#community", "community", "community")}${link("/#skills", "skills", "skills")}${link("/blog.html", "blog", "blog", " data-blog-link")}${link("/talks.html", "talks", "talks")}${link("/now.html", "now", "now")}${link("/uses.html", "uses", "uses")}<a href="#contact">contact</a></nav>`;
 }
 
 function header(current) {
@@ -657,6 +657,16 @@ ${talks.map((talk) => `          <a class="entry" href="${escapeAttr(talk.url ||
     : "";
   if (replaceRegion(path.join(ROOT, "index.html"), "resume-link", resumeLink)) changed.push("index.html");
 
+  /* now.html carries its own real last-modified date, taken from git. */
+  const nowFile = path.join(ROOT, "now.html");
+  if (fs.existsSync(nowFile)) {
+    const stamp = gitLastmod(nowFile) || localDate();
+    const label = `last updated <time datetime="${stamp}">${formatDate(stamp)}</time>`;
+    if (replaceRegion(nowFile, "now-updated", label)) changed.push("now.html");
+  }
+
+  /* uses.html has no date — it lists tools, not time-sensitive facts. */
+
   /* Project screenshots are optional: the <figure> exists only when the image
      does, so the card never ships a placeholder. Drop a WebP at
      assets/images/projects/<project-slug>.webp and rebuild. */
@@ -672,6 +682,8 @@ ${talks.map((talk) => `          <a class="entry" href="${escapeAttr(talk.url ||
     ["/", path.join(ROOT, "index.html")],
     ["/blog.html", path.join(ROOT, "blog.html")],
     ["/talks.html", path.join(ROOT, "talks.html")],
+    ["/now.html", path.join(ROOT, "now.html")],
+    ["/uses.html", path.join(ROOT, "uses.html")],
   ];
   for (const post of published) urls.push([post.url, post.file]);
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
