@@ -299,8 +299,8 @@ code{font-family:var(--mono);font-size:.9em;color:var(--red-text);background:col
 .project-links{display:flex;flex-wrap:wrap;gap:.3rem 1.1rem;margin-top:.55rem;font-size:.8rem;font-weight:700}
 .project-links a{text-decoration:underline;text-underline-offset:3px}
 .project-links a::before{content:"./";color:var(--red-text)}
-.project-shot{margin:.9rem 0 0;border:1px solid var(--line);background:var(--panel);overflow:hidden}
-.project-shot img{display:block;width:100%;height:auto}
+.project-shot{margin:.9rem 0 0;border:1px solid var(--line);background:var(--panel);overflow:hidden;aspect-ratio:16/9}
+.project-shot img{display:block;width:100%;height:100%;object-fit:cover}
 .workshop{margin-top:clamp(2rem,4.5vw,3.2rem);padding-top:.9rem;border-top:1px solid var(--line)}
 .workshop-head{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;flex-wrap:wrap}
 .workshop-head h3{font-size:.9rem;line-height:1.4;font-weight:700}
@@ -333,6 +333,9 @@ code{font-family:var(--mono);font-size:.9em;color:var(--red-text);background:col
 
 .project-outcome{margin-top:.4rem;font-size:.8rem;line-height:1.6;color:var(--muted)}
 .outcome-label{color:var(--red-text);font-weight:700;text-transform:uppercase;letter-spacing:.08em}
+.stack-now{margin-top:1rem;font-size:.8rem;letter-spacing:.06em;color:var(--muted);font-weight:700}
+.stack-label{color:var(--red-text)}
+.term-out a{color:var(--red-text);text-decoration:underline;text-underline-offset:3px;font-weight:700}
 
 /* ---------- skills ---------- */
 .skills-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 clamp(2rem,6vw,4.5rem)}
