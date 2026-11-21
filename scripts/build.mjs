@@ -184,7 +184,7 @@ export function renderPostsJs(posts) {
 function renderEntryList(posts) {
   return posts.map((post) => `          <a class="entry" href="${post.url}">
             <time datetime="${post.date}">${formatDate(post.date)}</time>
-            <h2>${escapeHtml(post.title)}</h2>
+            <h3>${escapeHtml(post.title)}</h3>
             <p>${escapeHtml(post.description)}</p>
             <span class="entry-more">read post →</span>
           </a>`).join("\n");
@@ -275,7 +275,7 @@ function renderLatestWriting(posts) {
       <div class="entries-list">
 ${latest.map((post) => `        <a class="entry" href="${post.url}">
           <time datetime="${post.date}">${formatDate(post.date)}</time>
-          <h2>${escapeHtml(post.title)}</h2>
+          <h3>${escapeHtml(post.title)}</h3>
           <p>${escapeHtml(post.description)}</p>
           <span class="entry-more">read post →</span>
         </a>`).join("\n")}
@@ -659,7 +659,7 @@ ${renderEntryList(published)}
         <div class="entries-list">
 ${talks.map((talk) => `          <a class="entry" href="${escapeAttr(talk.url || "#")}">
             <time datetime="${escapeAttr(talk.date || "")}">${formatTalkDate(talk.date)}</time>
-            <h2>${escapeHtml(talk.title || "Untitled talk")}</h2>
+            <h3>${escapeHtml(talk.title || "Untitled talk")}</h3>
             <p>${escapeHtml(talk.event || "")}${talk.location ? ` · ${escapeHtml(talk.location)}` : ""}</p>
             <span class="entry-more">${escapeHtml(talk.linkLabel || "view →")}</span>
           </a>`).join("\n")}

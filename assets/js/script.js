@@ -536,7 +536,7 @@
     list.innerHTML = items.map((item) => `
       <a class="entry" href="${esc(item.url || "#")}">
         <time datetime="${esc(item.dateTime || item.date || "")}">${esc(formatWhen(item))}</time>
-        <h2>${esc(item.title || untitled)}</h2>
+        <h3>${esc(item.title || untitled)}</h3>
         <p>${row(item)}</p>
         <span class="entry-more">${esc(typeof more === "function" ? more(item) : more)}</span>
       </a>

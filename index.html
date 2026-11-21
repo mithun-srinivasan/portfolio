@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Mithun Srinivasan · CSE student, FOSS, Go/TypeScript/Python</title>
+<title>Mithun Srinivasan</title>
 <meta name="author" content="Mithun Srinivasan">
 <meta name="robots" content="index,follow">
 <meta name="color-scheme" content="dark light">
@@ -216,9 +216,19 @@
   ]
 }
 </script>
-<link rel="stylesheet" href="/assets/css/style.css?v=2be47378">
+<link rel="stylesheet" href="/assets/css/style.css?v=79f26442">
 </head>
 <body>
+<div id="loader" aria-hidden="true">
+  <div class="loader-words">
+    <div>Hi</div>
+    <div>Привет</div>
+    <div>こんにちは</div>
+    <div>नमस्ते</div>
+    <div>வணக்கம்</div>
+    <div>नमस्तः</div>
+  </div>
+</div>
 <a class="skip-link" href="#main">Skip to content</a>
 
 <header class="site-header" id="site-header">
@@ -296,7 +306,7 @@
       <div class="entries-list">
         <a class="entry" href="/posts/hi.html">
           <time datetime="2026-11-01">01 Nov 2026</time>
-          <h2>Hi, world</h2>
+          <h3>Hi, world</h3>
           <p>A quick hello from the new blog: why I built this portfolio dependency-free, what I’m working on, and what’s next.</p>
           <span class="entry-more">read post →</span>
         </a>
@@ -441,7 +451,7 @@
             </div>
           </div>
         </div>
-        <aside class="about-side" aria-label="Education">
+        <div class="about-side">
           <div class="side-block">
             <h3>education</h3>
             <div class="edu">
@@ -457,7 +467,7 @@
               </div>
             </div>
           </div>
-        </aside>
+        </div>
       </div>
     </div>
   </section>
@@ -630,7 +640,19 @@
   </div>
 </footer>
 
-<script src="/assets/js/posts.js?v=2be47378" defer></script>
-<script src="/assets/js/script.js?v=2be47378" defer></script>
+<script>
+  (function(){
+    var loader = document.getElementById('loader');
+    if (!loader) return;
+    function hide(){
+      loader.classList.add('done');
+      setTimeout(function(){ loader.remove(); }, 700);
+    }
+    setTimeout(hide, 2500);
+  })();
+</script>
+
+<script src="/assets/js/posts.js?v=79f26442" defer></script>
+<script src="/assets/js/script.js?v=79f26442" defer></script>
 </body>
 </html>
