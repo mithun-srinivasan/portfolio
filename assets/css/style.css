@@ -200,7 +200,7 @@ code{font-family:var(--mono);font-size:.9em;color:var(--red-text);background:col
 .btn:hover{background-color:var(--ink);border-color:var(--ink);color:var(--paper);transform:translate(-3px,-3px);box-shadow:0 0 0 1px color-mix(in srgb,var(--red) 35%,transparent),6px 6px 0 var(--red)}
 .btn:active{transform:translate(0,0);box-shadow:0 0 0 1px color-mix(in srgb,var(--red) 35%,transparent),2px 2px 0 var(--red)}
 .btn:focus-visible{outline:2px solid var(--red);outline-offset:2px}
-.btn-cal{width:100%;max-width:260px;position:relative;overflow:hidden}
+.btn-cal{min-width:200px;position:relative;overflow:hidden}
 .btn-cal::after{content:"↗";font-size:.9em;opacity:0;transform:translateX(-4px);transition:opacity .15s,transform .15s}
 .btn-cal:hover::after{opacity:1;transform:translateX(2px)}
 .btn-cal:active{transform:translate(0,0);box-shadow:none}
@@ -372,6 +372,7 @@ code{font-family:var(--mono);font-size:.9em;color:var(--red-text);background:col
 .copy-btn{padding:.4rem .6rem;border:1px solid rgba(255,255,255,.55);background:transparent;color:#fff;font-size:.8rem;line-height:1.2;transition:background-color .15s,color .15s,border-color .15s}
 .copy-btn:hover,.copy-btn:focus-visible{background:#fff;color:var(--blood);border-color:#fff}
 .copy-status{display:block;min-height:1.2em;margin-top:.45rem;font-size:.8rem;line-height:1.5}
+.contact .btn-cal{margin-top:1.2rem}
 .contact-meta{display:flex;flex-wrap:wrap;gap:.3rem 1.8rem;margin-top:1.2rem;font-size:.8rem;line-height:1.65}
 .contact-meta a{text-decoration:underline;text-underline-offset:3px}
 .socials{display:grid;border-top:1px solid var(--line)}
