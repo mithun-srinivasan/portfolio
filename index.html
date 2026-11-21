@@ -642,33 +642,21 @@
     if (!loader) return;
     var textEl = document.getElementById('loader-text');
     var words = ['Hi','Привет','こんにちは','नमस्ते','வணக்கம்','नमस्तः'];
-    var i = 0, j = 0, deleting = false;
+    var word = words[Math.floor(Math.random() * words.length)];
+    var j = 0;
     function type(){
-      var current = words[i];
-      textEl.textContent = current.substring(0, j);
-      if (!deleting && j < current.length){
+      textEl.textContent = word.substring(0, j);
+      if (j < word.length){
         j++;
         setTimeout(type, 90);
-      } else if (!deleting && j === current.length){
-        deleting = true;
-        setTimeout(type, 1100);
-      } else if (deleting && j > 0){
-        j--;
-        setTimeout(type, 45);
       } else {
-        deleting = false;
-        i = (i + 1) % words.length;
-        if (i === 0){
-          setTimeout(function(){
-            loader.classList.add('done');
-            setTimeout(function(){ loader.remove(); }, 700);
-          }, 600);
-          return;
-        }
-        setTimeout(type, 300);
+        setTimeout(function(){
+          loader.classList.add('done');
+          setTimeout(function(){ loader.remove(); }, 700);
+        }, 900);
       }
     }
-    setTimeout(type, 300);
+    setTimeout(type, 200);
   })();
 </script>
 
