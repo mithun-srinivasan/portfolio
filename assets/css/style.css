@@ -197,7 +197,7 @@ code{font-family:var(--mono);font-size:.9em;color:var(--red-text);background:col
 }
 .btn::after{content:"→";font-size:.85em;opacity:0;transform:translateX(-3px);transition:opacity .15s,transform .15s}
 .btn:hover::after{opacity:1;transform:translateX(3px)}
-.btn:hover{background-color:var(--ink);border-color:var(--ink);color:var(--paper);transform:translate(-3px,-3px);box-shadow:0 0 0 1px color-mix(in srgb,var(--red) 35%,transparent),6px 6px 0 var(--red)}
+.btn:hover{background-color:var(--ink);border-color:var(--ink);color:var(--red-hot);transform:translate(-3px,-3px);box-shadow:0 0 0 1px color-mix(in srgb,var(--red) 35%,transparent),6px 6px 0 var(--red)}
 .btn:active{transform:translate(0,0);box-shadow:0 0 0 1px color-mix(in srgb,var(--red) 35%,transparent),2px 2px 0 var(--red)}
 .btn:focus-visible{outline:2px solid var(--red);outline-offset:2px}
 .btn-cal{min-width:200px;position:relative;overflow:hidden}
