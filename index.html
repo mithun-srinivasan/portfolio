@@ -216,17 +216,13 @@
   ]
 }
 </script>
-<link rel="stylesheet" href="/assets/css/style.css?v=79f26442">
+<link rel="stylesheet" href="/assets/css/style.css?v=ff1fc388">
 </head>
 <body>
 <div id="loader" aria-hidden="true">
-  <div class="loader-words">
-    <div>Hi</div>
-    <div>Привет</div>
-    <div>こんにちは</div>
-    <div>नमस्ते</div>
-    <div>வணக்கம்</div>
-    <div>नमस्तः</div>
+  <div class="loader-inner">
+    <div id="loader-text"></div>
+    <div class="loader-cursor" aria-hidden="true">▋</div>
   </div>
 </div>
 <a class="skip-link" href="#main">Skip to content</a>
@@ -644,15 +640,39 @@
   (function(){
     var loader = document.getElementById('loader');
     if (!loader) return;
-    function hide(){
-      loader.classList.add('done');
-      setTimeout(function(){ loader.remove(); }, 700);
+    var textEl = document.getElementById('loader-text');
+    var words = ['Hi','Привет','こんにちは','नमस्ते','வணக்கம்','नमस्तः'];
+    var i = 0, j = 0, deleting = false;
+    function type(){
+      var current = words[i];
+      textEl.textContent = current.substring(0, j);
+      if (!deleting && j < current.length){
+        j++;
+        setTimeout(type, 90);
+      } else if (!deleting && j === current.length){
+        deleting = true;
+        setTimeout(type, 1100);
+      } else if (deleting && j > 0){
+        j--;
+        setTimeout(type, 45);
+      } else {
+        deleting = false;
+        i = (i + 1) % words.length;
+        if (i === 0){
+          setTimeout(function(){
+            loader.classList.add('done');
+            setTimeout(function(){ loader.remove(); }, 700);
+          }, 600);
+          return;
+        }
+        setTimeout(type, 300);
+      }
     }
-    setTimeout(hide, 2500);
+    setTimeout(type, 300);
   })();
 </script>
 
-<script src="/assets/js/posts.js?v=79f26442" defer></script>
-<script src="/assets/js/script.js?v=79f26442" defer></script>
+<script src="/assets/js/posts.js?v=ff1fc388" defer></script>
+<script src="/assets/js/script.js?v=ff1fc388" defer></script>
 </body>
 </html>

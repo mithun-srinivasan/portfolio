@@ -613,23 +613,9 @@ pre code{white-space:pre}
 #loader.done{
   opacity:0;visibility:hidden;pointer-events:none;
 }
-.loader-words{position:relative;width:1px;height:1px;text-align:center}
-.loader-words > div{
-  position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
-  font-family:var(--mono);font-size:clamp(1.6rem,6vw,2.6rem);font-weight:800;
-  letter-spacing:.06em;line-height:1.2;
-  opacity:0;animation:loader-cycle 10s ease-in-out infinite;
-}
-@keyframes loader-cycle{
-  0%,11%{opacity:1;transform:translate(-50%,-50%) translateY(0)}
-  17%,100%{opacity:0;transform:translate(-50%,-50%) translateY(-1.2rem)}
-}
-.loader-words > div:nth-child(1){animation-delay:0s}
-.loader-words > div:nth-child(2){animation-delay:1.67s}
-.loader-words > div:nth-child(3){animation-delay:3.33s}
-.loader-words > div:nth-child(4){animation-delay:5s}
-.loader-words > div:nth-child(5){animation-delay:6.67s}
-.loader-words > div:nth-child(6){animation-delay:8.33s}
+.loader-inner{display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:clamp(1.6rem,6vw,2.6rem);font-weight:800;letter-spacing:.06em;white-space:nowrap}
+.loader-cursor{animation:loader-blink 1s step-end infinite}
+@keyframes loader-blink{50%{opacity:0}}
 
 @media (prefers-reduced-motion:no-preference){
   .js-reveal .reveal{opacity:0;transform:translateY(14px);transition:opacity .5s ease,transform .5s cubic-bezier(.2,.8,.2,1)}
