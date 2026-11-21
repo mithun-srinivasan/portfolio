@@ -597,18 +597,6 @@
   document.body.appendChild(toTop);
   window.addEventListener("scroll", () => { toTop.hidden = window.scrollY < 700; }, { passive: true });
 
-  /* ---------- scroll reveal ---------- */
-  if (!reduceMotion.matches && "IntersectionObserver" in window) {
-    const targets = document.querySelectorAll(".section-head, .project, .timeline li, .skill, .coding, .workshop");
-    root.classList.add("js-reveal");
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) { entry.target.classList.add("is-in"); io.unobserve(entry.target); }
-      });
-    }, { rootMargin: "0px 0px -8% 0px", threshold: 0.05 });
-    targets.forEach((el) => { el.classList.add("reveal"); io.observe(el); });
-  }
-
   /* ---------- project filter chips ---------- */
   const chipBar = document.getElementById("project-filter");
   if (chipBar) {

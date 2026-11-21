@@ -621,10 +621,6 @@ pre code{white-space:pre}
 .loader-cursor{animation:loader-blink 1s step-end infinite}
 @keyframes loader-blink{50%{opacity:0}}
 
-@media (prefers-reduced-motion:no-preference){
-  .js-reveal .reveal{opacity:0;transform:translateY(14px);transition:opacity .5s ease,transform .5s cubic-bezier(.2,.8,.2,1)}
-  .js-reveal .reveal.is-in{opacity:1;transform:none}
-}
 /* print rules live in one block at the end of this file */
 
 /* ---------- marquee ---------- */
@@ -752,7 +748,6 @@ pre code{white-space:pre}
   .hero-dotted-glow,.marquee,.to-top,.toast,.palette,.palette-trigger,.chips,.term-live-hint,.footer{display:none!important}
   body{color:#000;background:#fff;font-size:11pt;line-height:1.45}
   body::before{display:none!important}
-  .js-reveal .reveal{opacity:1!important;transform:none!important}
   .hero{padding-block:.2rem 1rem}
   .hero-grid{display:block}
   .hero-portrait{display:none}
